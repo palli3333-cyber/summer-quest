@@ -2087,7 +2087,7 @@ function renderChores(){
   if(!list) return;
   list.innerHTML = CHORES.map(function(c){
     var isDone = !!cs.completed[c.id];
-    return '<div class="chore-item'+(isDone?' done':'')+'" onclick=toggleChore(\''+c.id+'\')">'+
+    return '<div class="chore-item'+(isDone?' done':'')+'" onclick="toggleChore(\''+c.id+'\')">'+
       '<div class="chore-check">'+(isDone?'✓':'')+'</div>'+
       '<div class="chore-icon">'+c.icon+'</div>'+
       '<div class="chore-label">'+c.label+'</div>'+
