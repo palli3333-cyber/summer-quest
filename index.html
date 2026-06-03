@@ -374,23 +374,162 @@ var _safeStorage = {
 // ================================================================
 
 var MATH_CONCEPTS = [
-  // Each concept: id, title, emoji, unlocked by default or by mastery
-  // level: 1=known, 2=review, 3=new-needs-lesson
-  {id:'multiplication', title:'Multiplication', emoji:'✖️', level:1, unlockAfter:null},
-  {id:'division',       title:'Division',       emoji:'➗', level:1, unlockAfter:'multiplication'},
-  {id:'fractions',      title:'Fractions',      emoji:'½',  level:1, unlockAfter:'division'},
-  {id:'mixed_fractions',title:'Mixed Fractions', emoji:'🔢', level:1, unlockAfter:'fractions'},
-  {id:'word_problems',  title:'Word Problems',  emoji:'📝', level:1, unlockAfter:'mixed_fractions'},
-  {id:'perimeter_area', title:'Perimeter & Area',emoji:'📐', level:1, unlockAfter:'word_problems'},
-  {id:'equations',      title:'Equations',      emoji:'⚖️', level:3, unlockAfter:'perimeter_area'},
-  {id:'factors',        title:'Factors & Multiples',emoji:'🔣',level:3, unlockAfter:'equations'},
-  {id:'angles',         title:'Angles',         emoji:'📏', level:3, unlockAfter:'factors'},
-  {id:'percentages',    title:'Percentages',    emoji:'💯', level:3, unlockAfter:'angles'},
-  {id:'ratio',          title:'Ratio',          emoji:'⚖️', level:3, unlockAfter:'percentages'}
+  // Level 1 = already known, always unlocked, used for warmup pool
+  {id:'multiplication',  title:'Multi-Digit Multiplication',       emoji:'✖️', level:1, unlockAfter:null},
+  {id:'division',        title:'Multi-Digit Division',             emoji:'➗', level:1, unlockAfter:null},
+  {id:'fractions',       title:'Simple Fractions',                 emoji:'½',  level:1, unlockAfter:null},
+  {id:'word_problems',   title:'Word Problems',                    emoji:'📝', level:1, unlockAfter:null},
+  {id:'perimeter_area',  title:'Perimeter & Area',                 emoji:'📐', level:1, unlockAfter:null},
+  {id:'mixed_fractions', title:'Mixed Fractions',                  emoji:'🔢', level:1, unlockAfter:null},
+  // Level 3 = needs teaching — ordered by curriculum unit
+  {id:'place_value',     title:'Place Value & Rounding',           emoji:'🔢', level:3, unlockAfter:null},
+  {id:'fraction_equiv',  title:'Fraction Equivalence & Ordering',  emoji:'⚖️', level:3, unlockAfter:'place_value'},
+  {id:'fraction_addition',title:'Adding Unlike Fractions',         emoji:'➕', level:3, unlockAfter:'fraction_equiv'},
+  {id:'fraction_multiply',title:'Multiplying Fractions',           emoji:'✖️', level:3, unlockAfter:'fraction_addition'},
+  {id:'decimals',        title:'Decimal Fractions',                emoji:'🔟', level:3, unlockAfter:'fraction_multiply'},
+  {id:'unit_conversions',title:'Unit Conversions',                 emoji:'📏', level:3, unlockAfter:'decimals'},
+  {id:'angles',          title:'Shapes & Angles',                  emoji:'📐', level:3, unlockAfter:'unit_conversions'},
+  {id:'equations',       title:'Equations',                        emoji:'⚖️', level:3, unlockAfter:'angles'},
+  {id:'factors',         title:'Factors & Multiples',              emoji:'🔣', level:3, unlockAfter:'equations'},
+  {id:'percentages',     title:'Percentages',                      emoji:'💯', level:3, unlockAfter:'factors'},
+  {id:'ratio',           title:'Ratio',                            emoji:'⚖️', level:3, unlockAfter:'percentages'}
 ];
 
 // ── LESSONS (teach-first content) ────────────────────────────
 var LESSONS = {
+  place_value: {
+    title:'Place Value & Rounding',
+    emoji:'🔢',
+    intro:'Every digit in a number has a VALUE based on its position. Understanding place value helps you read big numbers, round them, and estimate quickly.',
+    steps:[
+      {heading:'Place Value Chart',
+       explanation:'Each position is 10 times bigger than the one to its right. Ones → Tens → Hundreds → Thousands → Ten-Thousands → Hundred-Thousands.',
+       visual:'📊  Number: 45,382\n• 4 = 4 ten-thousands = 40,000\n• 5 = 5 thousands = 5,000\n• 3 = 3 hundreds = 300\n• 8 = 8 tens = 80\n• 2 = 2 ones = 2\nTotal: 45,382',
+       example:'Write 307,045 in expanded form:\n300,000 + 7,000 + 0 + 40 + 5\n= 307,045\n\nWhat is the value of the 7 in 307,045?\n7 is in the THOUSANDS place = 7,000'},
+      {heading:'Rounding Numbers',
+       explanation:'To round, find the place you are rounding TO. Look at the digit to the RIGHT. If it is 5 or more → round UP. If it is less than 5 → round DOWN (keep the digit).',
+       visual:'🎯 Round 3,847 to the nearest hundred:\nHundreds digit = 8. Look RIGHT → 4.\n4 < 5, so round DOWN.\nAnswer: 3,800\n\n🎯 Round 3,867 to nearest hundred:\nLook right of 8 → 6. 6 ≥ 5, round UP.\nAnswer: 3,900',
+       example:'Round 24,563 to nearest thousand:\nThousands digit = 4. Look right → 5.\n5 ≥ 5 → round UP.\n24,563 → 25,000\n\nRound 24,463 to nearest thousand:\nLook right of 4 → 4. 4 < 5 → DOWN.\n24,463 → 24,000'},
+      {heading:'Multi-Step Addition & Subtraction',
+       explanation:'For large numbers, use the standard algorithm: line up by place value, start from the right, carry or borrow as needed.',
+       visual:'➕  43,587\n  + 28,946\n--------\nOnes: 7+6=13, write 3 carry 1\nTens: 8+4+1=13, write 3 carry 1\nHundreds: 5+9+1=15, write 5 carry 1\nThousands: 3+8+1=12, write 2 carry 1\nTen-thousands: 4+2+1=7\nAnswer: 72,533',
+       example:'Subtract: 60,000 - 34,567\n  60,000\n- 34,567\n--------\nBorrow chain: 60,000 → 59,999+1\n  59,999\n-  34,567\n  25,433 ✓'}
+    ]
+  },
+  fraction_equiv: {
+    title:'Fraction Equivalence & Ordering',
+    emoji:'⚖️',
+    intro:'Equivalent fractions are fractions that look different but represent the SAME amount. 1/2 = 2/4 = 3/6 = 50/100. Learning this unlocks all fraction operations!',
+    steps:[
+      {heading:'Making Equivalent Fractions',
+       explanation:'Multiply OR divide BOTH the numerator (top) and denominator (bottom) by the SAME number. The fraction value never changes — just the way it looks.',
+       visual:'🔄 1/3 → equivalent fractions:\n×2: 2/6  ×3: 3/9  ×4: 4/12  ×5: 5/15\nAll equal 1/3!\n\n🔄 Going down (simplifying):\n8/12 → ÷4 → 2/3\n(÷4 top and bottom)',
+       example:'Is 3/4 equivalent to 9/12?\n3/4: multiply by 3 → 9/12 ✓ YES!\n\nIs 2/5 equivalent to 6/20?\n2/5 × 4 = 8/20. But we got 6/20. NO ✗\n6/20 = 3/10, not 2/5.'},
+      {heading:'Simplifying (Reducing) Fractions',
+       explanation:'A fraction is in simplest form when the top and bottom share no common factors other than 1. Divide both by their Greatest Common Factor (GCF).',
+       visual:'✂️ Simplify 12/18:\nFactors of 12: 1,2,3,4,6,12\nFactors of 18: 1,2,3,6,9,18\nGCF = 6\n12÷6 = 2, 18÷6 = 3\nSimplest form: 2/3',
+       example:'Simplify 20/24:\nGCF(20,24) = 4\n20÷4=5, 24÷4=6\nAnswer: 5/6\n\nSimplify 15/25:\nGCF = 5. 15÷5=3, 25÷5=5\nAnswer: 3/5'},
+      {heading:'Comparing & Ordering Fractions',
+       explanation:'To compare fractions with different denominators, find a common denominator first. Then compare the numerators.',
+       visual:'⚖️ Which is bigger: 3/4 or 5/6?\nCommon denominator = 12\n3/4 = 9/12\n5/6 = 10/12\n10/12 > 9/12, so 5/6 > 3/4\n\n📏 Order from least to greatest:\n1/2, 1/3, 3/4\n→ 6/12, 4/12, 9/12\n→ 1/3, 1/2, 3/4',
+       example:'Order 2/3, 3/4, 5/6 from least to greatest.\nCommon denominator = 12:\n2/3=8/12, 3/4=9/12, 5/6=10/12\nOrder: 8/12, 9/12, 10/12\n= 2/3, 3/4, 5/6'}
+    ]
+  },
+  fraction_addition: {
+    title:'Adding & Subtracting Unlike Fractions',
+    emoji:'➕',
+    intro:'When fractions have the SAME denominator, adding is easy: 1/4 + 2/4 = 3/4. But when denominators differ, we must find a common denominator first.',
+    steps:[
+      {heading:'Step 1 — Find a Common Denominator',
+       explanation:'Find a number both denominators divide into evenly. The simplest method: multiply the two denominators. Or find the Least Common Multiple (LCM) for a neater answer.',
+       visual:'🎯 Add: 1/3 + 1/4\nLCM of 3 and 4 = 12\n(Because 3×4=12, and no smaller number works)\n\n🎯 Add: 1/4 + 1/6\nLCM of 4 and 6 = 12\n(Not 24! 12 is smaller: 4×3=12, 6×2=12)',
+       example:'Add 1/2 + 1/3:\nLCM(2,3)=6\n1/2 = 3/6  (×3)\n1/3 = 2/6  (×2)\n3/6 + 2/6 = 5/6'},
+      {heading:'Step 2 — Convert & Add',
+       explanation:'Multiply the top and bottom of each fraction by whatever makes the denominator equal the LCM. Then add the numerators. The denominator stays the same.',
+       visual:'🔄 3/4 + 1/6. LCM=12\n3/4 → ×3 → 9/12\n1/6 → ×2 → 2/12\n9/12 + 2/12 = 11/12 ✓',
+       example:'Add 2/5 + 1/4:\nLCM(5,4)=20\n2/5 = 8/20 (×4)\n1/4 = 5/20 (×5)\n8/20 + 5/20 = 13/20'},
+      {heading:'Subtracting Unlike Fractions',
+       explanation:'Exact same steps as adding — find common denominator, convert, then SUBTRACT the numerators. Always simplify your answer.',
+       visual:'➖ 3/4 - 1/3. LCM=12\n3/4 = 9/12\n1/3 = 4/12\n9/12 - 4/12 = 5/12',
+       example:'3/5 - 1/4:\nLCM=20\n3/5=12/20, 1/4=5/20\n12/20 - 5/20 = 7/20\n\n5/6 - 1/4:\nLCM=12\n5/6=10/12, 1/4=3/12\n10/12-3/12=7/12'}
+    ]
+  },
+  fraction_multiply: {
+    title:'Multiplying Fractions',
+    emoji:'✖️',
+    intro:'Multiplying fractions is actually EASIER than adding them — no common denominator needed! Just multiply tops together and bottoms together.',
+    steps:[
+      {heading:'Top × Top, Bottom × Bottom',
+       explanation:'To multiply fractions: multiply the numerators (tops), multiply the denominators (bottoms). Then simplify.',
+       visual:'🎯 2/3 × 3/4\nTop: 2×3=6\nBottom: 3×4=12\n= 6/12 = 1/2 ✓\n\n🎯 3/5 × 2/7\nTop: 3×2=6\nBottom: 5×7=35\n= 6/35 (already simple)',
+       example:'1/2 × 3/5:\n(1×3)/(2×5) = 3/10\n\n4/7 × 7/8:\n(4×7)/(7×8) = 28/56 = 1/2'},
+      {heading:'Multiplying a Fraction by a Whole Number',
+       explanation:'Write the whole number as a fraction over 1, then multiply normally. This is the same as repeated addition!',
+       visual:'🔢 4 × 2/5\n= 4/1 × 2/5\n= 8/5 = 1 and 3/5\n\n💡 Think of it as:\n2/5 + 2/5 + 2/5 + 2/5 = 8/5 ✓',
+       example:'3 × 3/4:\n= 9/4 = 2 and 1/4\n\nA recipe needs 2/3 cup sugar.\n5 batches need: 5 × 2/3 = 10/3 = 3 and 1/3 cups'},
+      {heading:'Simplify Before or After',
+       explanation:'You can simplify BEFORE multiplying (cross-cancelling) to keep numbers small. Or simplify after. Both give the same answer.',
+       visual:'🔽 Cross-cancel: 3/4 × 8/9\n3 and 9 share factor 3: 3/4 × 8/9̶ → 1/4 × 8/3\n8 and 4 share factor 4: 1/4̶ × 8/3 → 1/1 × 2/3 = 2/3\n\nVs. multiply first: 24/36 = 2/3 ✓ Same!',
+       example:'5/6 × 3/10:\nCross-cancel: 5 and 10 → ÷5: 1/6 × 3/2\nCross-cancel: 3 and 6 → ÷3: 1/2 × 1/2 = 1/4'}
+    ]
+  },
+  decimals: {
+    title:'Decimal Fractions',
+    emoji:'🔟',
+    intro:'Decimals are fractions with denominators of 10, 100, or 1000. The decimal point separates whole numbers from parts. Once you see them as fractions, they make perfect sense.',
+    steps:[
+      {heading:'Place Value with Decimals',
+       explanation:'After the decimal point: tenths (1/10), hundredths (1/100), thousandths (1/1000). Each place is 10 times smaller than the one to its left.',
+       visual:'📊 3.472\n• 3 = 3 ones\n• 4 = 4 tenths = 4/10\n• 7 = 7 hundredths = 7/100\n• 2 = 2 thousandths = 2/1000\n\n🔗 Fraction links:\n0.5 = 5/10 = 1/2\n0.25 = 25/100 = 1/4\n0.75 = 75/100 = 3/4',
+       example:'Write 0.6 as a fraction: 6/10 = 3/5\nWrite 0.35 as a fraction: 35/100 = 7/20\nWrite 3/4 as a decimal: 3÷4 = 0.75\nWrite 1/5 as a decimal: 1÷5 = 0.2'},
+      {heading:'Comparing & Ordering Decimals',
+       explanation:'Line up decimal points. Compare digit by digit left to right. Extra zeros at the end do NOT change value (0.6 = 0.60).',
+       visual:'⚖️ Compare 0.6 and 0.59:\n0.60\n0.59\nTenths: 6 vs 5 → 0.6 wins!\n\n📏 Order: 0.3, 0.29, 0.305\n= 0.300, 0.290, 0.305\nSmallest to largest: 0.290, 0.300, 0.305\n= 0.29, 0.3, 0.305',
+       example:'Which is larger: 1.8 or 1.79?\n1.80 vs 1.79\nTenths: 8 vs 7 → 1.8 wins!\n\nOrder: 2.5, 2.05, 2.55\n= 2.50, 2.05, 2.55\nAnswer: 2.05, 2.5, 2.55'},
+      {heading:'Adding & Subtracting Decimals',
+       explanation:'Line up the decimal points. Add zeros to make equal length if needed. Then add or subtract exactly as with whole numbers — decimal point drops straight down.',
+       visual:'➕ 3.6 + 1.47\n  3.60\n+ 1.47\n------\n  5.07\n\n➖ 5.2 - 2.84\n  5.20\n- 2.84\n------\n  2.36',
+       example:'2.7 + 4.85 = ?\n  2.70\n+ 4.85\n------\n  7.55\n\n6.0 - 3.47 = ?\n  6.00\n- 3.47\n------\n  2.53'}
+    ]
+  },
+  unit_conversions: {
+    title:'Unit Conversions',
+    emoji:'📏',
+    intro:'Units of measurement can be converted by multiplying or dividing. The key is knowing the CONVERSION FACTOR — how many of one unit fit into another.',
+    steps:[
+      {heading:'Length Conversions',
+       explanation:'Key conversion facts to memorise: 1 km = 1,000 m. 1 m = 100 cm. 1 cm = 10 mm. 1 foot = 12 inches. 1 yard = 3 feet. 1 mile ≈ 1.6 km.',
+       visual:'📏 Converting:\nBigger → Smaller: MULTIPLY\n3 km → m: 3 × 1,000 = 3,000 m\n\nSmaller → Bigger: DIVIDE\n500 cm → m: 500 ÷ 100 = 5 m\n\n💡 Trick: km→m "×1000", m→cm "×100", cm→mm "×10"',
+       example:'How many cm in 2.5 m?\n2.5 × 100 = 250 cm\n\nHow many m in 3,400 mm?\n3,400 ÷ 1,000 = 3.4 m\n\nA ribbon is 4.5 m long.\nHow many cm? 4.5 × 100 = 450 cm'},
+      {heading:'Mass (Weight) Conversions',
+       explanation:'1 kg = 1,000 g. 1 tonne = 1,000 kg. Same rule: bigger → smaller = multiply; smaller → bigger = divide.',
+       visual:'⚖️ 3.5 kg → g:\n3.5 × 1,000 = 3,500 g\n\n⚖️ 2,400 g → kg:\n2,400 ÷ 1,000 = 2.4 kg\n\n⚖️ 1.5 tonnes → kg:\n1.5 × 1,000 = 1,500 kg',
+       example:'A bag weighs 2.3 kg.\nHow many grams? 2,300 g\n\n5 bags weigh 850 g each.\nTotal = 5 × 850 = 4,250 g = 4.25 kg'},
+      {heading:'Time & Capacity Conversions',
+       explanation:'Time: 1 min=60s, 1 hr=60 min=3,600s, 1 day=24 hrs. Capacity: 1 L=1,000 mL, 1 gallon≈3.8 L.',
+       visual:'⏱️ 3.5 hours → minutes:\n3.5 × 60 = 210 minutes\n\n💧 2.5 L → mL:\n2.5 × 1,000 = 2,500 mL\n\n⏱️ 180 seconds → minutes:\n180 ÷ 60 = 3 minutes',
+       example:'A movie is 2 hours 35 minutes.\nTotal minutes = 2×60 + 35 = 155 minutes\n\nA bottle holds 750 mL.\nHow many litres? 750÷1,000 = 0.75 L'}
+    ]
+  },
+  angles: {
+    title:'Shapes & Angles',
+    emoji:'📐',
+    intro:'An angle is the amount of TURN between two lines meeting at a point. Measured in degrees (°). A full turn = 360°. Understanding angles unlocks all of geometry!',
+    steps:[
+      {heading:'Types of Angles',
+       explanation:'Angles are classified by their size. Knowing the names helps you identify and work with shapes.',
+       visual:'📐 ACUTE: less than 90°  (sharp like a needle)\n📐 RIGHT: exactly 90°  (corner of a book — a perfect L)\n📐 OBTUSE: between 90°-180°  (wide, open)\n📐 STRAIGHT: exactly 180°  (a flat line)\n📐 REFLEX: more than 180°  (more than half a turn)',
+       example:'Clock at 3:00 → RIGHT angle (90°)\nClock at 6:00 → STRAIGHT angle (180°)\nClock at 2:00 → ACUTE angle (≈60°)\nClock at 8:00 → OBTUSE angle (≈120°)'},
+      {heading:'Angles in Triangles & Quadrilaterals',
+       explanation:'KEY RULES: (1) Angles in a triangle always add to 180°. (2) Angles in any quadrilateral (4-sided shape) always add to 360°.',
+       visual:'△ Triangle:\n60° + 70° + 50° = 180° ✓\n90° + 55° + 35° = 180° ✓\n\n▭ Rectangle:\n90° × 4 = 360° ✓\n\n▱ Any quadrilateral:\nAngles sum to 360°',
+       example:'Triangle has angles 65° and 80°.\nThird angle = 180 - 65 - 80 = 35°\n\nQuadrilateral has angles 95°, 110°, 75°.\nFourth angle = 360 - 95 - 110 - 75 = 80°'},
+      {heading:'Lines of Symmetry',
+       explanation:'A line of symmetry divides a shape into two MIRROR-IMAGE halves. Some shapes have many lines of symmetry, some have none.',
+       visual:'🔷 Square: 4 lines of symmetry\n🔶 Rectangle: 2 lines of symmetry\n🔺 Equilateral triangle: 3 lines\n⭕ Circle: infinite lines!\n🔸 Scalene triangle: 0 lines\n\n💡 Regular polygons: lines = number of sides',
+       example:'How many lines of symmetry does a regular hexagon have?\nRegular hexagon has 6 sides → 6 lines of symmetry\n\nDoes a parallelogram (non-rectangle) have lines of symmetry?\nNo — it has rotational symmetry, but no line of symmetry.'}
+    ]
+  },
   equations: {
     title: 'What is an Equation?',
     emoji: '⚖️',
@@ -438,31 +577,6 @@ var LESSONS = {
         explanation: 'A prime number has EXACTLY two factors: 1 and itself. It cannot be divided by anything else!',
         visual: '⭐ Primes: 2, 3, 5, 7, 11, 13, 17...\n4 is NOT prime: 1×4 and 2×2 (has 3 factors)\n7 IS prime: only 1×7',
         example: 'Is 13 prime?\n13÷2=6.5 ✗\n13÷3=4.3 ✗\n13÷4=3.25 ✗\nOnly divides by 1 and 13.\nYES — 13 is prime! ⭐'
-      }
-    ]
-  },
-  angles: {
-    title: 'What are Angles?',
-    emoji: '📏',
-    intro: 'An angle is the amount of TURN between two lines that meet at a point. We measure angles in degrees (°). A full circle = 360°.',
-    steps: [
-      {
-        heading: 'Types of Angles',
-        explanation: 'Different amounts of turn have different names. Learning these names helps you talk about shapes precisely.',
-        visual: '📐 ACUTE: less than 90°  (sharp, like a pointy star)\n📐 RIGHT: exactly 90°  (like a corner of a book)\n📐 OBTUSE: 90°–180°  (wide, like an open door)\n📐 STRAIGHT: 180°  (a flat line)\n📐 REFLEX: more than 180°  (more than half a circle)',
-        example: 'Look at a clock at 3 o\'clock.\nThe hands make a RIGHT angle (90°).\nAt 6 o\'clock, they make a STRAIGHT angle (180°).\nAt 12 o\'clock, they overlap — 0° (or 360°!)'
-      },
-      {
-        heading: 'Angles in a Triangle',
-        explanation: 'Here is an amazing fact: the three angles inside ANY triangle ALWAYS add up to exactly 180°. Always!',
-        visual: '△ Triangle angles:\n60° + 70° + 50° = 180° ✓\n90° + 45° + 45° = 180° ✓\n100° + 40° + 40° = 180° ✓',
-        example: 'A triangle has angles 65° and 75°.\nWhat is the third angle?\n65 + 75 = 140\n180 - 140 = 40°\nThe third angle is 40°.'
-      },
-      {
-        heading: 'Angles in a Rectangle',
-        explanation: 'Every corner of a rectangle is a right angle (90°). Four corners × 90° = 360°. All quadrilaterals (4-sided shapes) have angles adding to 360°.',
-        visual: '▭ Rectangle: 90° + 90° + 90° + 90° = 360°\n⬡ Any 4-sided shape: angles sum to 360°',
-        example: 'A 4-sided shape has angles 80°, 110°, 95°.\nWhat is the 4th angle?\n80+110+95 = 285\n360 - 285 = 75°\nThe 4th angle is 75°.'
       }
     ]
   },
@@ -523,6 +637,252 @@ var LESSONS = {
 // Each concept has questions at multiple difficulty levels
 
 var CONCEPT_QUESTIONS = {
+
+  place_value: [
+    {d:1, type:'choice', skill:'Place Value', concept:'Understanding place value',
+     text:'In the number 47,382, what is the value of the digit 7?',
+     hint:'💡 Find where 7 sits: ones? tens? hundreds? thousands? ten-thousands?',
+     workedExample:'In 36,421: the 6 is in the thousands place, so its value is 6,000.',
+     reteachNote:'47,382: the 7 is in the thousands place. Value = 7,000.',
+     choices:['70','700','7,000','70,000'], correct:2,
+     feedback:'✅ 7,000! In 47,382 the 7 is in the thousands place, so it is worth 7,000.',
+     wrongFeedback:'Count from the right: ones, tens, hundreds, thousands. Which position is 7 in?'},
+    {d:1, type:'choice', skill:'Rounding', concept:'Rounding to the nearest hundred',
+     text:'Round 3,847 to the nearest hundred.',
+     hint:'💡 Look at the tens digit. If it is 5 or more, round up. Less than 5, round down.',
+     workedExample:'Round 2,361 to nearest hundred: tens digit = 6. 6≥5, so round up: 2,400.',
+     reteachNote:'Hundreds digit of 3,847 is 8. Tens digit = 4. 4<5, round down. Answer: 3,800.',
+     choices:['3,800','3,900','4,000','3,850'], correct:0,
+     feedback:'✅ 3,800! Tens digit is 4 (less than 5), so round down — hundreds stay at 8.',
+     wrongFeedback:'Find the hundreds digit (8). Look at the tens digit (4). Since 4 < 5, keep hundreds the same and replace everything to the right with zeros.'},
+    {d:2, type:'input', skill:'Rounding', concept:'Rounding to the nearest thousand',
+     text:'Round 24,563 to the nearest thousand.',
+     hint:'💡 Look at the hundreds digit to decide whether to round up or down.',
+     workedExample:'Round 13,720: hundreds digit=7. 7≥5, round up. Answer: 14,000.',
+     reteachNote:'Thousands digit=4. Hundreds digit=5. 5≥5, round UP. Answer: 25,000.',
+     correct:['25,000','25000'], feedback:'✅ 25,000! Hundreds digit is 5, so round up: 24,563 → 25,000.',
+     wrongFeedback:'Thousands digit is 4. Look right at hundreds: 5. Since 5 ≥ 5, round up to 25,000.'},
+    {d:2, type:'choice', skill:'Addition', concept:'Multi-step addition word problem',
+     text:'A school collected 12,456 cans in January and 8,739 cans in February. How many cans in total?',
+     hint:'💡 Add the two numbers. Watch out for carrying!',
+     workedExample:'14,325 + 6,847: 5+7=12, write 2 carry 1; 2+4+1=7; 3+8=11, write 1 carry 1; 4+6+1=11, write 1 carry 1; 1+0+1=2. Answer: 21,172.',
+     reteachNote:'12,456 + 8,739: 6+9=15, carry 1; 5+3+1=9; 4+7=11, carry 1; 2+8+1=11, carry 1; 1+0+1=2. Answer: 21,195.',
+     choices:['21,095','21,195','21,295','20,195'], correct:1,
+     feedback:'🎉 21,195! 12,456 + 8,739 = 21,195.',
+     wrongFeedback:'Line up the digits. Start from the right: 6+9=15 (write 5, carry 1). Continue left...'},
+    {d:3, type:'input', skill:'Subtraction', concept:'Multi-step subtraction with borrowing',
+     text:'A factory had 50,000 items. It shipped 27,643. How many remain?',
+     hint:'💡 You will need to borrow across many zeros. 50,000 → 49,999 + 1 trick!',
+     workedExample:'60,000 - 34,567: Borrow from 6: 59,999 - 34,567 + 1 at ones. Wait — use: 60,000-34,567=25,433.',
+     reteachNote:'50,000 - 27,643 = 22,357.',
+     correct:['22,357','22357'], feedback:'✅ 22,357 remain! 50,000 - 27,643 = 22,357.',
+     wrongFeedback:'Use borrowing: 50,000 - 27,643. Start right: 0-3 needs borrowing... borrow from the leftmost 5.'}
+  ],
+
+  fraction_equiv: [
+    {d:1, type:'choice', skill:'Fractions', concept:'Identifying equivalent fractions',
+     text:'Which fraction is equivalent to 2/3?',
+     hint:'💡 Multiply top AND bottom by the same number.',
+     workedExample:'1/2 equivalent: ×2=2/4, ×3=3/6, ×4=4/8. All equal 1/2.',
+     reteachNote:'2/3 ×2=4/6, ×3=6/9, ×4=8/12. All equal 2/3.',
+     choices:['3/4','4/6','4/9','3/6'], correct:1,
+     feedback:'✅ 4/6! 2/3 × 2 = 4/6. Both top and bottom multiplied by 2.',
+     wrongFeedback:'Multiply both numerator and denominator of 2/3 by the same number and see which answer you get.'},
+    {d:1, type:'input', skill:'Fractions', concept:'Simplifying fractions',
+     text:'Simplify 12/16 to its simplest form.',
+     hint:'💡 Find the GCF of 12 and 16, then divide both.',
+     workedExample:'Simplify 8/12: GCF(8,12)=4. 8÷4=2, 12÷4=3. Answer: 2/3.',
+     reteachNote:'GCF(12,16)=4. 12÷4=3, 16÷4=4. Simplest: 3/4.',
+     correct:['3/4'], feedback:'✅ 3/4! GCF of 12 and 16 is 4. 12÷4=3, 16÷4=4.',
+     wrongFeedback:'GCF of 12 and 16: factors of 12: 1,2,3,4,6,12. Factors of 16: 1,2,4,8,16. Largest common = 4. Divide both by 4.'},
+    {d:2, type:'choice', skill:'Fractions', concept:'Comparing fractions with different denominators',
+     text:'Which is greater: 3/4 or 5/6?',
+     hint:'💡 Find a common denominator (12) and compare.',
+     workedExample:'Compare 2/3 and 3/4: CD=12. 2/3=8/12, 3/4=9/12. So 3/4 > 2/3.',
+     reteachNote:'CD=12. 3/4=9/12, 5/6=10/12. 10>9, so 5/6 > 3/4.',
+     choices:['3/4','5/6','They are equal','Cannot compare'], correct:1,
+     feedback:'🎉 5/6! Convert to 12ths: 3/4=9/12, 5/6=10/12. 10/12 > 9/12.',
+     wrongFeedback:'Common denominator = 12. 3/4 = ?/12 and 5/6 = ?/12. Compare the numerators.'},
+    {d:2, type:'input', skill:'Fractions', concept:'Ordering fractions',
+     text:'Order these fractions from least to greatest: 3/4, 2/3, 5/6',
+     hint:'💡 Find a common denominator (12) and convert all three.',
+     workedExample:'Order 1/2, 1/3, 2/3: CD=6. 3/6, 2/6, 4/6. Order: 1/3, 1/2, 2/3.',
+     reteachNote:'CD=12: 3/4=9/12, 2/3=8/12, 5/6=10/12. Order: 8,9,10 → 2/3, 3/4, 5/6.',
+     correct:['2/3, 3/4, 5/6','2/3 3/4 5/6'], feedback:'✅ 2/3, 3/4, 5/6! In 12ths: 8/12, 9/12, 10/12.',
+     wrongFeedback:'Convert all to 12ths: 3/4=9/12, 2/3=8/12, 5/6=10/12. Order by numerator.'},
+    {d:3, type:'choice', skill:'Fractions', concept:'Fraction equivalence word problem',
+     text:'Maya says 4/6 of the pizza is left. Priya says 2/3 is left. Are they both correct?',
+     hint:'💡 Simplify 4/6 and compare to 2/3.',
+     workedExample:'6/9 and 2/3: 6/9 ÷ 3 = 2/3. Yes, equivalent!',
+     reteachNote:'4/6 ÷ 2 = 2/3. Yes, 4/6 = 2/3 — they are equivalent fractions.',
+     choices:['Yes — 4/6 and 2/3 are equivalent','No — 4/6 is more than 2/3','No — 2/3 is more than 4/6','Cannot tell without seeing the pizza'], correct:0,
+     feedback:'🍕 Yes! 4/6 ÷ 2 = 2/3. They describe the same amount in different ways.',
+     wrongFeedback:'Simplify 4/6 by dividing top and bottom by 2. What do you get?'}
+  ],
+
+  fraction_addition: [
+    {d:1, type:'choice', skill:'Fractions', concept:'Adding fractions with like denominators',
+     text:'What is 3/8 + 2/8?',
+     hint:'💡 Same denominator — just add the tops!',
+     workedExample:'2/7 + 3/7: add tops 2+3=5, keep denominator. Answer: 5/7.',
+     reteachNote:'3/8 + 2/8: tops 3+2=5, denominator stays 8. Answer: 5/8.',
+     choices:['5/8','5/16','1/8','6/8'], correct:0,
+     feedback:'✅ 5/8! Same denominators: just add the numerators. 3+2=5.',
+     wrongFeedback:'When denominators are the same, only add the top numbers. Keep the denominator.'},
+    {d:1, type:'choice', skill:'Fractions', concept:'Adding unlike fractions — simple',
+     text:'What is 1/2 + 1/4?',
+     hint:'💡 Convert 1/2 to quarters: 1/2 = 2/4.',
+     workedExample:'1/3 + 1/6: CD=6. 1/3=2/6. 2/6+1/6=3/6=1/2.',
+     reteachNote:'1/2 = 2/4. So 2/4 + 1/4 = 3/4.',
+     choices:['2/6','3/4','2/8','1/3'], correct:1,
+     feedback:'🎉 3/4! Convert 1/2→2/4, then 2/4+1/4=3/4.',
+     wrongFeedback:'Find common denominator (4). 1/2=2/4. Now add: 2/4+1/4=?'},
+    {d:2, type:'input', skill:'Fractions', concept:'Adding unlike fractions',
+     text:'What is 2/3 + 1/4? Simplify your answer.',
+     hint:'💡 LCM of 3 and 4 is 12. Convert both fractions.',
+     workedExample:'1/2 + 1/3: CD=6. 3/6+2/6=5/6.',
+     reteachNote:'CD=12. 2/3=8/12, 1/4=3/12. 8+3=11. Answer: 11/12.',
+     correct:['11/12'], feedback:'✅ 11/12! CD=12: 2/3=8/12, 1/4=3/12. 8+3=11/12.',
+     wrongFeedback:'LCM(3,4)=12. 2/3×4=8/12. 1/4×3=3/12. Add numerators: 8+3=?'},
+    {d:2, type:'choice', skill:'Fractions', concept:'Subtracting unlike fractions',
+     text:'What is 3/4 - 1/3?',
+     hint:'💡 Common denominator = 12. Convert both then subtract.',
+     workedExample:'5/6 - 1/4: CD=12. 10/12-3/12=7/12.',
+     reteachNote:'CD=12. 3/4=9/12, 1/3=4/12. 9-4=5. Answer: 5/12.',
+     choices:['2/12','5/12','4/12','7/12'], correct:1,
+     feedback:'✅ 5/12! CD=12: 9/12-4/12=5/12.',
+     wrongFeedback:'CD=12. 3/4=9/12, 1/3=4/12. Subtract: 9-4=? Keep denominator 12.'},
+    {d:3, type:'input', skill:'Fractions', concept:'Adding unlike fractions word problem',
+     text:'Priya spent 2/5 of her day reading and 1/3 of her day playing. What fraction of her day was this in total?',
+     hint:'💡 LCM of 5 and 3 is 15.',
+     workedExample:'1/4 + 2/5: CD=20. 5/20+8/20=13/20.',
+     reteachNote:'CD=15. 2/5=6/15, 1/3=5/15. 6+5=11. Answer: 11/15.',
+     correct:['11/15'], feedback:'📚 11/15! 2/5=6/15, 1/3=5/15. 6+5=11/15 of her day.',
+     wrongFeedback:'LCM(5,3)=15. 2/5=?/15 (×3). 1/3=?/15 (×5). Add numerators.'}
+  ],
+
+  fraction_multiply: [
+    {d:1, type:'choice', skill:'Fractions', concept:'Multiplying simple fractions',
+     text:'What is 1/2 × 1/4?',
+     hint:'💡 Top × top, bottom × bottom.',
+     workedExample:'1/3 × 1/5: (1×1)/(3×5) = 1/15.',
+     reteachNote:'(1×1)/(2×4) = 1/8.',
+     choices:['1/8','2/8','1/6','2/6'], correct:0,
+     feedback:'✅ 1/8! 1×1=1, 2×4=8. Answer: 1/8.',
+     wrongFeedback:'Multiply tops together: 1×1=1. Multiply bottoms: 2×4=8.'},
+    {d:1, type:'input', skill:'Fractions', concept:'Multiplying fraction by whole number',
+     text:'What is 5 × 2/3?',
+     hint:'💡 Write 5 as 5/1. Then multiply.',
+     workedExample:'4 × 3/5 = 12/5 = 2 and 2/5.',
+     reteachNote:'5/1 × 2/3 = 10/3 = 3 and 1/3.',
+     correct:['10/3','3 and 1/3','3 1/3'], feedback:'✅ 10/3 = 3 and 1/3! 5×2=10, 1×3=3.',
+     wrongFeedback:'Write 5 as 5/1. Multiply: (5×2)/(1×3) = 10/3. Convert to mixed number.'},
+    {d:2, type:'choice', skill:'Fractions', concept:'Multiplying fractions and simplifying',
+     text:'What is 3/4 × 8/9?',
+     hint:'💡 Multiply then simplify. Or cross-cancel first.',
+     workedExample:'2/3 × 3/4: 6/12 = 1/2. Or cross-cancel: 2/3×3/4 → 1/1×1/2=1/2.',
+     reteachNote:'3×8=24, 4×9=36. 24/36: GCF=12. 24÷12=2, 36÷12=3. Answer: 2/3.',
+     choices:['11/13','24/36','2/3','3/4'], correct:2,
+     feedback:'🎉 2/3! 3×8=24, 4×9=36. 24/36=2/3.',
+     wrongFeedback:'Multiply: (3×8)/(4×9)=24/36. Simplify by dividing by GCF(24,36)=12.'},
+    {d:2, type:'input', skill:'Fractions', concept:'Fraction multiplication word problem',
+     text:'A recipe needs 3/4 cup of oil. If you make 6 batches, how many cups of oil do you need?',
+     hint:'💡 6 × 3/4. Write 6 as 6/1.',
+     workedExample:'5 batches × 2/3 cup = 10/3 = 3 and 1/3 cups.',
+     reteachNote:'6 × 3/4 = 18/4 = 4 and 2/4 = 4 and 1/2.',
+     correct:['4 and 1/2','4.5','18/4','9/2'], feedback:'✅ 4 and 1/2 cups! 6×3/4=18/4=4½.',
+     wrongFeedback:'6 × 3/4 = 18/4. Simplify: 18÷4=4 remainder 2, so 4 and 2/4 = 4 and 1/2.'},
+    {d:3, type:'choice', skill:'Fractions', concept:'Fraction of a fraction',
+     text:'A garden is 4/5 of an acre. 2/3 of it is planted. How many acres are planted?',
+     hint:'💡 "2/3 of 4/5" means 2/3 × 4/5.',
+     workedExample:'1/2 of 3/4 = 1/2 × 3/4 = 3/8.',
+     reteachNote:'2/3 × 4/5 = 8/15 acre.',
+     choices:['6/8 acre','8/15 acre','2/5 acre','6/15 acre'], correct:1,
+     feedback:'🌱 8/15 acre! 2/3 × 4/5 = 8/15.',
+     wrongFeedback:'"2/3 of 4/5" = 2/3 × 4/5. Multiply tops: 2×4=8. Bottoms: 3×5=15.'}
+  ],
+
+  decimals: [
+    {d:1, type:'choice', skill:'Decimals', concept:'Place value of decimals',
+     text:'In 5.73, what does the 3 represent?',
+     hint:'💡 Count decimal places: 1st after point = tenths, 2nd = hundredths.',
+     workedExample:'In 4.82: 8 = 8 tenths, 2 = 2 hundredths.',
+     reteachNote:'5.73: 7=tenths, 3=hundredths.',
+     choices:['3 ones','3 tenths','3 hundredths','3 thousandths'], correct:2,
+     feedback:'✅ 3 hundredths! The 2nd digit after the decimal is always hundredths.',
+     wrongFeedback:'1st decimal place = tenths. 2nd decimal place = hundredths. Which is the 3?'},
+    {d:1, type:'input', skill:'Decimals', concept:'Converting fractions to decimals',
+     text:'Write 3/4 as a decimal.',
+     hint:'💡 Divide the top by the bottom: 3 ÷ 4.',
+     workedExample:'1/4: 1÷4=0.25. 1/2: 1÷2=0.5.',
+     reteachNote:'3÷4=0.75.',
+     correct:['0.75','.75'], feedback:'✅ 0.75! 3÷4=0.75. Also: 3/4=75/100=0.75.',
+     wrongFeedback:'Divide 3 ÷ 4. Or: 3/4 = 75/100 = 0.75.'},
+    {d:2, type:'choice', skill:'Decimals', concept:'Comparing decimals',
+     text:'Which decimal is greatest: 0.6, 0.59, 0.609?',
+     hint:'💡 Write as 0.600, 0.590, 0.609. Compare digit by digit.',
+     workedExample:'Compare 0.4 and 0.38: 0.40 vs 0.38. Tenths: 4 > 3. So 0.4 wins.',
+     reteachNote:'0.600 vs 0.590 vs 0.609: tenths all 6 or 5. 0.590 out. 0.600 vs 0.609: hundredths 0=0, thousandths 0 vs 9: 0.609 wins.',
+     choices:['0.6','0.59','0.609','All equal'], correct:2,
+     feedback:'✅ 0.609! 0.600 < 0.609 by 9 thousandths.',
+     wrongFeedback:'Write: 0.600, 0.590, 0.609. Compare left to right. Drop 0.59 first. Then 0.600 vs 0.609.'},
+    {d:2, type:'input', skill:'Decimals', concept:'Adding decimals',
+     text:'Add 3.85 + 1.7',
+     hint:'💡 Line up decimal points. Write 1.7 as 1.70.',
+     workedExample:'2.4 + 1.35: 2.40+1.35=3.75.',
+     reteachNote:'3.85 + 1.70 = 5.55.',
+     correct:['5.55'], feedback:'✅ 5.55! 3.85 + 1.70 = 5.55.',
+     wrongFeedback:'Write 1.7 as 1.70. Add: 3.85 + 1.70. Hundredths: 5+0=5. Tenths: 8+7=15, write 5 carry 1. Ones: 3+1+1=5.'},
+    {d:3, type:'choice', skill:'Decimals', concept:'Decimal word problem',
+     text:'A bottle holds 1.5 litres. A jug holds 0.85 litres. How much more does the bottle hold?',
+     hint:'💡 Subtract: 1.5 - 0.85. Write 1.5 as 1.50.',
+     workedExample:'2.3 - 0.75: 2.30-0.75=1.55.',
+     reteachNote:'1.50 - 0.85 = 0.65 litres.',
+     choices:['0.55 L','0.65 L','0.75 L','0.85 L'], correct:1,
+     feedback:'💧 0.65 L! 1.50 - 0.85 = 0.65.',
+     wrongFeedback:'1.5 = 1.50. Subtract: 1.50 - 0.85. Hundredths: 0-5 (borrow): 10-5=5. Tenths: 4-8 (borrow): 14-8=6. Ones: 0.'}
+  ],
+
+  unit_conversions: [
+    {d:1, type:'choice', skill:'Measurement', concept:'Converting kilometres to metres',
+     text:'How many metres are in 3.5 km?',
+     hint:'💡 1 km = 1,000 m. Multiply by 1,000.',
+     workedExample:'2.4 km = 2.4 × 1,000 = 2,400 m.',
+     reteachNote:'3.5 × 1,000 = 3,500 m.',
+     choices:['350 m','3,500 m','35,000 m','350,000 m'], correct:1,
+     feedback:'✅ 3,500 m! 3.5 × 1,000 = 3,500.',
+     wrongFeedback:'1 km = 1,000 m. Bigger → smaller means multiply. 3.5 × 1,000 = ?'},
+    {d:1, type:'input', skill:'Measurement', concept:'Converting grams to kilograms',
+     text:'Convert 4,500 g to kg.',
+     hint:'💡 1 kg = 1,000 g. Smaller → bigger means divide.',
+     workedExample:'2,400 g ÷ 1,000 = 2.4 kg.',
+     reteachNote:'4,500 ÷ 1,000 = 4.5 kg.',
+     correct:['4.5','4.5 kg'], feedback:'✅ 4.5 kg! 4,500 ÷ 1,000 = 4.5.',
+     wrongFeedback:'Grams → kilograms: divide by 1,000. 4,500 ÷ 1,000 = ?'},
+    {d:2, type:'choice', skill:'Measurement', concept:'Converting minutes to seconds',
+     text:'A race takes 2 minutes and 45 seconds. How many seconds is that in total?',
+     hint:'💡 1 minute = 60 seconds. Convert 2 minutes, then add 45.',
+     workedExample:'3 min 20 sec: 3×60+20=180+20=200 seconds.',
+     reteachNote:'2×60 + 45 = 120 + 45 = 165 seconds.',
+     choices:['125 s','145 s','165 s','205 s'], correct:2,
+     feedback:'⏱️ 165 seconds! 2×60=120, 120+45=165.',
+     wrongFeedback:'Convert minutes first: 2×60=120 seconds. Then add the 45 seconds.'},
+    {d:2, type:'input', skill:'Measurement', concept:'Unit conversion in context',
+     text:'A ribbon is 2.4 m long. How many centimetres is that?',
+     hint:'💡 1 m = 100 cm. Multiply by 100.',
+     workedExample:'3.7 m = 3.7 × 100 = 370 cm.',
+     reteachNote:'2.4 × 100 = 240 cm.',
+     correct:['240','240 cm'], feedback:'✅ 240 cm! 2.4 × 100 = 240.',
+     wrongFeedback:'metres → centimetres: multiply by 100. 2.4 × 100 = ?'},
+    {d:3, type:'choice', skill:'Measurement', concept:'Multi-step conversion problem',
+     text:'A water tank holds 5.2 litres. You pour out 850 mL. How many mL remain?',
+     hint:'💡 Convert 5.2 L to mL first. Then subtract.',
+     workedExample:'3.1 L = 3,100 mL. Pour 400 mL: 3,100 - 400 = 2,700 mL.',
+     reteachNote:'5.2 L = 5,200 mL. 5,200 - 850 = 4,350 mL.',
+     choices:['3,350 mL','4,250 mL','4,350 mL','4,450 mL'], correct:2,
+     feedback:'💧 4,350 mL! 5.2 L = 5,200 mL. 5,200 - 850 = 4,350.',
+     wrongFeedback:'Step 1: 5.2 L = 5,200 mL (×1,000). Step 2: 5,200 - 850 = ?'}
+  ],
 
   multiplication: [
     {d:1, type:'choice', skill:'Multiplication', concept:'Multiplying single digits',
@@ -852,44 +1212,44 @@ var CONCEPT_QUESTIONS = {
   ],
 
   angles: [
-    {d:1, type:'choice', skill:'Angles', concept:'Types of angles',
-     text:'An angle measures 75°. What type of angle is it?',
-     hint:'💡 Acute < 90°. Right = 90°. Obtuse = 90°–180°.',
-     workedExample:'65° is less than 90°, so it is ACUTE. 120° is between 90° and 180°, so OBTUSE.',
-     reteachNote:'75 is less than 90 → ACUTE.',
-     choices:['Obtuse','Right angle','Acute','Straight'], correct:2,
-     feedback:'📐 75° is ACUTE — it is less than 90°. Think: acute angles look sharp, like a thin wedge.',
-     wrongFeedback:'Compare 75 to 90. Is 75 less than 90, equal to 90, or between 90 and 180?'},
-    {d:1, type:'input', skill:'Angles', concept:'Angles in a triangle',
-     text:'A triangle has angles of 55° and 80°. What is the third angle?',
-     hint:'💡 Angles in any triangle always add up to 180°.',
-     workedExample:'Triangle with 60° and 70°: third angle = 180-60-70=50°.',
-     reteachNote:'55+80=135. Third angle = 180-135=45.',
-     correct:['45','45 degrees','45°'], feedback:'📐 45°! 180-55-80=45. Triangle angles ALWAYS sum to 180°.',
-     wrongFeedback:'Add the two known angles. Subtract from 180.'},
-    {d:2, type:'choice', skill:'Angles', concept:'Angles on a straight line',
-     text:'Two angles sit on a straight line. One angle is 113°. What is the other?',
-     hint:'💡 Angles on a straight line add up to 180°.',
-     workedExample:'One angle is 60°, so the other is 180-60=120°.',
-     reteachNote:'180-113=67.',
-     choices:['57°','67°','77°','87°'], correct:1,
-     feedback:'✅ 67°! Angles on a straight line sum to 180°. 180-113=67.',
-     wrongFeedback:'Straight line = 180°. 180 minus the known angle = the other angle.'},
-    {d:2, type:'input', skill:'Angles', concept:'Angles in a quadrilateral',
-     text:'A quadrilateral has three angles: 95°, 110°, and 75°. Find the fourth angle.',
-     hint:'💡 Angles in any quadrilateral (4-sided shape) sum to 360°.',
-     workedExample:'Three angles: 80°+100°+90°=270°. Fourth = 360-270=90°.',
-     reteachNote:'95+110+75=280. Fourth angle = 360-280=80.',
-     correct:['80','80 degrees','80°'], feedback:'📐 80°! 360-95-110-75=80. Quadrilateral angles always sum to 360°.',
-     wrongFeedback:'Add the three known angles. Subtract from 360.'},
-    {d:3, type:'choice', skill:'Angles', concept:'Vertically opposite angles',
-     text:'Two straight lines cross. One angle is 42°. What is the angle directly opposite it?',
-     hint:'💡 Vertically opposite angles are EQUAL. They are the angles across from each other at a crossing point.',
-     workedExample:'Lines cross, one angle is 70°. The angle directly opposite is also 70°.',
-     reteachNote:'Vertically opposite angles are always equal.',
-     choices:['42°','48°','138°','180°'], correct:0,
-     feedback:'⭐ 42°! Vertically opposite angles are always equal. When two lines cross, opposite angles match.',
-     wrongFeedback:'Vertically opposite angles — the ones directly across from each other — are always equal to each other.'}
+    {d:1, type:'choice', skill:'Geometry', concept:'Types of angles',
+     text:'An angle of 135° is classified as:',
+     hint:'💡 Acute < 90°. Right = 90°. Obtuse 90-180°. Straight = 180°.',
+     workedExample:'75° is acute (less than 90°). 100° is obtuse (between 90-180°).',
+     reteachNote:'135° is between 90° and 180°, so it is obtuse.',
+     choices:['Acute','Right','Obtuse','Straight'], correct:2,
+     feedback:'✅ Obtuse! 135° is between 90° and 180°.',
+     wrongFeedback:'Acute < 90. Right = 90. Obtuse = 90 to 180. Straight = 180. Where does 135° fit?'},
+    {d:1, type:'input', skill:'Geometry', concept:'Angles in a triangle',
+     text:'A triangle has angles 65° and 80°. What is the third angle?',
+     hint:'💡 All three angles in a triangle add to 180°.',
+     workedExample:'Triangle: 50° and 70°. Third = 180-50-70 = 60°.',
+     reteachNote:'180 - 65 - 80 = 35°.',
+     correct:['35','35°','35 degrees'], feedback:'✅ 35°! 180 - 65 - 80 = 35.',
+     wrongFeedback:'All triangle angles sum to 180°. 65 + 80 = 145. 180 - 145 = ?'},
+    {d:2, type:'choice', skill:'Geometry', concept:'Angles in a quadrilateral',
+     text:'A quadrilateral has angles 95°, 110°, and 75°. What is the fourth angle?',
+     hint:'💡 All four angles in a quadrilateral add to 360°.',
+     workedExample:'Quad angles: 80°, 100°, 90°. Fourth = 360-80-100-90=90°.',
+     reteachNote:'360 - 95 - 110 - 75 = 80°.',
+     choices:['70°','80°','90°','100°'], correct:1,
+     feedback:'✅ 80°! 95+110+75=280. 360-280=80.',
+     wrongFeedback:'Quadrilateral angles sum to 360°. Add the three known: 95+110+75=? Then 360-that sum.'},
+    {d:2, type:'input', skill:'Geometry', concept:'Lines of symmetry',
+     text:'How many lines of symmetry does a regular pentagon have?',
+     hint:'💡 A regular polygon has as many lines of symmetry as it has sides.',
+     workedExample:'Regular hexagon: 6 sides → 6 lines of symmetry.',
+     reteachNote:'Pentagon: 5 sides → 5 lines of symmetry.',
+     correct:['5'], feedback:'✅ 5! A regular pentagon has 5 sides and 5 lines of symmetry.',
+     wrongFeedback:'For any regular polygon: lines of symmetry = number of sides.'},
+    {d:3, type:'choice', skill:'Geometry', concept:'Angle problem solving',
+     text:'Two angles on a straight line are in ratio 2:3. What are the two angles?',
+     hint:'💡 Straight line = 180°. Ratio 2:3 means 2 parts and 3 parts. Total 5 parts = 180°.',
+     workedExample:'Ratio 1:2 on straight line: 3 parts=180°. 1 part=60°. Angles: 60° and 120°.',
+     reteachNote:'5 parts = 180°. 1 part = 36°. Angles: 2×36=72° and 3×36=108°.',
+     choices:['60° and 90°','72° and 108°','80° and 100°','36° and 144°'], correct:1,
+     feedback:'📐 72° and 108°! 5 parts=180°, each part=36°. 2×36=72, 3×36=108.',
+     wrongFeedback:'Total = 180°. Ratio 2:3, total parts=5. One part = 180÷5=36°. Angles = 2×36 and 3×36.'}
   ],
 
   percentages: [
@@ -1111,23 +1471,33 @@ function isMastered(conceptId){
 function isUnlocked(conceptId){
   var concept=MATH_CONCEPTS.find(function(c){return c.id===conceptId;});
   if(!concept) return false;
-  if(!concept.unlockAfter) return true; // first concept always unlocked
+  if(concept.level===1) return true; // always unlocked — already known
+  if(!concept.unlockAfter) return true; // first in chain
+  var prereq=MATH_CONCEPTS.find(function(c){return c.id===concept.unlockAfter;});
+  if(!prereq) return true;
+  if(prereq.level===1) return true; // prereq is "known", so this is automatically accessible
   return isMastered(concept.unlockAfter);
 }
 
 // ── TODAY'S CONCEPT SELECTION ─────────────────────────────────
 function getTodaysMathConcept(){
   if(!state.todayConcept || state.todayConceptDate !== new Date().toDateString()){
-    // Find the first unlocked concept that is not mastered yet
     var chosen = null;
+    // Prefer unlocked level:3 concepts (the ones that need teaching)
     for(var i=0; i<MATH_CONCEPTS.length; i++){
       var c = MATH_CONCEPTS[i];
-      if(isUnlocked(c.id) && !isMastered(c.id)){
+      if(c.level===3 && isUnlocked(c.id) && !isMastered(c.id)){
         chosen = c.id;
         break;
       }
     }
-    // If all mastered (unlikely), cycle back to hardest
+    // Fall back to any unmastered concept
+    if(!chosen){
+      for(var i=0; i<MATH_CONCEPTS.length; i++){
+        var c = MATH_CONCEPTS[i];
+        if(isUnlocked(c.id) && !isMastered(c.id)){ chosen = c.id; break; }
+      }
+    }
     if(!chosen) chosen = MATH_CONCEPTS[MATH_CONCEPTS.length-1].id;
     state.todayConcept = chosen;
     state.todayConceptDate = new Date().toDateString();
@@ -1140,35 +1510,51 @@ function getTodaysMathConcept(){
 function buildMathSession(){
   var mainConcept = getTodaysMathConcept();
   var m = getMastery(mainConcept);
-  // Determine difficulty: start at 1, scale up based on recent accuracy
   var sessionAccuracy = m.attempts>0 ? masteryPct(mainConcept) : 50;
   var difficultyBias = sessionAccuracy >= 80 ? 3 : sessionAccuracy >= 60 ? 2 : 1;
 
-  // Get main concept questions sorted by difficulty
-  var mainQs = (CONCEPT_QUESTIONS[mainConcept]||[]).slice();
-  mainQs.sort(function(a,b){ return a.d - b.d; });
+  // Phase 1: warmup from ALL level:1 (known) concepts
+  var knownConcepts = MATH_CONCEPTS.filter(function(c){return c.level===1;}).map(function(c){return c.id;});
+  var warmupPool = [];
+  knownConcepts.forEach(function(cId){
+    var qs = CONCEPT_QUESTIONS[cId]||[];
+    warmupPool = warmupPool.concat(qs);
+  });
+  // Also include mastered level:3 concepts in warmup pool
+  MATH_CONCEPTS.filter(function(c){return c.level===3 && isMastered(c.id);}).forEach(function(c){
+    var qs = CONCEPT_QUESTIONS[c.id]||[];
+    warmupPool = warmupPool.concat(qs);
+  });
+  warmupPool.sort(function(){return Math.random()-0.5;});
+  // Mix difficulties: more hard questions as student improves overall
+  var totalSessions = Object.keys(state.mastery||{}).reduce(function(sum,k){return sum+(state.mastery[k].attempts||0);},0);
+  var overallLevel = totalSessions > 50 ? 3 : totalSessions > 20 ? 2 : 1;
+  var easyPool = warmupPool.filter(function(q){return q.d<=2;});
+  var hardPool = warmupPool.filter(function(q){return q.d===3;});
+  easyPool.sort(function(){return Math.random()-0.5;});
+  hardPool.sort(function(){return Math.random()-0.5;});
+  var hardCount = overallLevel===3 ? 8 : overallLevel===2 ? 5 : 2;
+  var warmupQs = easyPool.slice(0, 20-hardCount).concat(hardPool.slice(0, hardCount));
+  warmupQs.sort(function(){return Math.random()-0.5;});
+  warmupQs = warmupQs.slice(0,20);
 
-  // Adaptive difficulty: pick questions at appropriate level
-  var selected = [];
-  // First 3: at or below current difficulty bias
-  var easy = mainQs.filter(function(q){return q.d<=difficultyBias;});
-  var hard = mainQs.filter(function(q){return q.d>difficultyBias;});
-  selected = selected.concat(easy.slice(0,3)).concat(hard.slice(0,2));
+  // Phase 2: lesson break marker
+  var lessonBreak = {type:'lesson_break', conceptId:mainConcept, skill:'Lesson', concept:"Today's Concept: "+(MATH_CONCEPTS.find(function(c){return c.id===mainConcept;})||{}).title};
 
-  // Fill to at least 8 questions from main concept
-  var remaining = mainQs.filter(function(q){return selected.indexOf(q)<0;});
-  selected = selected.concat(remaining);
-  selected = selected.slice(0,10); // cap at 10 main concept questions
+  // Phase 3: concept questions
+  var conceptQs = (CONCEPT_QUESTIONS[mainConcept]||[]).slice();
+  conceptQs.sort(function(a,b){return a.d-b.d;});
+  var easyConceptQs = conceptQs.filter(function(q){return q.d<=difficultyBias;});
+  var hardConceptQs = conceptQs.filter(function(q){return q.d>difficultyBias;});
+  var selected = easyConceptQs.concat(hardConceptQs).slice(0,10);
 
-  // Add 2-3 review questions from weak concepts
-  var reviewQs = getReviewQuestions(mainConcept, 3);
-  selected = selected.concat(reviewQs);
+  var allQs = warmupQs.concat([lessonBreak]).concat(selected);
 
   return {
     concept: mainConcept,
     conceptObj: MATH_CONCEPTS.find(function(c){return c.id===mainConcept;}),
-    questions: selected,
-    hasLesson: LESSONS[mainConcept] !== undefined && (m.attempts === 0)
+    questions: allQs,
+    hasLesson: LESSONS[mainConcept]!==undefined
   };
 }
 
@@ -2272,6 +2658,18 @@ function renderAdaptiveQuestion(){
   if(!qs||!qs.length){finishSubject();return;}
   var q=qs[currentQ];
   if(!q){finishSubject();return;}
+  if(q && q.type==='lesson_break'){
+    var total=qs.length;
+    document.getElementById('q-num').textContent='Concept Lesson';
+    document.getElementById('lesson-prog-fill').style.width=((currentQ+1)/total*100)+'%';
+    var lsn=LESSONS[q.conceptId];
+    if(!lsn){currentQ++;renderAdaptiveQuestion();return;}
+    currentLessonId=q.conceptId;
+    currentLessonCallback=function(){currentQ++;renderAdaptiveQuestion();};
+    lessonStep=-1;
+    showLessonStep(lsn,currentLessonCallback);
+    return;
+  }
   var total=qs.length;
   selectedChoice=null;attemptCount=0;
   document.getElementById('q-num').textContent='Q '+(currentQ+1)+' / '+total;
