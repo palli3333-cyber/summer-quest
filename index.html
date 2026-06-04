@@ -1506,49 +1506,337 @@ function getTodaysMathConcept(){
   return state.todayConcept;
 }
 
+// ── DAILY QUESTION GENERATOR ──────────────────────────────────
+// Uses today's date as seed so questions are fresh every day
+function getDailySeed(){
+  var d=new Date();
+  return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
+}
+function makeRng(seed){
+  var s=seed|0;
+  return function(lo,hi){
+    s=Math.imul(s^(s>>>16),0x45d9f3b);s=Math.imul(s^(s>>>16),0x45d9f3b);s^=s>>>16;
+    var v=((s>>>0)/4294967296);
+    if(lo===undefined)return v;
+    return lo+Math.floor(v*(hi-lo+1));
+  };
+}
+function pick(rng,arr){return arr[rng(0,arr.length-1)];}
+function frac(n,d){return n+'/'+d;}
+
+function generateDailyWarmup(seed, totalSessions){
+  var rng=makeRng(seed);
+  var level = totalSessions>50?3:totalSessions>20?2:1;
+  var qs=[];
+
+  // ── MULTIPLICATION (5 questions) ──────────────────────────────
+  for(var i=0;i<5;i++){
+    var d=level>=2&&i>=2?2:1;
+    var a,b;
+    if(d===1){a=rng(2,12);b=rng(2,12);}
+    else{a=rng(12,99);b=rng(2,12);}
+    var ans=a*b;
+    qs.push({d:d,type:'input',skill:'Multiplication',concept:'Multiplying numbers',
+      text:'What is '+a+' × '+b+'?',
+      hint:'💡 Multiply the two numbers together.',
+      workedExample:'Example: 7 × 8 = 56',
+      reteachNote:a+' × '+b+' = '+ans,
+      correct:[String(ans)],
+      feedback:'✅ '+ans+'! '+a+' × '+b+' = '+ans+'.',
+      wrongFeedback:'Try again: '+a+' × '+b+'. Use your times tables or long multiplication.'});
+  }
+
+  // ── DIVISION (4 questions) ────────────────────────────────────
+  for(var i=0;i<4;i++){
+    var b=rng(2,12),ans=rng(2,12),a=b*ans;
+    var d=level>=2&&i>=2?2:1;
+    if(d===2){b=rng(2,12);ans=rng(10,25);a=b*ans;}
+    qs.push({d:d,type:'input',skill:'Division',concept:'Dividing numbers',
+      text:'What is '+a+' ÷ '+b+'?',
+      hint:'💡 Think: what times '+b+' gives '+a+'?',
+      workedExample:'Example: 48 ÷ 6 = 8 (because 6 × 8 = 48)',
+      reteachNote:a+' ÷ '+b+' = '+ans,
+      correct:[String(ans)],
+      feedback:'✅ '+ans+'! '+a+' ÷ '+b+' = '+ans+'.',
+      wrongFeedback:a+' ÷ '+b+': how many times does '+b+' go into '+a+'?'});
+  }
+
+  // ── ADDITION (3 questions) ────────────────────────────────────
+  for(var i=0;i<3;i++){
+    var a=rng(100,9999),b=rng(100,9999),ans=a+b;
+    qs.push({d:level>=2?2:1,type:'input',skill:'Addition',concept:'Adding large numbers',
+      text:'What is '+a.toLocaleString()+' + '+b.toLocaleString()+'?',
+      hint:'💡 Line up by place value and add column by column.',
+      workedExample:'Example: 1,234 + 5,678 = 6,912',
+      reteachNote:a+' + '+b+' = '+ans,
+      correct:[String(ans),ans.toLocaleString()],
+      feedback:'✅ '+ans.toLocaleString()+'!',
+      wrongFeedback:'Add column by column from right to left. '+a+' + '+b+' = '+ans});
+  }
+
+  // ── SUBTRACTION (3 questions) ─────────────────────────────────
+  for(var i=0;i<3;i++){
+    var b=rng(100,4999),ans=rng(100,4999),a=b+ans;
+    qs.push({d:level>=2?2:1,type:'input',skill:'Subtraction',concept:'Subtracting large numbers',
+      text:'What is '+a.toLocaleString()+' − '+b.toLocaleString()+'?',
+      hint:'💡 Line up by place value and subtract, borrowing when needed.',
+      workedExample:'Example: 5,000 − 2,347 = 2,653',
+      reteachNote:a+' − '+b+' = '+ans,
+      correct:[String(ans),ans.toLocaleString()],
+      feedback:'✅ '+ans.toLocaleString()+'!',
+      wrongFeedback:a+' − '+b+' = '+ans+'. Borrow from the left when a digit is too small.'});
+  }
+
+  // ── WORD PROBLEMS (3 questions) ───────────────────────────────
+  var wpTemplates=[
+    function(){var u=rng(2,9),p=rng(10,50),t=u*p;return{text:'A box holds '+p+' apples. How many apples are in '+u+' boxes?',ans:t,hint:'💡 Multiply: '+u+' × '+p};},
+    function(){var t=rng(100,500),g=rng(2,8),each=Math.floor(t/g),r=t-each*g;return{text:''+t+' stickers are shared equally among '+g+' friends. How many does each friend get?',ans:each,hint:'💡 Divide: '+t+' ÷ '+g};},
+    function(){var a=rng(200,800),b=rng(50,200),ans=a+b;return{text:'A school library has '+a+' fiction books and '+b+' non-fiction books. How many books in total?',ans:ans,hint:'💡 Add the two amounts.'};},
+    function(){var s=rng(500,2000),sp=rng(50,400),ans=s-sp;return{text:'Maya had $'+s+'. She spent $'+sp+'. How much does she have left?',ans:ans,hint:'💡 Subtract: '+s+' − '+sp};},
+    function(){var l=rng(3,15),w=rng(2,10),area=l*w,perim=2*(l+w);var which=rng(0,1);return{text:'A rectangle is '+l+' cm long and '+w+' cm wide. What is its '+(which?'area':'perimeter')+'?',ans:which?area:perim,hint:which?'💡 Area = length × width':'💡 Perimeter = 2 × (length + width)'};},
+  ];
+  for(var i=0;i<3;i++){
+    var wp=wpTemplates[rng(0,wpTemplates.length-1)]();
+    qs.push({d:2,type:'input',skill:'Word Problems',concept:'Solving word problems',
+      text:wp.text,hint:wp.hint,
+      workedExample:'Read carefully, identify the operation, solve step by step.',
+      reteachNote:'Answer: '+wp.ans,
+      correct:[String(wp.ans),wp.ans.toLocaleString()],
+      feedback:'🎉 Correct! '+wp.ans,
+      wrongFeedback:wp.hint+'. Answer: '+wp.ans});
+  }
+
+  // ── FRACTIONS (2 questions) ───────────────────────────────────
+  var denoms=[2,3,4,5,6,8,10];
+  var d1=pick(rng,denoms);
+  var n1=rng(1,d1-1);
+  var d2=d1;
+  var n2=rng(1,d2-1);
+  var sumN=n1+n2,sumD=d1;
+  qs.push({d:1,type:'input',skill:'Fractions',concept:'Adding fractions (same denominator)',
+    text:'What is '+frac(n1,d1)+' + '+frac(n2,d2)+'?',
+    hint:'💡 Same denominator — just add the tops!',
+    workedExample:'1/5 + 2/5 = 3/5',
+    reteachNote:n1+'/'+d1+' + '+n2+'/'+d2+' = '+sumN+'/'+sumD,
+    correct:[sumN+'/'+sumD],
+    feedback:'✅ '+sumN+'/'+sumD+'!',
+    wrongFeedback:'Same denominator: add only the numerators. '+n1+'+'+n2+'='+sumN+', keep /'+sumD});
+
+  var d3=pick(rng,[2,3,4,5]);
+  var n3=rng(1,d3-1);
+  var d4=pick(rng,[2,3,4,5].filter(function(x){return x!==d3;}));
+  var n4=rng(1,d4-1);
+  var lcm=d3*d4/gcd(d3,d4);
+  var newN3=n3*(lcm/d3),newN4=n4*(lcm/d4);
+  var fracSumN=newN3+newN4,fracSumD=lcm;
+  var g=gcd(fracSumN,fracSumD);
+  var simN=fracSumN/g,simD=fracSumD/g;
+  qs.push({d:2,type:'input',skill:'Fractions',concept:'Adding fractions (different denominators)',
+    text:'What is '+frac(n3,d3)+' + '+frac(n4,d4)+'? Simplify your answer.',
+    hint:'💡 Common denominator = '+lcm+'. Convert both fractions first.',
+    workedExample:'1/2 + 1/3: CD=6. 3/6+2/6=5/6',
+    reteachNote:'CD='+lcm+'. '+n3+'/'+d3+'='+newN3+'/'+lcm+', '+n4+'/'+d4+'='+newN4+'/'+lcm+'. Sum='+simN+'/'+simD,
+    correct:[simN+'/'+simD,fracSumN+'/'+fracSumD],
+    feedback:'✅ '+simN+'/'+simD+'!',
+    wrongFeedback:'Find common denominator ('+lcm+'). Convert then add numerators.'});
+
+  // Shuffle the full set
+  qs.sort(function(){return rng()-0.5;});
+  return qs.slice(0,20);
+}
+
+function gcd(a,b){return b===0?a:gcd(b,a%b);}
+
+function generateConceptQuestions(conceptId, seed, difficulty){
+  var rng=makeRng(seed+conceptId.length*97);
+  var qs=[];
+
+  if(conceptId==='place_value'){
+    for(var i=0;i<10;i++){
+      var num=rng(1000,99999);
+      var digits=String(num).split('');
+      var pos=rng(0,digits.length-1);
+      var placeNames=['ones','tens','hundreds','thousands','ten-thousands'];
+      var placeName=placeNames[digits.length-1-pos];
+      var val=parseInt(digits[pos])*Math.pow(10,digits.length-1-pos);
+      var roundTo=pick(rng,['hundred','thousand','ten']);
+      var rounded=roundTo==='hundred'?Math.round(num/100)*100:roundTo==='thousand'?Math.round(num/1000)*1000:Math.round(num/10)*10;
+      if(i%2===0){
+        qs.push({d:i<4?1:i<7?2:3,type:'input',skill:'Place Value',concept:'Value of a digit',
+          text:'In the number '+num.toLocaleString()+', what is the value of the digit '+digits[pos]+'?',
+          hint:'💡 '+digits[pos]+' is in the '+placeName+' place.',
+          workedExample:'In 5,832: the 8 is in the hundreds place, value = 800.',
+          reteachNote:'Value = '+val.toLocaleString(),
+          correct:[String(val),val.toLocaleString()],
+          feedback:'✅ '+val.toLocaleString()+'! The '+digits[pos]+' is in the '+placeName+' place.',
+          wrongFeedback:'Count from the right: ones, tens, hundreds, thousands. The '+digits[pos]+' is in the '+placeName+' place = '+val.toLocaleString()});
+      } else {
+        qs.push({d:i<4?1:i<7?2:3,type:'input',skill:'Rounding',concept:'Rounding to nearest '+roundTo,
+          text:'Round '+num.toLocaleString()+' to the nearest '+roundTo+'.',
+          hint:'💡 Find the '+roundTo+'s digit. Look at the digit to its right.',
+          workedExample:'Round 3,847 to nearest hundred: tens=4, 4<5 → 3,800.',
+          reteachNote:'Answer: '+rounded.toLocaleString(),
+          correct:[String(rounded),rounded.toLocaleString()],
+          feedback:'✅ '+rounded.toLocaleString()+'!',
+          wrongFeedback:'Look at the digit just to the right of the '+roundTo+'s place. ≥5 round up, <5 round down. Answer: '+rounded.toLocaleString()});
+      }
+    }
+  }
+
+  if(conceptId==='fraction_addition'){
+    var denoms=[2,3,4,5,6,8,10];
+    for(var i=0;i<10;i++){
+      var d1=pick(rng,denoms),d2=pick(rng,denoms.filter(function(x){return x!==d1;}));
+      var n1=rng(1,d1-1),n2=rng(1,d2-1);
+      var lcm=d1*d2/gcd(d1,d2);
+      var nn1=n1*(lcm/d1),nn2=n2*(lcm/d2);
+      var sn=nn1+nn2,sd=lcm,g=gcd(sn,sd);
+      var op=i%3===0?'-':'+';
+      if(op==='-'&&nn1<nn2){var tmp=nn1;nn1=nn2;nn2=tmp;var tmp2=d1;d1=d2;d2=tmp2;var tmp3=n1;n1=n2;n2=tmp3;}
+      if(op==='+'){sn=nn1+nn2;}else{sn=nn1-nn2;}
+      if(sn<=0){sn=nn1+nn2;op='+';}
+      g=gcd(sn,sd);
+      qs.push({d:i<3?1:i<7?2:3,type:'input',skill:'Fractions',concept:'Adding/subtracting unlike fractions',
+        text:'Work out: '+n1+'/'+d1+' '+op+' '+n2+'/'+d2,
+        hint:'💡 Common denominator = '+lcm+'. Convert both fractions, then '+op+'.',
+        workedExample:'1/3 + 1/4: LCD=12. 4/12+3/12=7/12',
+        reteachNote:'LCD='+lcm+'. '+n1+'/'+d1+'='+nn1+'/'+lcm+'. '+n2+'/'+d2+'='+nn2+'/'+lcm+'. Answer: '+sn/g+'/'+(sd/g),
+        correct:[sn/g+'/'+(sd/g),sn+'/'+sd],
+        feedback:'✅ '+sn/g+'/'+(sd/g)+'!',
+        wrongFeedback:'Common denominator = '+lcm+'. Convert: '+n1+'/'+d1+'='+nn1+'/'+lcm+', '+n2+'/'+d2+'='+nn2+'/'+lcm+'. Then '+op+' the numerators.'});
+    }
+  }
+
+  if(conceptId==='fraction_multiply'){
+    for(var i=0;i<10;i++){
+      var d1=rng(2,8),d2=rng(2,8),n1=rng(1,d1),n2=rng(1,d2);
+      var pn=n1*n2,pd=d1*d2,g=gcd(pn,pd);
+      var whole=i%3===0?rng(2,6):0;
+      if(whole){
+        var wn=whole*n2,wg=gcd(wn,d2);
+        qs.push({d:i<4?1:2,type:'input',skill:'Fractions',concept:'Multiplying fraction by whole number',
+          text:'What is '+whole+' × '+n2+'/'+d2+'?',
+          hint:'💡 Write '+whole+' as '+whole+'/1. Multiply tops and bottoms.',
+          workedExample:'3 × 2/5 = 6/5 = 1 and 1/5',
+          reteachNote:''+whole+' × '+n2+'/'+d2+' = '+wn+'/'+d2+(wg>1?' = '+wn/wg+'/'+(d2/wg):''),
+          correct:[wn/wg+'/'+(d2/wg),wn+'/'+d2],
+          feedback:'✅ '+wn+'/'+d2+(wg>1?' = '+wn/wg+'/'+(d2/wg):'')+' !',
+          wrongFeedback:whole+' × '+n2+'/'+d2+' = ('+whole+'×'+n2+')/(1×'+d2+') = '+wn+'/'+d2});
+      } else {
+        qs.push({d:i<4?1:i<8?2:3,type:'input',skill:'Fractions',concept:'Multiplying fractions',
+          text:'What is '+n1+'/'+d1+' × '+n2+'/'+d2+'? Simplify.',
+          hint:'💡 Top × top = '+n1+'×'+n2+'='+pn+'. Bottom × bottom = '+d1+'×'+d2+'='+pd+'.',
+          workedExample:'2/3 × 3/4 = 6/12 = 1/2',
+          reteachNote:''+n1+'×'+n2+'='+pn+', '+d1+'×'+d2+'='+pd+'. Simplified: '+pn/g+'/'+(pd/g),
+          correct:[pn/g+'/'+(pd/g),pn+'/'+pd],
+          feedback:'✅ '+pn/g+'/'+(pd/g)+'!',
+          wrongFeedback:'Multiply tops: '+n1+'×'+n2+'='+pn+'. Multiply bottoms: '+d1+'×'+d2+'='+pd+'. Simplify '+pn+'/'+pd+'.'});
+      }
+    }
+  }
+
+  if(conceptId==='decimals'){
+    for(var i=0;i<10;i++){
+      var a=(rng(10,999)/100),b=(rng(10,999)/100);
+      a=Math.round(a*100)/100; b=Math.round(b*100)/100;
+      var op=i%3===0?'-':'+';
+      var ans=op==='+'?Math.round((a+b)*100)/100:Math.round((a-b)*100)/100;
+      if(ans<0){op='+';ans=Math.round((a+b)*100)/100;}
+      qs.push({d:i<3?1:i<7?2:3,type:'input',skill:'Decimals',concept:'Decimal '+(op==='+'?'addition':'subtraction'),
+        text:'Work out: '+a+' '+op+' '+b,
+        hint:'💡 Line up the decimal points. Add zeros if needed.',
+        workedExample:'3.4 + 1.85: write 3.40 + 1.85 = 5.25',
+        reteachNote:a+' '+op+' '+b+' = '+ans,
+        correct:[String(ans)],
+        feedback:'✅ '+ans+'!',
+        wrongFeedback:'Line up decimal points: '+a+' '+op+' '+b+' = '+ans});
+    }
+  }
+
+  if(conceptId==='unit_conversions'){
+    var convs=[
+      function(){var km=rng(1,20);return{q:km+' km = ? m',a:km*1000,hint:'1 km = 1,000 m. Multiply by 1,000.'};},
+      function(){var m=rng(500,9000);return{q:m+' m = ? km',a:m/1000,hint:'Divide by 1,000.'};},
+      function(){var kg=rng(1,20);return{q:kg+' kg = ? g',a:kg*1000,hint:'1 kg = 1,000 g. Multiply by 1,000.'};},
+      function(){var g=rng(500,8000);return{q:g+' g = ? kg',a:g/1000,hint:'Divide by 1,000.'};},
+      function(){var m=rng(1,10);return{q:m+' m = ? cm',a:m*100,hint:'1 m = 100 cm. Multiply by 100.'};},
+      function(){var min=rng(2,10);return{q:min+' minutes = ? seconds',a:min*60,hint:'1 min = 60 sec. Multiply by 60.'};},
+      function(){var L=rng(1,10);return{q:L+' litres = ? mL',a:L*1000,hint:'1 L = 1,000 mL.'};},
+    ];
+    for(var i=0;i<10;i++){
+      var c=convs[rng(0,convs.length-1)]();
+      var a=Math.round(c.a*1000)/1000;
+      qs.push({d:i<4?1:i<7?2:3,type:'input',skill:'Measurement',concept:'Unit conversions',
+        text:c.q,hint:'💡 '+c.hint,
+        workedExample:'2.5 km = 2.5 × 1,000 = 2,500 m',
+        reteachNote:'Answer: '+a,
+        correct:[String(a),a.toLocaleString()],
+        feedback:'✅ '+a+'!',
+        wrongFeedback:c.hint+' Answer: '+a});
+    }
+  }
+
+  if(conceptId==='angles'){
+    for(var i=0;i<10;i++){
+      if(i%2===0){
+        var a1=rng(20,80),a2=rng(20,80),a3=180-a1-a2;
+        if(a3<=0||a3>=180){a1=40;a2=60;a3=80;}
+        qs.push({d:i<4?1:i<8?2:3,type:'input',skill:'Geometry',concept:'Angles in a triangle',
+          text:'A triangle has angles of '+a1+'° and '+a2+'°. What is the third angle?',
+          hint:'💡 Angles in a triangle always sum to 180°.',
+          workedExample:'50° + 70° + ? = 180°. Third angle = 180 − 50 − 70 = 60°.',
+          reteachNote:'180 − '+a1+' − '+a2+' = '+a3+'°',
+          correct:[String(a3),a3+'°',a3+' degrees'],
+          feedback:'✅ '+a3+'°! '+a1+'+'+a2+'+'+a3+'=180°',
+          wrongFeedback:'All three triangle angles add to 180°. 180 − '+a1+' − '+a2+' = '+a3+'°'});
+      } else {
+        var a1=rng(60,110),a2=rng(60,110),a3=rng(60,110),a4=360-a1-a2-a3;
+        if(a4<=0||a4>=360){a1=80;a2=100;a3=90;a4=90;}
+        qs.push({d:i<4?1:i<8?2:3,type:'input',skill:'Geometry',concept:'Angles in a quadrilateral',
+          text:'A quadrilateral has angles '+a1+'°, '+a2+'°, and '+a3+'°. Find the fourth angle.',
+          hint:'💡 Angles in any 4-sided shape sum to 360°.',
+          workedExample:'80°+100°+90°+?=360°. Fourth=360−270=90°.',
+          reteachNote:'360 − '+a1+' − '+a2+' − '+a3+' = '+a4+'°',
+          correct:[String(a4),a4+'°',a4+' degrees'],
+          feedback:'✅ '+a4+'°!',
+          wrongFeedback:'Quadrilateral angles sum to 360°. 360 − '+a1+' − '+a2+' − '+a3+' = '+a4+'°'});
+      }
+    }
+  }
+
+  // Fall back to static questions if no generator defined
+  if(qs.length===0) qs=(CONCEPT_QUESTIONS[conceptId]||[]).slice();
+
+  // Sort by difficulty then shuffle within each level
+  qs.sort(function(a,b){return (a.d||1)-(b.d||1);});
+  return qs.slice(0,10);
+}
+
 // ── ADAPTIVE QUESTION SELECTION ───────────────────────────────
 function buildMathSession(){
   var mainConcept = getTodaysMathConcept();
   var m = getMastery(mainConcept);
   var sessionAccuracy = m.attempts>0 ? masteryPct(mainConcept) : 50;
   var difficultyBias = sessionAccuracy >= 80 ? 3 : sessionAccuracy >= 60 ? 2 : 1;
-
-  // Phase 1: warmup from ALL level:1 (known) concepts
-  var knownConcepts = MATH_CONCEPTS.filter(function(c){return c.level===1;}).map(function(c){return c.id;});
-  var warmupPool = [];
-  knownConcepts.forEach(function(cId){
-    var qs = CONCEPT_QUESTIONS[cId]||[];
-    warmupPool = warmupPool.concat(qs);
-  });
-  // Also include mastered level:3 concepts in warmup pool
-  MATH_CONCEPTS.filter(function(c){return c.level===3 && isMastered(c.id);}).forEach(function(c){
-    var qs = CONCEPT_QUESTIONS[c.id]||[];
-    warmupPool = warmupPool.concat(qs);
-  });
-  warmupPool.sort(function(){return Math.random()-0.5;});
-  // Mix difficulties: more hard questions as student improves overall
   var totalSessions = Object.keys(state.mastery||{}).reduce(function(sum,k){return sum+(state.mastery[k].attempts||0);},0);
-  var overallLevel = totalSessions > 50 ? 3 : totalSessions > 20 ? 2 : 1;
-  var easyPool = warmupPool.filter(function(q){return q.d<=2;});
-  var hardPool = warmupPool.filter(function(q){return q.d===3;});
-  easyPool.sort(function(){return Math.random()-0.5;});
-  hardPool.sort(function(){return Math.random()-0.5;});
-  var hardCount = overallLevel===3 ? 8 : overallLevel===2 ? 5 : 2;
-  var warmupQs = easyPool.slice(0, 20-hardCount).concat(hardPool.slice(0, hardCount));
-  warmupQs.sort(function(){return Math.random()-0.5;});
-  warmupQs = warmupQs.slice(0,20);
+
+  // Phase 1: 20 fresh daily warmup questions (different every day)
+  var dailySeed = getDailySeed();
+  var warmupQs = generateDailyWarmup(dailySeed, totalSessions);
 
   // Phase 2: lesson break marker
   var lessonBreak = {type:'lesson_break', conceptId:mainConcept, skill:'Lesson', concept:"Today's Concept: "+(MATH_CONCEPTS.find(function(c){return c.id===mainConcept;})||{}).title};
 
-  // Phase 3: concept questions
-  var conceptQs = (CONCEPT_QUESTIONS[mainConcept]||[]).slice();
-  conceptQs.sort(function(a,b){return a.d-b.d;});
-  var easyConceptQs = conceptQs.filter(function(q){return q.d<=difficultyBias;});
-  var hardConceptQs = conceptQs.filter(function(q){return q.d>difficultyBias;});
-  var selected = easyConceptQs.concat(hardConceptQs).slice(0,10);
+  // Phase 3: fresh daily concept questions
+  var conceptQs = generateConceptQuestions(mainConcept, dailySeed, difficultyBias);
+  // Supplement with static questions if generator returned few
+  if(conceptQs.length < 8){
+    var staticQs=(CONCEPT_QUESTIONS[mainConcept]||[]).slice();
+    staticQs.sort(function(a,b){return a.d-b.d;});
+    conceptQs=conceptQs.concat(staticQs).slice(0,10);
+  }
 
-  var allQs = warmupQs.concat([lessonBreak]).concat(selected);
+  var allQs = warmupQs.concat([lessonBreak]).concat(conceptQs);
 
   return {
     concept: mainConcept,
