@@ -341,7 +341,13 @@ body { -webkit-text-size-adjust: 100%; }
     <div class="chart-card"><h4>⚠️ Skills Needing Practice</h4><ul class="weak-skills-list" id="weak-skills"></ul></div>
     <div class="chart-card"><h4>📝 Session Log</h4><div id="parent-log"></div></div>
   </div>
-  
+
+  <div class="chart-card" style="margin-bottom:16px;">
+    <h4>📋 Detailed Answer Report</h4>
+    <div style="font-size:0.78rem;color:rgba(255,255,255,0.5);margin-bottom:10px;">Every question answered — see exactly what she wrote and whether it was right ✅ or wrong ❌</div>
+    <div id="question-log-section"><div style="color:rgba(255,255,255,0.3);font-size:0.85rem;">Loading...</div></div>
+  </div>
+
   <div class="chart-card" style="margin-bottom:16px;">
     <h4>📅 30-Day Activity — Chores</h4>
     <div style="font-size:0.78rem;color:rgba(255,255,255,0.5);margin-bottom:10px;">🟢 All done · 🟡 Partial · 🔴 None · Hover for details</div>
@@ -3151,6 +3157,22 @@ async function syncChoreToSupabase(choreData){
   } catch(e){ console.log('Chore sync failed:', e); }
 }
 
+// ── PER-QUESTION ANSWER LOGGING ────────────────────────────────
+// SQL to run in Supabase once:
+// CREATE TABLE question_log (id uuid DEFAULT gen_random_uuid() PRIMARY KEY, ts timestamptz DEFAULT now(), subject text, concept text, skill text, question_text text, student_answer text, correct_answer text, is_correct boolean, attempt_num int);
+// ALTER TABLE question_log ENABLE ROW LEVEL SECURITY;
+// CREATE POLICY "allow all" ON question_log FOR ALL USING (true) WITH CHECK (true);
+async function logQuestionAttempt(data){
+  if(!supabaseReady) return;
+  try{
+    await fetch(SUPABASE_URL+'/rest/v1/question_log',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY,'Prefer':'return=minimal'},
+      body:JSON.stringify(data)
+    });
+  }catch(e){console.log('question log failed:',e);}
+}
+
 async function fetchLast30DaysFromSupabase(){
   if(!supabaseReady) return null;
   try {
@@ -3615,11 +3637,12 @@ async function updateParentDashboard(){
   var hdr={'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY};
   var thirtyAgo=new Date();thirtyAgo.setDate(thirtyAgo.getDate()-30);
 
-  var sessions=[],chores=[],teachMe=[];
+  var sessions=[],chores=[],teachMe=[],questionLog=[];
   if(supabaseReady){
     try{var r=await fetch(SUPABASE_URL+'/rest/v1/sessions?order=ts.desc&ts=gte.'+thirtyAgo.toISOString(),{headers:hdr});if(r.ok)sessions=await r.json();}catch(e){}
     try{var r=await fetch(SUPABASE_URL+'/rest/v1/chore_logs?order=date.desc&date=gte.'+thirtyAgo.toISOString().split('T')[0],{headers:hdr});if(r.ok)chores=await r.json();}catch(e){}
     try{var r=await fetch(SUPABASE_URL+'/rest/v1/teach_me_log?order=ts.desc&ts=gte.'+thirtyAgo.toISOString(),{headers:hdr});if(r.ok)teachMe=await r.json();}catch(e){}
+    try{var r=await fetch(SUPABASE_URL+'/rest/v1/question_log?order=ts.desc&limit=200&ts=gte.'+thirtyAgo.toISOString(),{headers:hdr});if(r.ok)questionLog=await r.json();}catch(e){}
   }
 
   var useDB=sessions.length>0;
@@ -3669,7 +3692,69 @@ async function updateParentDashboard(){
   var logEl=document.getElementById('parent-log');
   if(logEl)logEl.innerHTML=logHTML||'<div class="log-item" style="color:rgba(255,255,255,0.4);">No sessions yet.</div>';
 
+  // ── DETAILED ANSWER REPORT ─────────────────────────────────────
+  var qlEl=document.getElementById('question-log-section');
+  if(qlEl){
+    if(!supabaseReady){
+      qlEl.innerHTML='<div style="color:rgba(255,255,255,0.4);font-size:0.85rem;">Connect Supabase to see detailed answers.</div>';
+    } else if(questionLog.length===0){
+      qlEl.innerHTML='<div style="color:rgba(255,255,255,0.4);font-size:0.85rem;">No answer records yet — answer some questions first!</div>';
+    } else {
+      var totalQ=questionLog.length;
+      var correctQ=questionLog.filter(function(r){return r.is_correct;}).length;
+      var todayLogs=questionLog.filter(function(r){return r.ts&&r.ts.startsWith(todayStr);});
+      var olderLogs=questionLog.filter(function(r){return !r.ts||!r.ts.startsWith(todayStr);});
+      var qlHTML='<div style="background:rgba(255,255,255,0.05);border-radius:12px;padding:12px 16px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;">';
+      qlHTML+='<span style="color:rgba(255,255,255,0.8);font-size:0.9rem;font-weight:700;">Last 30 days: '+totalQ+' answers</span>';
+      qlHTML+='<span style="color:#06D6A0;font-weight:800;font-size:0.9rem;">✅ '+correctQ+' correct</span>';
+      qlHTML+='<span style="color:#FF6B6B;font-weight:800;font-size:0.9rem;">❌ '+(totalQ-correctQ)+' wrong</span>';
+      qlHTML+='<span style="color:rgba(255,255,255,0.5);font-size:0.85rem;">('+Math.round(correctQ/totalQ*100)+'% accuracy)</span>';
+      qlHTML+='</div>';
+      if(todayLogs.length>0){
+        qlHTML+='<div style="font-weight:800;color:rgba(255,255,255,0.6);font-size:0.78rem;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;">Today — '+todayLogs.length+' answers</div>';
+        qlHTML+=renderQuestionLogTable(todayLogs);
+      } else {
+        qlHTML+='<div style="color:rgba(255,255,255,0.35);font-size:0.85rem;margin-bottom:12px;">No activity today yet.</div>';
+      }
+      if(olderLogs.length>0){
+        qlHTML+='<div style="font-weight:800;color:rgba(255,255,255,0.6);font-size:0.78rem;letter-spacing:1.2px;text-transform:uppercase;margin:16px 0 8px;">Previous days (up to 200)</div>';
+        qlHTML+=renderQuestionLogTable(olderLogs.slice(0,200));
+      }
+      qlEl.innerHTML=qlHTML;
+    }
+  }
+
   if(bannerEl)bannerEl.innerHTML=useDB?'<div style="background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border-radius:10px;padding:8px 14px;margin-bottom:10px;font-size:0.8rem;color:#065F46;font-weight:700;">✅ Live from Supabase — '+sessions.length+' sessions across all devices</div>':'<div style="background:#FFF3CD;border-radius:10px;padding:8px 14px;margin-bottom:10px;font-size:0.8rem;color:#856404;">⚠️ Showing local data — no Supabase sessions found yet</div>';
+}
+
+function renderQuestionLogTable(logs){
+  var html='<div style="overflow-x:auto;border-radius:12px;border:1px solid rgba(255,255,255,0.08);">';
+  html+='<table style="width:100%;border-collapse:collapse;font-size:0.82rem;min-width:600px;">';
+  html+='<thead><tr style="background:rgba(255,255,255,0.05);">';
+  html+='<th style="text-align:left;padding:8px 10px;color:rgba(255,255,255,0.45);font-size:0.72rem;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;">Time</th>';
+  html+='<th style="text-align:left;padding:8px 10px;color:rgba(255,255,255,0.45);font-size:0.72rem;letter-spacing:1px;text-transform:uppercase;">Subject</th>';
+  html+='<th style="text-align:left;padding:8px 10px;color:rgba(255,255,255,0.45);font-size:0.72rem;letter-spacing:1px;text-transform:uppercase;min-width:180px;">Question</th>';
+  html+='<th style="text-align:left;padding:8px 10px;color:rgba(255,255,255,0.45);font-size:0.72rem;letter-spacing:1px;text-transform:uppercase;">Her Answer</th>';
+  html+='<th style="text-align:left;padding:8px 10px;color:rgba(255,255,255,0.45);font-size:0.72rem;letter-spacing:1px;text-transform:uppercase;">Correct Answer</th>';
+  html+='<th style="text-align:center;padding:8px 10px;color:rgba(255,255,255,0.45);font-size:0.72rem;letter-spacing:1px;text-transform:uppercase;">Result</th>';
+  html+='</tr></thead><tbody>';
+  logs.forEach(function(r){
+    var ok=r.is_correct;
+    var timeStr=new Date(r.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    var dateStr=new Date(r.ts).toLocaleDateString([],{month:'short',day:'numeric'});
+    var rowBg=ok?'rgba(6,214,160,0.06)':'rgba(255,107,107,0.09)';
+    html+='<tr style="border-top:1px solid rgba(255,255,255,0.05);background:'+rowBg+';">';
+    html+='<td style="padding:8px 10px;color:rgba(255,255,255,0.38);white-space:nowrap;font-size:0.78rem;">'+dateStr+'<br>'+timeStr+'</td>';
+    html+='<td style="padding:8px 10px;color:rgba(255,255,255,0.65);text-transform:capitalize;font-weight:700;font-size:0.8rem;">'+(r.subject||'')+'</td>';
+    var qtxt=(r.question_text||'').substring(0,90)+(r.question_text&&r.question_text.length>90?'…':'');
+    html+='<td style="padding:8px 10px;color:rgba(255,255,255,0.8);font-size:0.8rem;line-height:1.4;">'+qtxt+'</td>';
+    html+='<td style="padding:8px 10px;font-weight:800;font-size:0.85rem;color:'+(ok?'#34D399':'#F87171')+'">'+(r.student_answer||'—')+'</td>';
+    html+='<td style="padding:8px 10px;color:rgba(255,255,255,0.5);font-size:0.8rem;">'+(r.correct_answer||'—')+'</td>';
+    html+='<td style="padding:8px 10px;text-align:center;font-size:1.1rem;">'+(ok?'✅':'❌')+'</td>';
+    html+='</tr>';
+  });
+  html+='</tbody></table></div>';
+  return html;
 }
 
 function exportReport(){var blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='summer-quest-report.json';a.click();URL.revokeObjectURL(url);}
@@ -3957,23 +4042,51 @@ function checkAdaptiveAnswer(){
   var q=qs[currentQ];
   var maxA=(q.type==='input'||q.type==='passage_input')?2:3;
   var correct=false;
+  var studentAnswer='';
+
   if(q.type==='drag'){
     attemptCount++;correct=checkDragAnswer(q);
-    if(!correct&&attemptCount<maxA){showAdaptiveReteach(q,attemptCount);return;}
+    studentAnswer='[drag answer]';
+    var correctAnswerText=(q.items||[]).join(', ');
+    logQuestionAttempt({ts:new Date().toISOString(),subject:currentSubject,concept:q.concept||'',skill:q.skill||'',question_text:(q.text||'').replace(/<[^>]*>/g,'').substring(0,200),student_answer:studentAnswer,correct_answer:correctAnswerText,is_correct:correct,attempt_num:attemptCount});
+    if(!correct&&attemptCount<maxA){showAdaptiveReteach(q,attemptCount);var sb=document.getElementById('submit-btn');if(sb){sb.textContent='Try Again 🔄';sb.style.display='inline-block';}return;}
     sessionTotal++;showFeedback(correct,q,!correct);recordAdaptiveResult(correct,q);return;
   }
+
   if(q.type==='choice'||q.type==='passage_choice'||q.type==='wotd'){
     if(selectedChoice===null){alert('Please select an answer!');return;}
     correct=(selectedChoice===q.correct);
+    studentAnswer=q.choices&&q.choices[selectedChoice]!=null?q.choices[selectedChoice]:'';
   } else {
     var val=(document.getElementById('answer-input')||{}).value||'';
     if(!val.trim()){alert('Please type your answer!');return;}
-    if(q.correct===null){correct=true;}
-    else{correct=q.correct.some(function(a){return val.toLowerCase().replace(/[^a-z0-9]/g,'').indexOf(a.toLowerCase().replace(/[^a-z0-9]/g,''))>=0;});}
+    studentAnswer=val;
+    if(q.correct===null){
+      // open-ended: always mark correct but still log it as open-ended
+      correct=true;
+    } else {
+      correct=q.correct.some(function(a){return val.toLowerCase().replace(/[^a-z0-9]/g,'').indexOf(a.toLowerCase().replace(/[^a-z0-9]/g,''))>=0;});
+    }
   }
+
   attemptCount++;
+
+  // Build correct answer text for logging
+  var correctAnswerText='';
+  if(q.type==='choice'||q.type==='passage_choice'||q.type==='wotd'){
+    correctAnswerText=q.choices&&q.correct!=null?q.choices[q.correct]:'';
+  } else if(q.correct===null){
+    correctAnswerText='(open ended)';
+  } else {
+    correctAnswerText=q.correct?q.correct[0]:'';
+  }
+
+  // Log EVERY attempt immediately — wrong attempts recorded before retry
+  logQuestionAttempt({ts:new Date().toISOString(),subject:currentSubject,concept:q.concept||'',skill:q.skill||'',question_text:(q.text||'').replace(/<[^>]*>/g,'').substring(0,200),student_answer:studentAnswer,correct_answer:correctAnswerText,is_correct:correct,attempt_num:attemptCount});
+
   var dots=document.querySelectorAll('.attempt-dot');
   if(dots[attemptCount-1]){dots[attemptCount-1].classList.add('used');dots[attemptCount-1].classList.add(correct?'correct':'wrong');}
+
   if(correct){
     lockChoices(q,true);sessionTotal++;sessionCorrect++;
     showFeedback(true,q);recordAdaptiveResult(true,q);
@@ -3982,8 +4095,14 @@ function checkAdaptiveAnswer(){
       var wb=document.querySelector('.choice-btn[data-idx="'+selectedChoice+'"]');
       if(wb){wb.classList.add('wrong');wb.onclick=null;}selectedChoice=null;
     }
-    if(attemptCount>=maxA){lockChoices(q,false);sessionTotal++;showFeedback(false,q,true);recordAdaptiveResult(false,q);}
-    else{showAdaptiveReteach(q,attemptCount);}
+    if(attemptCount>=maxA){
+      lockChoices(q,false);sessionTotal++;showFeedback(false,q,true);recordAdaptiveResult(false,q);
+    } else {
+      showAdaptiveReteach(q,attemptCount);
+      // Show "Try Again" button — wrong attempt already logged above
+      var sb=document.getElementById('submit-btn');
+      if(sb){sb.textContent='Try Again 🔄';sb.style.display='inline-block';}
+    }
   }
 }
 
