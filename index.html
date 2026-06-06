@@ -223,7 +223,7 @@ body { -webkit-text-size-adjust: 100%; }
       <span class="card-icon">🔢</span><div class="card-badge" id="math-card-badge">Ready!</div>
       <h3>Math</h3><p>Word problems, fractions, multiplication, geometry &amp; logic thinking!</p>
       <div class="progress-bar-wrap"><div class="progress-bar" id="math-progress" style="width:0%"></div></div>
-      <div class="card-meta" id="math-meta">Target: 40 min · 0 min today</div>
+      <div class="card-meta" id="math-meta">Target: 60 min · 0 min today</div>
       <button class="start-btn">Start Mission →</button>
     </div>
     <div class="subject-card reading" onclick="startSubject('reading')">
@@ -244,7 +244,7 @@ body { -webkit-text-size-adjust: 100%; }
       <span class="card-icon">🌍</span><div class="card-badge" id="awareness-card-badge">Ready!</div>
       <h3>World Awareness</h3><p>Space, climate, inventions, cultures, and inspiring people!</p>
       <div class="progress-bar-wrap"><div class="progress-bar" id="awareness-progress" style="width:0%"></div></div>
-      <div class="card-meta" id="awareness-meta">Target: 10 min · 0 min today</div>
+      <div class="card-meta" id="awareness-meta">Target: 20 min · 0 min today</div>
       <button class="start-btn">Start Mission →</button>
     </div>
   </div>
@@ -1969,6 +1969,44 @@ function generateConceptQuestions(conceptId, seed, difficulty){
     }
   }
 
+  if(conceptId==='equations'){
+    for(var i=0;i<10;i++){
+      var type=i%3;
+      if(type===0){
+        var a=rng(1,20),b=rng(a+1,30),x=b-a;
+        qs.push({d:i<4?1:i<7?2:3,type:'input',skill:'Equations',concept:'Solving addition equations',
+          text:'Solve for x:  x + '+a+' = '+b,
+          hint:'💡 Subtract '+a+' from both sides.',
+          workedExample:'x + 5 = 12  →  x = 12 - 5 = 7',
+          reteachNote:'x = '+b+' - '+a+' = '+x,
+          correct:[String(x),'x='+x,'x = '+x],
+          feedback:'✅ x = '+x+'! Subtract '+a+' from both sides: '+b+' - '+a+' = '+x+'.',
+          wrongFeedback:'To isolate x, subtract '+a+' from both sides of the equation.'});
+      } else if(type===1){
+        var a=rng(2,10),x=rng(2,12),b=a*x;
+        qs.push({d:i<4?1:i<7?2:3,type:'input',skill:'Equations',concept:'Solving multiplication equations',
+          text:'Solve for x:  '+a+'x = '+b,
+          hint:'💡 Divide both sides by '+a+'.',
+          workedExample:'3x = 15  →  x = 15 ÷ 3 = 5',
+          reteachNote:'x = '+b+' ÷ '+a+' = '+x,
+          correct:[String(x),'x='+x,'x = '+x],
+          feedback:'✅ x = '+x+'! Divide both sides by '+a+': '+b+' ÷ '+a+' = '+x+'.',
+          wrongFeedback:''+a+'x = '+b+'. Divide both sides by '+a+' to find x.'});
+      } else {
+        var a=rng(2,8),c=rng(1,15),b=rng(c+1,30),x=b-c,xVal=Math.floor(x/a);
+        if(a*xVal+c!==b){xVal=rng(2,10);b=a*xVal+c;}
+        qs.push({d:2,type:'input',skill:'Equations',concept:'Solving two-step equations',
+          text:'Solve for x:  '+a+'x + '+c+' = '+b,
+          hint:'💡 Step 1: subtract '+c+'. Step 2: divide by '+a+'.',
+          workedExample:'2x + 3 = 11  →  2x = 8  →  x = 4',
+          reteachNote:a+'x = '+(b-c)+'. x = '+(b-c)+' ÷ '+a+' = '+xVal,
+          correct:[String(xVal),'x='+xVal,'x = '+xVal],
+          feedback:'✅ x = '+xVal+'! Step 1: '+b+' - '+c+' = '+(b-c)+'. Step 2: '+(b-c)+' ÷ '+a+' = '+xVal+'.',
+          wrongFeedback:'Two steps: first subtract '+c+' from both sides, then divide by '+a+'.'});
+      }
+    }
+  }
+
   // Fall back to static questions if no generator defined
   if(qs.length===0) qs=(CONCEPT_QUESTIONS[conceptId]||[]).slice();
 
@@ -1979,35 +2017,61 @@ function generateConceptQuestions(conceptId, seed, difficulty){
 
 // ── ADAPTIVE QUESTION SELECTION ───────────────────────────────
 function buildMathSession(){
-  var mainConcept = getTodaysMathConcept();
-  var m = getMastery(mainConcept);
-  var sessionAccuracy = m.attempts>0 ? masteryPct(mainConcept) : 50;
-  var difficultyBias = sessionAccuracy >= 80 ? 3 : sessionAccuracy >= 60 ? 2 : 1;
-  var totalSessions = Object.keys(state.mastery||{}).reduce(function(sum,k){return sum+(state.mastery[k].attempts||0);},0);
+  var seed=getDailySeed();
+  var totalSessions=Object.keys(state.mastery||{}).reduce(function(sum,k){return sum+(state.mastery[k].attempts||0);},0);
+  var rng=makeRng(seed);
 
-  // Phase 1: 20 fresh daily warmup questions (different every day)
-  var dailySeed = getDailySeed();
-  var warmupQs = generateDailyWarmup(dailySeed, totalSessions);
+  // Determine overall difficulty based on history
+  var overallAcc=0,accCount=0;
+  ['math'].forEach(function(s){(state.accuracy&&state.accuracy[s]||[]).slice(-10).forEach(function(v){overallAcc+=v;accCount++;});});
+  var diffLevel=accCount>0?(overallAcc/accCount>=80?3:overallAcc/accCount>=60?2:1):1;
 
-  // Phase 2: lesson break marker
-  var lessonBreak = {type:'lesson_break', conceptId:mainConcept, skill:'Lesson', concept:"Today's Concept: "+(MATH_CONCEPTS.find(function(c){return c.id===mainConcept;})||{}).title};
-
-  // Phase 3: fresh daily concept questions
-  var conceptQs = generateConceptQuestions(mainConcept, dailySeed, difficultyBias);
-  // Supplement with static questions if generator returned few
-  if(conceptQs.length < 8){
-    var staticQs=(CONCEPT_QUESTIONS[mainConcept]||[]).slice();
-    staticQs.sort(function(a,b){return a.d-b.d;});
-    conceptQs=conceptQs.concat(staticQs).slice(0,10);
+  // ── PART 1: Warmup — multiplication, division, fractions (15 q) ──
+  var warmupQs=[];
+  // 5 multiplication
+  for(var i=0;i<5;i++){
+    var a=diffLevel>=2?rng(12,99):rng(2,12),b=diffLevel>=2?rng(2,12):rng(2,12),ans=a*b;
+    warmupQs.push({d:diffLevel,type:'input',skill:'Multiplication',concept:'Multiplying numbers',
+      text:'What is '+a+' × '+b+'?',hint:'💡 Use times tables or long multiplication.',
+      workedExample:'23 × 4: (20×4)+(3×4)=80+12=92',reteachNote:a+'×'+b+'='+ans,
+      correct:[String(ans)],feedback:'✅ '+ans+'!',wrongFeedback:a+' × '+b+' = '+ans});
+  }
+  // 5 division
+  for(var i=0;i<5;i++){
+    var b=rng(2,12),ans=diffLevel>=2?rng(10,25):rng(2,12),a=b*ans;
+    warmupQs.push({d:diffLevel,type:'input',skill:'Division',concept:'Dividing numbers',
+      text:'What is '+a+' ÷ '+b+'?',hint:'💡 Think: '+b+' × ? = '+a,
+      workedExample:'84 ÷ 7: 7×12=84, so answer=12',reteachNote:a+'÷'+b+'='+ans,
+      correct:[String(ans)],feedback:'✅ '+ans+'!',wrongFeedback:a+' ÷ '+b+' = '+ans});
+  }
+  // 5 fractions
+  var denoms=[2,3,4,5,6,8];
+  for(var i=0;i<5;i++){
+    var d1=denoms[rng(0,denoms.length-1)],n1=rng(1,d1-1);
+    var d2=denoms.filter(function(x){return x!==d1;})[rng(0,denoms.length-2)],n2=rng(1,d2-1);
+    var lcm=d1*d2/gcd(d1,d2),nn1=n1*(lcm/d1),nn2=n2*(lcm/d2),sn=nn1+nn2,g=gcd(sn,lcm);
+    warmupQs.push({d:i<3?1:2,type:'input',skill:'Fractions',concept:'Adding unlike fractions',
+      text:'Work out: '+n1+'/'+d1+' + '+n2+'/'+d2,hint:'💡 LCD = '+lcm,
+      workedExample:'1/3+1/4: LCD=12. 4/12+3/12=7/12',reteachNote:'LCD='+lcm+'. Answer='+sn/g+'/'+(lcm/g),
+      correct:[sn/g+'/'+(lcm/g),sn+'/'+lcm],feedback:'✅ '+sn/g+'/'+(lcm/g)+'!',
+      wrongFeedback:'LCD='+lcm+'. Convert: '+n1+'/'+d1+'='+nn1+'/'+lcm+', '+n2+'/'+d2+'='+nn2+'/'+lcm+'. Add: '+sn+'/'+lcm+'='+sn/g+'/'+(lcm/g)});
   }
 
-  var allQs = warmupQs.concat([lessonBreak]).concat(conceptQs);
+  // ── PART 2: Equations lesson + 8 equations questions ──────────
+  var eqLesson={type:'lesson_break',conceptId:'equations',skill:'Lesson',concept:'📐 Equations — Solving for X'};
+  var eqQs=generateConceptQuestions('equations',seed,diffLevel);
+
+  // ── PART 3: Geometry lesson + 8 geometry questions ────────────
+  var geoLesson={type:'lesson_break',conceptId:'angles',skill:'Lesson',concept:'📏 Shapes & Angles'};
+  var geoQs=generateConceptQuestions('angles',seed+1,diffLevel);
+
+  var allQs=warmupQs.concat([eqLesson]).concat(eqQs.slice(0,8)).concat([geoLesson]).concat(geoQs.slice(0,8));
 
   return {
-    concept: mainConcept,
-    conceptObj: MATH_CONCEPTS.find(function(c){return c.id===mainConcept;}),
-    questions: allQs,
-    hasLesson: LESSONS[mainConcept]!==undefined
+    concept:'equations',
+    conceptObj:MATH_CONCEPTS.find(function(c){return c.id==='equations';}),
+    questions:allQs,
+    hasLesson:true
   };
 }
 
@@ -2048,15 +2112,41 @@ function buildReadingSession(){
 }
 
 function buildScienceSession(){
-  var acc = state.accuracy && state.accuracy.science ? state.accuracy.science : [];
-  var recentAcc = acc.length ? acc.slice(-5).reduce(function(s,v){return s+v;},0)/Math.min(acc.length,5)*100 : 70;
-  var pool = SCIENCE_QUESTIONS.slice();
-  var easyPool = pool.filter(function(q){return !q.d || q.d<=2;});
-  var hardPool = pool.filter(function(q){return q.d && q.d===3;});
-  var hardCount = recentAcc >= 80 ? 5 : recentAcc >= 60 ? 3 : 1;
-  var easySubset = getDailySubset(easyPool, 15-hardCount, 37);
-  var hardSubset = getDailySubset(hardPool, hardCount, 41);
-  return {questions: easySubset.concat(hardSubset)};
+  var seed=getDailySeed();
+  var rng=makeRng(seed+7);
+  var acc=(state.accuracy&&state.accuracy.science)||[];
+  var recentAcc=acc.length?acc.slice(-10).reduce(function(s,v){return s+v;},0)/Math.min(acc.length,10)*100:70;
+
+  // Pick 4 different concepts for today using the daily seed
+  var allConcepts=SCIENCE_CONCEPT_LESSONS.slice();
+  var idx=allConcepts.map(function(_,i){return i;});
+  for(var i=idx.length-1;i>0;i--){var j=rng(0,i);var t=idx[i];idx[i]=idx[j];idx[j]=t;}
+  var todayConcepts=idx.slice(0,4).map(function(i){return allConcepts[i];});
+
+  // Build question sequence: for each concept, lesson break → quiz questions
+  var qs=[];
+  todayConcepts.forEach(function(concept){
+    // Lesson break to show concept lesson
+    qs.push({
+      type:'science_lesson',
+      conceptId:concept.id,
+      lesson:concept.lesson,
+      title:concept.title,
+      emoji:concept.emoji,
+      skill:'Science Lesson',
+      concept:concept.emoji+' '+concept.title
+    });
+    // Pick questions based on difficulty
+    var cqs=concept.questions.slice();
+    if(recentAcc>=80){
+      cqs.sort(function(a,b){return (b.d||1)-(a.d||1);});
+    } else if(recentAcc>=60){
+      cqs.sort(function(a,b){return (a.d||1)-(b.d||1);});
+      cqs=[cqs[0],cqs[cqs.length-1],cqs[1]].filter(Boolean);
+    }
+    qs=qs.concat(cqs.slice(0,3));
+  });
+  return {questions:qs};
 }
 
 function buildAwarenessSession(){
@@ -2253,9 +2343,154 @@ function renderConceptProgress(){
 var state=(function(){try{return JSON.parse(_safeStorage.getItem('sqa2')||'null');}catch(e){return null;}})() ||{xp:0,stars:0,streak:0,lastDay:null,badges:[],progress:{math:0,reading:0,science:0,awareness:0},accuracy:{math:[],reading:[],science:[],awareness:[]},timeSpent:{math:0,reading:0,science:0,awareness:0},todayTime:{math:0,reading:0,science:0,awareness:0},todayDate:null,weakSkills:{},log:[],xpHistory:[]};
 var todayStr=new Date().toDateString();
 if(state.todayDate!==todayStr){state.todayTime={math:0,reading:0,science:0,awareness:0};state.todayDate=todayStr;}
-function saveState(){try{_safeStorage.setItem('sqa2',JSON.stringify(state));}catch(e){}}
+function saveState(){try{_safeStorage.setItem('sqa2',JSON.stringify(state));}catch(e){}syncStateToSupabase();}
 
-var TARGET={math:2400,reading:2400,science:2400,awareness:600};
+var TARGET={math:3600,reading:2400,science:2400,awareness:1200};
+
+// ── SCIENCE DAILY CONCEPT LESSONS (Khan Academy style) ────────
+// Each entry: one concept with a mini-lesson + 4 quiz questions
+var SCIENCE_CONCEPT_LESSONS = [
+  {
+    id:'states_matter', title:'States of Matter', emoji:'🧊',
+    lesson:{intro:'Everything around you is made of matter, and matter exists in three states: SOLID, LIQUID, and GAS. What makes them different is how the tiny particles (molecules) inside them move.',
+      steps:[
+        {heading:'Solids, Liquids, Gases',explanation:'In a SOLID, molecules are packed tightly and vibrate in place — the solid holds its shape. In a LIQUID, molecules slide around — it takes the shape of its container. In a GAS, molecules move freely and fast, filling all available space.',visual:'🪨 SOLID → molecules locked in place, fixed shape\n💧 LIQUID → molecules slide, takes container shape\n💨 GAS → molecules zoom everywhere, fills all space',example:'Ice (solid) → melts into water (liquid) → evaporates into steam (gas)\nHeating gives molecules energy to move more freely.'},
+        {heading:'Changing States',explanation:'Matter changes state when heated or cooled. Melting: solid→liquid. Freezing: liquid→solid. Evaporation: liquid→gas. Condensation: gas→liquid.',visual:'🌡️ Add heat → molecules move faster → state changes UP\n❄️ Remove heat → molecules slow → state changes DOWN\n\nMelting point of ice = 0°C\nBoiling point of water = 100°C',example:'Why does a puddle disappear? Evaporation — water molecules gain enough energy to escape into the air as gas (water vapour).'}
+      ]},
+    questions:[
+      {d:1,type:'choice',skill:'States of Matter',concept:'Identifying states',text:'Which state of matter has a FIXED shape and FIXED volume?',choices:['Gas','Liquid','Solid','Plasma'],correct:2,hint:'💡 Think: which state holds its shape?',workedExample:'Ice holds its shape. Water takes the shape of its container.',feedback:'✅ Solid! Tightly packed molecules hold fixed shape and volume.',wrongFeedback:'Which state keeps its shape even if you move it?'},
+      {d:1,type:'choice',skill:'States of Matter',concept:'Phase changes',text:'What happens to ice when it is heated above 0°C?',choices:['It evaporates directly to gas','It melts into liquid water','It becomes denser','Nothing changes'],correct:1,hint:'💡 0°C is the melting point of ice.',workedExample:'Adding heat gives molecules energy to break free of the solid structure.',feedback:'✅ It melts! Heat gives water molecules enough energy to slide freely.',wrongFeedback:'0°C is where ice turns to liquid water. What is that process called?'},
+      {d:2,type:'input',skill:'States of Matter',concept:'Explaining evaporation',text:'Why does a wet towel dry faster on a hot sunny day than on a cold cloudy day? Use the word EVAPORATION.',hint:'💡 Think about what heat does to water molecules.',workedExample:'Heat gives molecules energy. More energy = more molecules can escape as gas.',correct:null,feedback:'✅ Heat gives water molecules more energy, so more can evaporate (escape as gas) quickly.',wrongFeedback:'Complete: On a hot day, water molecules have more ___ so they ___ faster (evaporation).'},
+      {d:2,type:'choice',skill:'States of Matter',concept:'Condensation',text:'Water droplets form on the outside of a cold glass of juice. This is called:',choices:['Evaporation','Melting','Condensation','Freezing'],correct:2,hint:'💡 Water vapour in the air hits the cold surface and...',workedExample:'Gas → liquid = condensation. Cold surfaces cause water vapour to lose energy and become liquid.',feedback:'✅ Condensation! Water vapour cools on the cold glass and becomes liquid droplets.',wrongFeedback:'Water is going from gas (vapour in air) to liquid (droplets). Gas→liquid = ?'}
+    ]
+  },
+  {
+    id:'food_chains', title:'Food Chains & Ecosystems', emoji:'🌿',
+    lesson:{intro:'All living things need energy. Energy flows through ecosystems in FOOD CHAINS — from the sun, to plants, to animals. Understanding food chains explains why every creature matters.',
+      steps:[
+        {heading:'Producers and Consumers',explanation:'PRODUCERS (plants) make their own food using sunlight (photosynthesis). PRIMARY CONSUMERS (herbivores) eat plants. SECONDARY CONSUMERS (carnivores) eat herbivores. DECOMPOSERS (fungi, bacteria) break down dead matter.',visual:'☀️ Sun → 🌿 Plant (Producer) → 🐛 Caterpillar (Primary Consumer) → 🐦 Bird (Secondary Consumer) → 🦅 Eagle (Tertiary Consumer)\n\nDecomposers return nutrients to the soil → plants grow → cycle continues!',example:'Pond food chain:\nAlgae → Water flea → Small fish → Heron\nIf water fleas disappear: small fish starve, herons decline, algae blooms.'},
+        {heading:'Food Webs',explanation:'Real ecosystems have FOOD WEBS — many interconnected food chains. Removing one species affects many others. This is why biodiversity (variety of life) is so important.',visual:'🌿 Grass → 🐁 Mouse → 🦊 Fox\n🌿 Grass → 🐇 Rabbit → 🦊 Fox → 🦅 Eagle\n🌿 Grass → 🦗 Grasshopper → 🐸 Frog → 🐍 Snake → 🦅 Eagle\n\nIf foxes disappear → rabbits and mice overpopulate → grass eaten bare → many species affected!',example:'Why do scientists worry when a species goes extinct? Because every species is connected in food webs. Losing one pulls threads from the whole web.'}
+      ]},
+    questions:[
+      {d:1,type:'choice',skill:'Ecosystems',concept:'Producers and consumers',text:'Which organism is a PRODUCER in a food chain?',choices:['A lion','A grass plant','A zebra','A vulture'],correct:1,hint:'💡 Producers make their own food using sunlight.',workedExample:'Plants use photosynthesis to convert sunlight into food energy. Animals cannot do this.',feedback:'✅ Grass! Plants are producers — they make energy from sunlight.',wrongFeedback:'Which organism makes its own food using sunlight? It must be a plant.'},
+      {d:1,type:'choice',skill:'Ecosystems',concept:'Food chain direction',text:'In the food chain: Oak tree → Caterpillar → Blue tit → Sparrowhawk. What does the arrow mean?',choices:['Eats','Is eaten by','Lives near','Competes with'],correct:0,hint:'💡 Energy flows in the direction of the arrow.',workedExample:'A→B means A is eaten by B, so energy passes from A to B.',feedback:'✅ The arrow means "is eaten by" — energy flows in that direction.',wrongFeedback:'The arrow shows energy transfer: which direction does energy flow?'},
+      {d:2,type:'choice',skill:'Ecosystems',concept:'Effect of removing a species',text:'Food chain: Grass → Rabbits → Foxes. If all foxes were removed, what would happen to the rabbit population?',choices:['Decrease — no foxes to protect them','Increase — no predators eating them','Stay the same','Disappear immediately'],correct:1,hint:'💡 Foxes eat rabbits. Remove the predator — what happens to prey?',workedExample:'Remove wolves from a forest → deer overpopulate → they eat too much vegetation → other animals suffer.',feedback:'🐇 Rabbits would INCREASE! Without foxes eating them, their population would boom. Then grass would get depleted.',wrongFeedback:'Foxes eat rabbits. If foxes disappear, what controls the rabbit population?'},
+      {d:2,type:'input',skill:'Ecosystems',concept:'Explaining food webs',text:'Explain why a food WEB is more realistic than a single food chain. Use the word INTERDEPENDENCE.',hint:'💡 Think: do animals eat only ONE thing in real life?',workedExample:'A fox eats rabbits AND mice AND birds. Remove rabbits and the fox survives on other prey.',correct:null,feedback:'✅ Food webs show interdependence — multiple connections mean removing one species has complex effects, and many organisms can adapt to other food sources.',wrongFeedback:'Real animals eat many things. A food web shows all those connections. Why does that matter when one species disappears?'}
+    ]
+  },
+  {
+    id:'photosynthesis', title:'Photosynthesis', emoji:'🌿',
+    lesson:{intro:'Plants are amazing — they make their own food using sunlight! This process, called PHOTOSYNTHESIS, is the foundation of almost all life on Earth.',
+      steps:[
+        {heading:'The Photosynthesis Equation',explanation:'Plants take in CARBON DIOXIDE (from air) and WATER (from roots), use SUNLIGHT energy, and produce GLUCOSE (food) and OXYGEN (released into air).',visual:'☀️ Sunlight + 💧 Water + 💨 CO₂ → 🍬 Glucose + 🌬️ Oxygen\n\nChlorophyll (the green pigment in leaves) captures sunlight.\nThis is why leaves are green and face toward the light.',example:'A plant on a windowsill turns its leaves toward the sun — it is maximising the light for photosynthesis!'},
+        {heading:'Why Photosynthesis Matters',explanation:'Photosynthesis produces oxygen (which animals breathe) and glucose (which feeds all food chains). It also REMOVES CO₂ from the atmosphere, helping reduce climate change.',visual:'🌿 Plants → produce O₂ we breathe\n🌿 Plants → make glucose → eaten by herbivores → eaten by carnivores → ALL energy comes from plants!\n🌿 Plants → absorb CO₂ → slow climate change\n\nRainforests are called "lungs of the Earth" because of how much photosynthesis they do.',example:'Why do we plant trees to fight climate change? Trees absorb CO₂ through photosynthesis, reducing greenhouse gases in the atmosphere.'}
+      ]},
+    questions:[
+      {d:1,type:'choice',skill:'Plant Biology',concept:'What plants need for photosynthesis',text:'Which THREE things does a plant need for photosynthesis?',choices:['Sunlight, water, and carbon dioxide','Sunlight, oxygen, and soil','Water, nitrogen, and moonlight','Carbon dioxide, oxygen, and sugar'],correct:0,hint:'💡 Think: what goes IN to make food.',workedExample:'Inputs: sunlight (energy) + water + CO₂. Outputs: glucose + oxygen.',feedback:'✅ Sunlight + water + CO₂! These are the ingredients plants use to make food.',wrongFeedback:'Remember the photosynthesis equation: what are the THREE inputs?'},
+      {d:1,type:'choice',skill:'Plant Biology',concept:'Product of photosynthesis',text:'What gas do plants RELEASE during photosynthesis?',choices:['Carbon dioxide','Nitrogen','Oxygen','Hydrogen'],correct:2,hint:'💡 This is the gas humans need to breathe.',workedExample:'Photosynthesis: CO₂ + H₂O + light → Glucose + O₂',feedback:'✅ Oxygen! Plants release O₂ — that is why forests are so important for life.',wrongFeedback:'The gas plants release is the one we breathe in. What is it?'},
+      {d:2,type:'choice',skill:'Plant Biology',concept:'Chlorophyll',text:'Why are leaves GREEN?',choices:['They absorb green light and reflect all others','They contain chlorophyll, which reflects green light and absorbs red and blue','They are painted green by the soil','Green is the most common colour in nature'],correct:1,hint:'💡 Chlorophyll absorbs most colours but reflects one.',workedExample:'Chlorophyll absorbs red and blue light (uses them for energy) and reflects green light — which is why we see green.',feedback:'✅ Chlorophyll reflects green light and absorbs red and blue for energy!',wrongFeedback:'Chlorophyll captures sunlight energy. But it does not absorb green light — it reflects it. That reflected light reaches your eyes.'},
+      {d:2,type:'input',skill:'Plant Biology',concept:'Applying photosynthesis',text:'A plant is placed in a dark cupboard for a week. What will happen and WHY? Use the word PHOTOSYNTHESIS in your answer.',hint:'💡 Without sunlight, what cannot happen?',workedExample:'Without light, no photosynthesis → no glucose → no energy → plant weakens.',correct:null,feedback:'✅ Without light, photosynthesis cannot occur, so the plant cannot make glucose (food). It will weaken, turn yellow, and may die.',wrongFeedback:'Photosynthesis needs sunlight. Without sunlight, the plant cannot ___, so it cannot make ___, so it will ___.'}
+    ]
+  },
+  {
+    id:'gravity_forces', title:'Gravity & Forces', emoji:'🍎',
+    lesson:{intro:'A FORCE is a push or pull that can change the speed, direction, or shape of an object. Forces are invisible but their effects are everywhere — gravity keeps you on Earth, friction stops you sliding, and air resistance slows falling objects.',
+      steps:[
+        {heading:'Gravity',explanation:'GRAVITY is a force that pulls objects with mass toward each other. Earth\'s gravity pulls everything toward its centre. The stronger the mass, the stronger the gravity.',visual:'🌍 Earth\'s gravity pulls:\n• You to the ground\n• The Moon into orbit\n• Rain downward\n• Planets around the Sun\n\n🍎 Story: Newton watched an apple fall and realised the same force that pulls apples also keeps the Moon in orbit!',example:'Why do you fall back down when you jump? Gravity pulls you toward Earth\'s centre. The Moon is also "falling" toward Earth, but it moves sideways so fast it keeps orbiting!'},
+        {heading:'Friction and Air Resistance',explanation:'FRICTION is a force between surfaces touching — it slows things down. AIR RESISTANCE (drag) is friction between an object and the air. Both forces oppose motion.',visual:'🛷 Friction:\n• Rough surfaces → more friction → slows things more\n• Smooth surfaces → less friction → slips easier\n• Useful: car brakes, shoe grip\n• Unhelpful: slows machines down\n\n🪂 Air resistance:\n• Large surface area → more air resistance\n• Parachutes work using air resistance to slow fall safely!',example:'Why does a feather fall slower than a rock? Same gravity, but the feather has more surface area relative to its weight, so air resistance slows it much more.'}
+      ]},
+    questions:[
+      {d:1,type:'choice',skill:'Forces',concept:'Gravity',text:'A ball is thrown straight up into the air. What force pulls it back down?',choices:['Air resistance','Friction','Gravity','Magnetism'],correct:2,hint:'💡 This force attracts all objects with mass toward Earth.',workedExample:'Everything with mass is pulled toward Earth\'s centre by gravity — always, constantly.',feedback:'✅ Gravity! It pulls the ball back down, just as it keeps you on the ground.',wrongFeedback:'The invisible force that pulls all objects toward Earth is called...?'},
+      {d:1,type:'choice',skill:'Forces',concept:'Friction',text:'Why do car brakes slow a car down?',choices:['They push air out of the way','They create friction between brake pads and wheels','They reverse the engine','They pull the car backward'],correct:1,hint:'💡 Friction is the force between surfaces in contact.',workedExample:'Rough brake pads press against the spinning wheel, creating friction that converts movement energy into heat.',feedback:'✅ Friction! Brake pads press against wheels, creating a force that opposes motion.',wrongFeedback:'What force acts between two surfaces pressing together? That force slows the spinning wheel.'},
+      {d:2,type:'choice',skill:'Forces',concept:'Air resistance',text:'A skydiver opens a parachute. What happens and why?',choices:['They fall faster — more weight pulls them down','They fall slower — parachute increases air resistance','They hover — forces balance immediately','They go upward — parachute acts like a balloon'],correct:1,hint:'💡 Larger surface area = more air resistance.',workedExample:'Parachute has huge surface area → collides with many air molecules → large upward air resistance force → slows the fall.',feedback:'✅ The parachute\'s large surface area creates huge air resistance, slowing the fall to a safe speed.',wrongFeedback:'How does a larger surface area affect air resistance? And what does more air resistance do to falling speed?'},
+      {d:2,type:'input',skill:'Forces',concept:'Comparing forces',text:'A feather and a stone are dropped from the same height. On Earth the stone hits first. On the Moon (no atmosphere), they land at the same time. Explain why.',hint:'💡 What does air resistance depend on? What does the Moon not have?',workedExample:'Air resistance depends on surface area and speed. No air = no air resistance = only gravity acts.',correct:null,feedback:'✅ On Earth, air resistance slows the feather more than the stone (larger surface relative to weight). On the Moon, there is no atmosphere, so no air resistance — only gravity acts equally on both.',wrongFeedback:'What force slows the feather on Earth but not the stone as much? Does the Moon have that force?'}
+    ]
+  },
+  {
+    id:'water_cycle', title:'The Water Cycle', emoji:'💧',
+    lesson:{intro:'Water on Earth is constantly moving and changing state in a never-ending cycle. This WATER CYCLE powers weather, fills rivers, and makes life possible.',
+      steps:[
+        {heading:'The Four Stages',explanation:'EVAPORATION: sun heats water → becomes water vapour → rises. CONDENSATION: vapour cools high up → forms clouds. PRECIPITATION: water falls as rain, snow, or hail. COLLECTION: water collects in oceans, lakes, rivers → cycle repeats.',visual:'☀️ Evaporation → water rises as vapour\n☁️ Condensation → clouds form\n🌧️ Precipitation → rain/snow falls\n🌊 Collection → back to sea/lake/river\n♻️ Repeat forever!',example:'Where does rain come from? Ocean water evaporates → rises → cools → condenses into cloud droplets → drops grow → precipitation falls back as rain.'},
+        {heading:'Why the Water Cycle Matters',explanation:'The water cycle distributes fresh water around Earth. Without it, some places would flood and others would dry up. It also moves heat energy around the planet, driving weather patterns.',visual:'🌍 The water cycle:\n• Provides fresh water for drinking, farming, ecosystems\n• Drives weather: clouds, rain, storms\n• Moves heat: warm wet air from tropics to poles\n• Cleans water: evaporation leaves salt and pollution behind\n\n💡 The water you drink today may have been in a dinosaur 100 million years ago!',example:'Why is snow important for deserts? Snow in mountains melts in spring → rivers fill → water flows to desert regions → life possible far from rain.'}
+      ]},
+    questions:[
+      {d:1,type:'choice',skill:'Water Cycle',concept:'Evaporation',text:'What causes water in a puddle to disappear after a sunny day?',choices:['The Earth absorbs it','Animals drink it','Evaporation — water becomes water vapour','It drains underground'],correct:2,hint:'💡 Heat + water = which state change?',workedExample:'Sun heats water molecules → fastest ones escape to become vapour → puddle shrinks.',feedback:'✅ Evaporation! Sunlight gives water molecules enough energy to become gas (water vapour) and rise into the air.',wrongFeedback:'When liquid water turns into gas due to heat, that process is called...?'},
+      {d:1,type:'choice',skill:'Water Cycle',concept:'Condensation to clouds',text:'How do clouds form?',choices:['Factories release smoke that becomes clouds','Water vapour rises, cools, and condenses into tiny water droplets','Warm air traps pollution','Oceans spray water upward'],correct:1,hint:'💡 What happens when warm, moist air rises and cools?',workedExample:'Water vapour (gas) + cooling = condensation → millions of tiny water droplets → cloud.',feedback:'✅ Water vapour rises, cools, and condenses into tiny droplets that form clouds.',wrongFeedback:'Water vapour is a gas. When it cools high in the atmosphere, which state change happens to form clouds?'},
+      {d:2,type:'choice',skill:'Water Cycle',concept:'Full cycle',text:'Put the water cycle in order: [A] Condensation [B] Precipitation [C] Evaporation [D] Collection',choices:['A→B→C→D','C→A→B→D','B→C→A→D','D→C→B→A'],correct:1,hint:'💡 Start with the sun heating water.',workedExample:'Evaporation (sun heats water) → Condensation (vapour cools, clouds form) → Precipitation (rain falls) → Collection (water gathers)',feedback:'✅ C→A→B→D! Evaporation→Condensation→Precipitation→Collection.',wrongFeedback:'Start with the sun heating ocean water. What is the FIRST step? Then what happens next as the vapour rises?'},
+      {d:2,type:'input',skill:'Water Cycle',concept:'Applying water cycle knowledge',text:'A glass of ice water sits on a table on a warm, humid day. Water droplets form on the OUTSIDE of the glass. Explain this using the water cycle.',hint:'💡 The glass is cold. The air around it contains water vapour. What happens when vapour meets cold glass?',workedExample:'Cold surface → nearby air cools → water vapour condenses → liquid droplets form on surface.',correct:null,feedback:'✅ Water vapour from the warm air condenses when it contacts the cold glass surface. The cold causes the vapour to lose energy and become liquid — condensation!',wrongFeedback:'The water came from the AIR, not through the glass. The cold glass caused water vapour to go through which state change?'}
+    ]
+  },
+  {
+    id:'electricity', title:'Electricity & Circuits', emoji:'⚡',
+    lesson:{intro:'ELECTRICITY is the flow of tiny charged particles called ELECTRONS through a material. When electrons flow through a circuit, they carry energy that can power lights, motors, and devices.',
+      steps:[
+        {heading:'Electric Circuits',explanation:'A circuit is a complete loop that electricity flows around. It needs: a power source (battery), wires, and a component (bulb, buzzer). If the loop is broken, electricity stops flowing.',visual:'🔋 Battery → wire → 💡 bulb → wire → back to battery\n= COMPLETE circuit → bulb lights up!\n\n🔋 Battery → broken wire → bulb\n= INCOMPLETE circuit → bulb stays off\n\n💡 Think of it like a water pipe loop — if there is a gap, water (electrons) cannot flow.',example:'A torch has a switch that physically breaks or completes the circuit. OFF = broken circuit. ON = complete circuit → bulb lights.'},
+        {heading:'Conductors and Insulators',explanation:'CONDUCTORS allow electricity to flow through them (metals: copper, iron, aluminium). INSULATORS block electricity flow (rubber, plastic, wood, glass). Wires are copper (conductor) coated in plastic (insulator) — the plastic protects you from shock.',visual:'✅ CONDUCTORS: copper, gold, silver, iron, aluminium, water (salt water)\n❌ INSULATORS: rubber, plastic, wood, glass, ceramic, dry air\n\n💡 Why are plugs made of plastic? To stop electricity flowing to your hands!',example:'Which materials make a circuit light up? Only conductors. You can test materials by putting them into a circuit as the "mystery material" — if the bulb lights, it conducts!'}
+      ]},
+    questions:[
+      {d:1,type:'choice',skill:'Electricity',concept:'Complete circuits',text:'A circuit has a battery, a bulb, and wires. The bulb is not lighting up. What is the most likely reason?',choices:['The battery has too much power','The circuit has a break (gap) somewhere','The bulb is too bright','The wires are too long'],correct:1,hint:'💡 Electricity needs a complete LOOP to flow.',workedExample:'If any part of the circuit is disconnected, current stops flowing and the bulb goes out.',feedback:'✅ A break in the circuit! Electricity needs a complete loop — any gap stops the flow.',wrongFeedback:'Electricity flows in a complete loop. What could stop it flowing to the bulb?'},
+      {d:1,type:'choice',skill:'Electricity',concept:'Conductors',text:'Which material would BEST conduct electricity?',choices:['Wood','Rubber','Copper wire','Plastic'],correct:2,hint:'💡 Metals are the best conductors.',workedExample:'Copper is used in electrical wires because it allows electrons to flow freely.',feedback:'✅ Copper wire! Metals are excellent conductors — their electrons move freely.',wrongFeedback:'Which of these is a metal? Metals allow electrons to flow freely, making them conductors.'},
+      {d:2,type:'choice',skill:'Electricity',concept:'Insulators',text:'Why are electrical wires coated in plastic?',choices:['To make them look nicer','Plastic conducts electricity better than copper','Plastic is an insulator that prevents electric shock','To make them heavier'],correct:2,hint:'💡 What does an insulator do?',workedExample:'The copper inside carries current. The plastic coating blocks current from reaching people who touch it.',feedback:'✅ Plastic is an insulator — it blocks electricity, keeping the current inside the wire and people safe.',wrongFeedback:'Insulators block electricity. Why would you want to block electricity around the outside of a wire?'},
+      {d:2,type:'input',skill:'Electricity',concept:'Designing a circuit test',text:'Design an experiment to find out which of these materials conducts electricity: a pencil, a coin, a rubber eraser, and a paper clip. How would you test them?',hint:'💡 You need a simple circuit with a gap where you can insert each material.',workedExample:'Build circuit: battery → wire → gap → wire → bulb. Insert each material in the gap. If bulb lights = conductor.',correct:null,feedback:'✅ Build a circuit with a gap, insert each material, observe if the bulb lights. If it does → conductor. If not → insulator.',wrongFeedback:'You need a complete circuit with a test gap. What materials would you use? What would you observe? What would it mean if the bulb lights?'}
+    ]
+  },
+  {
+    id:'human_body', title:'The Human Body Systems', emoji:'🫀',
+    lesson:{intro:'Your body is made of 11 organ SYSTEMS, each with a specific job. They work together to keep you alive. Today we focus on three key systems: circulatory, digestive, and skeletal.',
+      steps:[
+        {heading:'Circulatory System',explanation:'The HEART pumps blood through blood vessels (arteries, veins, capillaries) to every cell. Blood carries OXYGEN (from lungs) and NUTRIENTS (from food) to cells, and carries CARBON DIOXIDE waste back to lungs.',visual:'❤️ Heart pumps → Arteries carry blood AWAY from heart → Capillaries deliver to cells → Veins return blood to heart → Lungs add oxygen → repeat!\n\n⚡ Your heart beats ~100,000 times per day!\n🩸 Blood is red because of haemoglobin (iron-containing protein that carries O₂)',example:'Why does your heart beat faster when you exercise? Your muscles need more oxygen → heart pumps faster to deliver more blood.'},
+        {heading:'Digestive and Skeletal Systems',explanation:'DIGESTIVE: mouth (chew) → oesophagus → stomach (acid breaks food) → small intestine (absorbs nutrients) → large intestine (absorbs water) → waste out. SKELETAL: 206 bones provide structure, protect organs, and work with muscles to enable movement.',visual:'🦷 Mouth → 🫁 Oesophagus → 🫃 Stomach → 🧫 Small intestine → 💧 Large intestine\n\n🦴 Skeleton:\n• Skull protects brain\n• Ribcage protects heart & lungs\n• Spine supports body\n• Joints allow movement',example:'Why does your stomach rumble when you are hungry? Muscles in your stomach and intestines keep moving (called peristalsis) — the rumbling is those movements with air inside!'}
+      ]},
+    questions:[
+      {d:1,type:'choice',skill:'Human Body',concept:'Heart function',text:'What is the primary job of the human heart?',choices:['Filter waste from blood','Produce blood cells','Pump blood throughout the body','Control breathing'],correct:2,hint:'💡 The heart is a muscle that squeezes constantly.',workedExample:'Think of the heart as a pump in a water system — it keeps fluid moving through all the pipes.',feedback:'✅ Pump blood! The heart delivers oxygen and nutrients to every cell via blood vessels.',wrongFeedback:'The heart is a muscular pump. What does it pump, and where does it pump it to?'},
+      {d:1,type:'choice',skill:'Human Body',concept:'Digestion order',text:'After you swallow food, what is the NEXT organ it enters?',choices:['Stomach','Small intestine','Large intestine','Oesophagus'],correct:3,hint:'💡 The food must travel DOWN from your mouth to your stomach. What tube does it travel through?',workedExample:'Mouth (chew) → Oesophagus (tube to stomach) → Stomach → intestines',feedback:'✅ Oesophagus! Food travels down this tube from mouth to stomach using muscle contractions.',wrongFeedback:'After swallowing, food needs to get to the stomach. What tube connects the mouth to the stomach?'},
+      {d:2,type:'choice',skill:'Human Body',concept:'Why heart rate increases',text:'Why does your heart beat faster when you run?',choices:['Running makes your heart excited','Muscles need more oxygen, so the heart pumps faster to deliver it','Running pushes blood upward which requires more pumping','The heart beats randomly'],correct:1,hint:'💡 What do working muscles need more of?',workedExample:'Exercise → muscles work harder → need more O₂ → heart pumps faster → more blood (with O₂) reaches muscles.',feedback:'✅ Working muscles need more oxygen and glucose — the heart beats faster to deliver them via blood.',wrongFeedback:'What do your leg muscles need more of during running? How does the heart help deliver that?'},
+      {d:2,type:'input',skill:'Human Body',concept:'Organ systems working together',text:'Explain how the digestive system and circulatory system work TOGETHER to give your body the energy it needs.',hint:'💡 Digestion breaks food into nutrients. How do those nutrients get to your muscles?',workedExample:'Digestion → breaks food into glucose → absorbed into blood → heart pumps blood to muscles → muscles use glucose for energy.',correct:null,feedback:'✅ Digestion breaks food into nutrients (glucose) → absorbed into bloodstream in the small intestine → heart pumps blood carrying those nutrients to all cells → cells use them for energy.',wrongFeedback:'Step 1: what does digestion do to food? Step 2: where do those nutrients go next? Step 3: how do they reach your muscles?'}
+    ]
+  },
+  {
+    id:'adaptations', title:'Animal Adaptations', emoji:'🐾',
+    lesson:{intro:'An ADAPTATION is a feature that helps an organism survive in its environment. Every animal and plant has adaptations shaped by millions of years of evolution. Organisms with better adaptations survive and pass on their traits.',
+      steps:[
+        {heading:'Types of Adaptations',explanation:'STRUCTURAL: physical features (polar bear white fur, cactus thick skin, duck webbed feet). BEHAVIOURAL: actions (migration, hibernation, camouflage behaviour). PHYSIOLOGICAL: internal body processes (Arctic fish antifreeze proteins, camel water storage).',visual:'🐻‍❄️ Polar bear: white fur (camouflage), thick fat (insulation), small ears (reduce heat loss)\n🦒 Giraffe: long neck (reach high leaves), long tongue (grip branches)\n🌵 Cactus: no leaves (reduce water loss), thick stem (water storage), spines (deter animals)\n🦈 Shark: streamlined body (fast swimming), gills (breathe underwater)',example:'Why do Arctic foxes turn white in winter and brown in summer? Their fur colour changes as a BEHAVIOURAL/PHYSIOLOGICAL adaptation for camouflage in each season.'},
+        {heading:'Natural Selection',explanation:'Adaptations develop through NATURAL SELECTION: organisms with better adaptations survive and reproduce more. Over many generations, useful traits become more common in the population.',visual:'🦋 Example — peppered moths:\nBefore pollution: white bark → white moths camouflaged → survived → many white moths\nAfter pollution: dark sooty bark → dark moths camouflaged → white moths eaten → more dark moths\nThe environment SELECTED which colour survived!\n\nThis happens over many generations, not in one lifetime.',example:'If the environment changes too fast (like today\'s climate change), animals may not be able to adapt quickly enough — which is why many species are threatened.'}
+      ]},
+    questions:[
+      {d:1,type:'choice',skill:'Adaptations',concept:'Identifying adaptations',text:'A duck has webbed feet. What is the PRIMARY purpose of this adaptation?',choices:['To walk on land more easily','To swim efficiently in water','To dig burrows','To grip branches'],correct:1,hint:'💡 Where do ducks spend most of their time? What do webbed feet help with?',workedExample:'Webbed feet act like paddles — increased surface area pushes more water backward, propelling the duck forward.',feedback:'✅ Swimming! Webbed feet act as paddles, pushing water and propelling the duck efficiently.',wrongFeedback:'Ducks swim a lot. Their webbed feet are shaped like paddles. What does that help them do?'},
+      {d:1,type:'choice',skill:'Adaptations',concept:'Desert adaptations',text:'A cactus stores water in its thick stem and has spines instead of leaves. What are the spines MOST likely adapted for?',choices:['Photosynthesis','Collecting rainwater','Deterring animals from eating the water-storing stem','Providing shade'],correct:2,hint:'💡 Deserts are dry — water is precious. What would animals want to do to a water-filled cactus?',workedExample:'Sharp spines discourage thirsty animals from eating the cactus to get its stored water.',feedback:'✅ The spines protect the water-storing stem from animals who would eat it to get water.',wrongFeedback:'A cactus stores precious water in its stem. In a hot desert, many animals are thirsty. What would they want to do to the cactus?'},
+      {d:2,type:'choice',skill:'Adaptations',concept:'Natural selection',text:'In a population of beetles, green ones are harder to see on leaves. Birds eat mainly the brown ones. Over many generations, what happens to the population?',choices:['More brown beetles develop','More green beetles develop','Equal numbers of both','All beetles become blue'],correct:1,hint:'💡 Which beetles survive to reproduce?',workedExample:'Green beetles survive → reproduce more → pass green colour to offspring → more green offspring → population becomes mostly green.',feedback:'✅ More green beetles! Green ones survive, reproduce, and pass on the green trait. This is natural selection in action.',wrongFeedback:'Which beetles get eaten? Which ones survive and reproduce? What colour do their offspring inherit?'},
+      {d:2,type:'input',skill:'Adaptations',concept:'Explaining adaptations',text:'Explain TWO adaptations of a polar bear and how each helps it survive in the Arctic.',hint:'💡 Think: white fur, thick fat layer, small ears, large paws, black skin under fur.',workedExample:'1. White fur: camouflage in snow for hunting and hiding from threats. 2. Thick fat layer: insulation keeps body warm in −40°C temperatures.',correct:null,feedback:'✅ Key adaptations: white fur (camouflage in snow), thick fat (insulation), small ears (less heat loss), large furry paws (grip ice, distribute weight).',wrongFeedback:'Pick any two features of a polar bear and explain HOW each one specifically helps it survive the Arctic cold or hunt prey.'}
+    ]
+  },
+  {
+    id:'earth_space', title:'Earth & Space', emoji:'🌍',
+    lesson:{intro:'Earth is one of 8 planets orbiting the Sun. Our solar system is just one tiny part of the Milky Way galaxy, which contains over 200 billion stars. Understanding space helps us understand where we are and where we come from.',
+      steps:[
+        {heading:'The Solar System',explanation:'8 planets orbit the Sun in order: Mercury, Venus, Earth, Mars (rocky inner planets) | Jupiter, Saturn, Uranus, Neptune (gas giants). Earth is the third planet and the only one known to have life.',visual:'☀️ Sun → ☿ Mercury → ♀ Venus → 🌍 Earth → ♂ Mars → ♃ Jupiter → ♄ Saturn → ⛢ Uranus → ♆ Neptune\n\nMemory trick: "My Very Educated Mother Just Served Us Noodles"\n\n🌕 Moon: Earth\'s natural satellite, orbits Earth every 27 days\n🌙 Moon phases: New → Crescent → Half → Gibbous → Full → back',example:'Why do we have day and night? Earth rotates on its axis every 24 hours. Your side of Earth faces the Sun = day. Your side faces away = night.'},
+        {heading:'Why We Have Seasons',explanation:'Earth\'s axis is TILTED (23.5°). As Earth orbits the Sun over a year, different hemispheres tilt toward the Sun at different times. Tilted toward Sun = summer (more direct sunlight, longer days). Tilted away = winter.',visual:'🌍 June: Northern hemisphere tilts TOWARD Sun → Summer in UK/USA → Winter in Australia\n🌍 December: Northern hemisphere tilts AWAY from Sun → Winter in UK/USA → Summer in Australia\n\n⚠️ Common misconception: seasons are NOT caused by distance from the Sun! (Earth is actually CLOSER to the Sun in Northern winter)',example:'If you were an astronaut on the Moon looking at Earth, you would see the lit half — that is always day on Earth. The dark half is night. As Earth rotates, day and night sweep around.'}
+      ]},
+    questions:[
+      {d:1,type:'choice',skill:'Space Science',concept:'Solar system order',text:'Which planet is CLOSEST to the Sun?',choices:['Venus','Earth','Mercury','Mars'],correct:2,hint:'💡 Remember: My Very Educated Mother...',workedExample:'Order from Sun: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune.',feedback:'✅ Mercury! It is the smallest and closest planet to the Sun.',wrongFeedback:'Use the mnemonic: My Very Educated Mother Just Served Us Noodles. The FIRST letter = closest to Sun.'},
+      {d:1,type:'choice',skill:'Space Science',concept:'Day and night',text:'What causes day and night on Earth?',choices:['Earth orbiting the Sun','The Moon blocking sunlight','Earth rotating on its axis every 24 hours','The Sun moving around Earth'],correct:2,hint:'💡 Earth spins on its own axis. One full spin = one day.',workedExample:'Imagine a spinning globe with a torch shining on it. The lit side = day, dark side = night.',feedback:'✅ Earth\'s rotation! One full spin every 24 hours creates day and night.',wrongFeedback:'It is not the Sun that moves (though it looks that way). Earth spins. What does that create?'},
+      {d:2,type:'choice',skill:'Space Science',concept:'Seasons',text:'Why is it summer in the UK in June but winter in Australia at the same time?',choices:['Australia is further from the Sun in June','The Northern hemisphere tilts toward the Sun in June','The Sun moves over different countries','Australia has a different calendar'],correct:1,hint:'💡 Earth\'s axis is tilted. In June, which hemisphere tilts toward the Sun?',workedExample:'June: North tilts toward Sun → more direct sunlight → longer days → summer. South tilts away → winter.',feedback:'✅ Earth\'s tilt! In June the Northern hemisphere leans toward the Sun → summer. The South leans away → winter.',wrongFeedback:'Earth\'s axis is tilted 23.5°. In June, which hemisphere is tilted toward the Sun? What does more direct sunlight cause?'},
+      {d:2,type:'input',skill:'Space Science',concept:'Moon phases',text:'Explain why the Moon appears to change shape throughout the month. Does the Moon actually change shape?',hint:'💡 The Moon does not change shape. Think about sunlight and our viewing angle.',workedExample:'The Sun always lights one half of the Moon. As the Moon orbits Earth, we see different amounts of its lit half — causing the apparent phases.',correct:null,feedback:'✅ The Moon does not change shape! The Sun always lights half the Moon. As the Moon orbits Earth over 27 days, we see different proportions of its lit half — creating the phases from new moon to full moon and back.',wrongFeedback:'The Moon is always a sphere. The Sun always lights one half. As the Moon moves around Earth, from our viewpoint, how much of the lit half can we see?'}
+    ]
+  },
+  {
+    id:'light_sound', title:'Light & Sound', emoji:'🔦',
+    lesson:{intro:'LIGHT and SOUND are both forms of energy that travel as waves — but they are very different! Light travels incredibly fast and can travel through empty space. Sound is much slower and needs a material (medium) to travel through.',
+      steps:[
+        {heading:'Light',explanation:'Light travels at 300,000 km/second — the fastest speed possible. It travels in straight lines. When it hits objects it can be: ABSORBED (object gets warm), REFLECTED (bounces back — mirrors), or REFRACTED (bends when entering a new material — glass, water).',visual:'🔦 Light travels in straight lines\n🪞 Mirror: reflects light → we see our reflection\n💎 Glass/water: refracts (bends) light → objects in water look shifted\n🌈 Prism: refracts light splitting white light into the rainbow spectrum\n⚠️ Shadows form when opaque objects BLOCK light — proving light travels in straight lines!',example:'Why do your legs look bent when standing in water? Light from your legs refracts (bends) when it exits the water and enters air — your brain interprets it as a straight line, so your legs appear displaced.'},
+        {heading:'Sound',explanation:'Sound is vibrations that travel through matter. Faster through solids and liquids than air (molecules are closer together). Cannot travel through a vacuum (no molecules to vibrate).',visual:'🔔 Bell rings → vibrates → pushes air molecules → wave of compressions travels outward → reaches ear → ear drum vibrates → you hear it!\n\n🚀 In space, no one can hear you scream — no air molecules to carry sound vibrations!\n\nSpeed of sound in air: ~340 m/s\nSpeed of sound in water: ~1,500 m/s\nSpeed of sound in steel: ~5,000 m/s',example:'Why do you hear thunder after you see lightning? Light travels at 300,000 km/s. Sound travels at 0.34 km/s. Count seconds after lightning: each second = ~340 m away!'}
+      ]},
+    questions:[
+      {d:1,type:'choice',skill:'Light & Sound',concept:'Light travel',text:'Light from a torch travels in:',choices:['Curved lines that bend around objects','All directions at once randomly','Straight lines','Spirals'],correct:1,hint:'💡 This is why shadows form behind objects.',workedExample:'Because light travels straight, objects create shadows directly behind them — the shadow has the same shape as the object.',feedback:'✅ Straight lines! Light cannot bend around corners (in normal conditions), which is why shadows are sharp.',wrongFeedback:'If light curved, shadows would be strange shapes. Why are shadows a clear outline of the object?'},
+      {d:1,type:'choice',skill:'Light & Sound',concept:'Sound needs medium',text:'Astronauts in space cannot talk to each other without radios even when face to face. Why?',choices:['Their helmets muffle sound','Space is a vacuum — no air molecules to carry sound vibrations','Sound travels too fast in space','Their voices are too quiet'],correct:1,hint:'💡 Sound needs molecules to travel. What does space have?',workedExample:'Sound = vibrations passed from molecule to molecule. No molecules = no sound.',feedback:'✅ Space is a vacuum — no air molecules! Sound vibrations have nothing to travel through.',wrongFeedback:'Sound is made of vibrating molecules passing energy to neighbouring molecules. What does space not have?'},
+      {d:2,type:'choice',skill:'Light & Sound',concept:'Refraction',text:'A pencil placed in a glass of water appears bent at the water surface. This is because:',choices:['Water pushes the pencil sideways','Light refracts (bends) when passing from water to air','The pencil actually bends in water','Water magnifies the pencil'],correct:1,hint:'💡 Light changes speed when entering a different material.',workedExample:'Light slows when entering water. When it exits back into air, it speeds up and bends — the brain interprets the bent light as a bent pencil.',feedback:'✅ Refraction! Light bends when moving between water and air, making the pencil appear displaced.',wrongFeedback:'The pencil is not actually bent. Light traveling from water to air changes direction. What is that bending of light called?'},
+      {d:2,type:'input',skill:'Light & Sound',concept:'Comparing light and sound',text:'You see lightning, then 5 seconds later hear thunder. The speed of sound is 340 m/s. How far away is the storm? Show your working.',hint:'💡 Distance = speed × time.',workedExample:'Speed × time = distance. Sound: 340 m/s × 3 seconds = 1,020 m away.',correct:['1700','1,700','1700 m','1,700 m'],feedback:'✅ 1,700 m (1.7 km) away! 340 m/s × 5 seconds = 1,700 m.',wrongFeedback:'Use: distance = speed × time. 340 m/s × 5 s = ? metres.'}
+    ]
+  }
+];
 
 // ── EXPANDED SCIENCE QUESTION POOL ───────────────────────────────
 var SCIENCE_QUESTIONS=[
@@ -2722,7 +2957,7 @@ var AWARENESS_QUESTIONS=[
 ];
 
 var SUBJECTS={
-math:{title:'🔢 Math Mission',targetMin:40,questions:[
+math:{title:'🔢 Math Mission',targetMin:60,questions:[
 {type:'choice',skill:'Multiplication',concept:'Multiplying to find a total',text:'Sophia practised piano for 35 minutes every day for 8 days. How many minutes total?',hint:'💡 Write it as an equation: minutes per day × days = total.',workedExample:'If she practised 10 min for 3 days → 10×3=30 min. Same idea, bigger numbers!',reteachNote:"Multiplication means repeated addition. 35×8 = 35+35+35+35+35+35+35+35. Or try: 30×8=240, then 5×8=40, add them.",choices:['270 minutes','280 minutes','245 minutes','315 minutes'],correct:1,feedback:'🎵 Yes! 35×8=280. Break 35 into 30+5: 30×8=240, 5×8=40, total 280!',wrongFeedback:"Try breaking 35 into 30+5. Multiply each by 8, then add your answers."},
 {type:'input',skill:'Multi-step Problems',concept:'Solving a problem in more than one step',text:"Maya baked 4 trays of 18 cookies each. She ate 6 and gave 12 to a neighbour. How many does she have left?",hint:'💡 Step 1: Total cookies (multiply). Step 2: Subtract what left.',workedExample:'3 trays × 10 cookies = 30 total. Ate 5, gave 5 → 30−10=20 left.',reteachNote:"Step 1: 4×18 = ? Step 2: She lost 6+12=18 cookies total. Subtract 18 from step 1.",correct:['54','54 cookies'],feedback:'🍪 Perfect! 4×18=72, then 72−18=54.',wrongFeedback:"Two steps: 4×18=? Then subtract 6+12 from that total."},
 {type:'choice',skill:'Perimeter',concept:'Adding all sides to find the distance around a shape',text:'A rectangular garden is 14 m long and 9 m wide. What is its perimeter?',hint:'💡 A rectangle has TWO long sides and TWO short sides.',workedExample:'5m×3m rectangle: 5+5+3+3=16m. Two of each side!',reteachNote:"Draw it! You need: 14+14+9+9. Don't just add 14+9!",choices:['23 m','46 m','126 m','36 m'],correct:1,feedback:'🌿 Correct! 14+14+9+9=46m.',wrongFeedback:"A rectangle has 4 sides! Add ALL four: 14+14+9+9."},
@@ -2805,7 +3040,7 @@ science:{title:'🔬 Science Explorer',targetMin:40,questions:[
 {type:'choice',skill:'Life Science',concept:'Adaptation and how organisms suit their environment',text:"Polar bears have thick WHITE fur, lots of body fat, and small ears. The white fur is an ADAPTATION. What is its PRIMARY purpose?",hint:'💡 Think about where polar bears live and what they need: hunting, warmth, safety.',workedExample:'Adaptation purpose = always about SURVIVAL. Ask: how does THIS specific feature help the animal live in its environment?',reteachNote:"White fur in a snowy environment: if the bear blends into snow, can prey see it coming? Can predators spot it?",choices:["To keep the bear warm in very cold temperatures","To camouflage the bear in snow for hunting and avoiding predators","To reflect sunlight so it doesn't overheat","To help it swim faster"],correct:1,feedback:"🐻‍❄️ White fur = camouflage! It hides the bear from prey AND predators in snow. Fat provides warmth; small ears reduce heat loss.",wrongFeedback:"White fur in white snow — what does blending in achieve? Think about BOTH hunting and not being seen by enemies."},
 {type:'input',skill:'Scientific Thinking',concept:'Explaining a phenomenon using scientific reasoning',text:'Ice floats in water. Most solids SINK in their liquid form. Why might it be IMPORTANT for life on Earth that ice floats? Think about fish, ponds, and winter.',hint:"💡 If ice sank, what would happen to ponds in winter? What lives there?",workedExample:'Ice floats → creates an insulating lid on ponds → water stays liquid underneath → fish survive winter.',reteachNote:"If ice sank: water freezes solid from bottom up. Fish and aquatic life have nowhere to survive winter. Floating ice = liquid water preserved below.",correct:null,feedback:"❄️ Ice is less dense than liquid water, so it floats. This insulates ponds, keeping water below liquid — protecting aquatic life through winter. A tiny physical property protects enormous amounts of life!",wrongFeedback:"Imagine winter WITHOUT floating ice: ice sinks, more forms and sinks... eventually what's left? Would a fish have anywhere to live?"}
 ]},
-awareness:{title:'🌍 World Awareness',targetMin:10,questions:[
+awareness:{title:'🌍 World Awareness',targetMin:20,questions:[
 {type:'choice',skill:'Space Exploration',concept:'Why and how we explore space',text:'Why do scientists send ROBOTS to Mars instead of humans right now?',hint:"💡 What do humans need to survive? Mars has almost none of it.",workedExample:"Robots: no oxygen needed, no food, no sleep, no fear. Humans need all of these.",reteachNote:"Mars: no breathable air, −60°C, 7-month trip. Robots survive all of this. A human mission would be extremely dangerous.",choices:["Robots are more intelligent","Robots don't need air, food, or warmth — it's safer and far cheaper","Scientists don't want to go","Robots travel faster"],correct:1,feedback:"🤖 Robots are perfect extreme-environment explorers. Human Mars missions are planned for the 2030s!",wrongFeedback:"Think about survival needs: air, food, warmth, radiation protection. Mars has almost none. What advantage does that give robots?"},
 {type:'input',skill:'Climate',concept:'Understanding climate change and innovation',text:'Climate change causes global temperatures to rise. Invent ONE solution. Name it, describe how it works, and explain HOW it reduces warming.',hint:"💡 What causes warming? (CO2 traps heat.) Your invention could use clean energy, remove CO2, or help nature absorb more carbon.",workedExample:'"Solar Roadways: roads made of solar panels. Generate electricity from sunlight. Replace coal power plants. Less CO2. Less warming."',reteachNote:"Chain: invention → reduces CO2 → less heat trapped → less warming. Explain all three links.",correct:null,feedback:"🌍 Real scientists work on ideas just like yours! Solar panels, carbon capture, lab-grown meat, ocean seaweed farms — innovation is how we solve climate change.",wrongFeedback:"Explain the CHAIN: your invention → does what → which reduces CO2 how → which reduces warming how."},
 {type:'choice',skill:'Geography',concept:'Basic world geography',text:'Which continent has the MOST countries?',hint:"💡 Which continent is very large and was divided into many nations through history?",workedExample:"Africa=54 countries, Asia=48, Europe=44, North America=23.",reteachNote:"Africa was divided into many nations during and after European colonisation. It also has enormous cultural diversity.",choices:['Asia','Europe','Africa','North America'],correct:2,feedback:"🌍 Africa has 54 countries — the most of any continent! Also has the Nile, Sahara, and incredible wildlife.",wrongFeedback:"Think large continent + many nations from colonial history. Africa has 54!"},
@@ -2877,6 +3112,27 @@ async function syncSessionToSupabase(sessionData){
       body: JSON.stringify(sessionData)
     });
   } catch(e){ console.log('Supabase sync failed (offline?):', e); }
+}
+
+// ── FULL STATE SYNC TO SUPABASE ────────────────────────────────
+async function syncStateToSupabase(){
+  if(!supabaseReady) return;
+  try{
+    await fetch(SUPABASE_URL+'/rest/v1/student_state',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY,'Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify({id:'main',state_json:JSON.stringify(state),updated_at:new Date().toISOString()})
+    });
+  }catch(e){console.log('State sync failed:',e);}
+}
+
+async function loadStateFromSupabase(){
+  if(!supabaseReady) return null;
+  try{
+    var r=await fetch(SUPABASE_URL+'/rest/v1/student_state?id=eq.main&select=state_json',{headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY}});
+    if(r.ok){var d=await r.json();if(d.length&&d[0].state_json)return JSON.parse(d[0].state_json);}
+  }catch(e){}
+  return null;
 }
 
 async function syncChoreToSupabase(choreData){
@@ -3644,6 +3900,18 @@ function renderAdaptiveQuestion(){
     showLessonStep(lsn,currentLessonCallback);
     return;
   }
+  if(q && q.type==='science_lesson'){
+    document.getElementById('q-num').textContent=q.emoji+' '+q.title;
+    document.getElementById('lesson-prog-fill').style.width=((currentQ+1)/total*100)+'%';
+    var lsn=q.lesson;
+    if(!lsn){currentQ++;renderAdaptiveQuestion();return;}
+    currentLessonCallback=function(){currentQ++;renderAdaptiveQuestion();};
+    lessonStep=-1;
+    // Temporarily set LESSONS entry so showLessonStep works
+    LESSONS['__science_temp__']=Object.assign({title:q.title,emoji:q.emoji},lsn);
+    showLessonStep(LESSONS['__science_temp__'],currentLessonCallback);
+    return;
+  }
   var total=qs.length;
   selectedChoice=null;attemptCount=0;
   document.getElementById('q-num').textContent='Q '+(currentQ+1)+' / '+total;
@@ -3815,9 +4083,19 @@ async function syncTeachMeToSupabase(entry){
 
 // ── INIT ───────────────────────────────────────────────────────
 updateDashboard();
+(async function(){
+  var remote=await loadStateFromSupabase();
+  if(remote&&remote.xp!=null&&(remote.xp>(state.xp||0)||(remote.log||[]).length>(state.log||[]).length)){
+    state=remote;
+    saveState();
+    updateDashboard();
+    console.log('State loaded from Supabase: XP='+state.xp);
+  }
+})();
 var todayNow=new Date().toDateString();
 if(state.lastDay&&state.lastDay!==todayNow){var yest=new Date();yest.setDate(yest.getDate()-1);if(state.lastDay!==yest.toDateString()){state.streak=0;saveState();}}
 
 </script>
+<!-- Supabase table needed: CREATE TABLE student_state (id text PRIMARY KEY, state_json text, updated_at timestamptz); ALTER TABLE student_state ENABLE ROW LEVEL SECURITY; CREATE POLICY "allow all" ON student_state FOR ALL USING (true) WITH CHECK (true); -->
 </body>
 </html>
