@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Summer Quest Academy ✨</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6C4DE8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Summer Quest">
+<link rel="apple-touch-icon" href="icons/icon-512.png">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
 <style>
 :root{--sky:#6EC6F5;--sun:#FFD166;--mint:#06D6A0;--coral:#FF6B6B;--lavender:#A78BFA;--navy:#1A1A4E;--card-bg:rgba(255,255,255,0.93);--glass:rgba(255,255,255,0.55);--shadow:0 8px 32px rgba(106,90,205,0.13);--radius:22px;--font-head:'Fredoka One',cursive;--font-body:'Nunito',sans-serif;}
@@ -4279,5 +4285,14 @@ if(state.lastDay&&state.lastDay!==todayNow){var yest=new Date();yest.setDate(yes
 
 </script>
 <!-- Supabase table needed: CREATE TABLE student_state (id text PRIMARY KEY, state_json text, updated_at timestamptz); ALTER TABLE student_state ENABLE ROW LEVEL SECURITY; CREATE POLICY "allow all" ON student_state FOR ALL USING (true) WITH CHECK (true); -->
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('/summer-quest/sw.js', {scope: '/summer-quest/'})
+      .then(function(r){ console.log('SW registered'); })
+      .catch(function(e){ console.log('SW error', e); });
+  });
+}
+</script>
 </body>
 </html>
