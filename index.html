@@ -176,6 +176,40 @@ body{font-family:var(--font-body);min-height:100vh;background:linear-gradient(13
 .day-cell.done-none{background:rgba(255,100,100,0.3);}
 .day-cell.today{outline:2px solid #fff;outline-offset:1px;}
 
+/* ── DAILY TEST ──────────────────────────────────────────────── */
+.test-card{background:linear-gradient(135deg,#1A1A4E 0%,#3B0764 100%);border-radius:var(--radius);padding:22px;box-shadow:0 8px 32px rgba(59,7,100,0.35);color:#fff;margin-top:6px;cursor:pointer;transition:transform .18s,box-shadow .18s;border:2px solid rgba(167,139,250,0.4);}
+.test-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(59,7,100,0.45);}
+.test-card h3{font-family:var(--font-head);font-size:1.3rem;margin:8px 0 4px;}
+.test-card p{font-size:0.83rem;opacity:.8;margin-bottom:10px;}
+.test-card .start-btn{background:linear-gradient(135deg,#FFD166,#FF9F1C);color:var(--navy);}
+.test-badge{background:rgba(255,255,255,0.15);border-radius:50px;padding:4px 12px;font-size:0.75rem;font-weight:800;display:inline-block;margin-bottom:8px;}
+.test-header{background:linear-gradient(135deg,#1A1A4E,#3B0764);color:#fff;border-radius:var(--radius);padding:20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.test-progress-bar-wrap{background:rgba(255,255,255,0.18);border-radius:50px;height:10px;flex:1;min-width:120px;overflow:hidden;margin:0 12px;}
+.test-progress-bar-fill{height:100%;background:linear-gradient(90deg,#FFD166,#FF9F1C);border-radius:50px;transition:width .4s;}
+.test-q-num{font-family:var(--font-head);font-size:1.05rem;color:#FFD166;white-space:nowrap;}
+.test-timer{font-family:var(--font-head);font-size:1.1rem;color:#A78BFA;white-space:nowrap;}
+.test-question-card{background:var(--card-bg);border-radius:var(--radius);padding:28px 24px;box-shadow:var(--shadow);margin-bottom:18px;border-left:5px solid #7C3AED;}
+.test-question-text{font-size:1.05rem;font-weight:700;color:var(--navy);line-height:1.7;margin-bottom:20px;}
+.test-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px;}
+.test-choice-btn{background:#F3F4F6;border:2.5px solid #E5E7EB;border-radius:14px;padding:14px 16px;font-family:var(--font-body);font-size:0.95rem;font-weight:700;color:var(--navy);cursor:pointer;transition:all .15s;text-align:left;}
+.test-choice-btn:hover{background:#EDE9FE;border-color:#7C3AED;color:#4C1D95;}
+.test-choice-btn.selected{background:#7C3AED;border-color:#7C3AED;color:#fff;}
+.test-choice-btn.correct{background:#06D6A0;border-color:#06D6A0;color:#fff;}
+.test-choice-btn.wrong{background:#FF6B6B;border-color:#FF6B6B;color:#fff;}
+.test-input{width:100%;border:2.5px solid #E5E7EB;border-radius:14px;padding:14px 18px;font-family:var(--font-body);font-size:1rem;font-weight:700;color:var(--navy);outline:none;margin-bottom:8px;transition:border-color .2s;}
+.test-input:focus{border-color:#7C3AED;}
+.test-nav{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
+.test-submit-btn{background:linear-gradient(135deg,#7C3AED,#A78BFA);color:#fff;border:none;border-radius:50px;padding:14px 32px;font-family:var(--font-body);font-weight:800;font-size:1rem;cursor:pointer;transition:transform .15s;}
+.test-submit-btn:hover{transform:scale(1.04);}
+.test-skip-btn{background:none;border:2px solid #ddd;border-radius:50px;padding:10px 20px;font-family:var(--font-body);font-weight:700;font-size:0.88rem;color:#aaa;cursor:pointer;}
+.test-results-card{background:var(--card-bg);border-radius:var(--radius);padding:28px 24px;box-shadow:var(--shadow);margin-bottom:16px;}
+.test-score-big{font-family:var(--font-head);font-size:4rem;text-align:center;margin:10px 0;}
+.test-grade{font-family:var(--font-head);font-size:1.4rem;text-align:center;margin-bottom:18px;}
+.test-review-item{background:#F8F9FF;border-radius:14px;padding:16px;margin-bottom:10px;border-left:4px solid #ddd;}
+.test-review-item.correct-item{border-left-color:#06D6A0;}
+.test-review-item.wrong-item{border-left-color:#FF6B6B;}
+.test-review-q{font-size:0.9rem;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.test-review-a{font-size:0.85rem;margin-top:4px;}
 /* iOS Safari touch fixes */
 * { -webkit-tap-highlight-color: transparent; }
 button, .subject-card, .choice-btn, .chore-item, .start-btn, .back-btn, 
@@ -254,6 +288,15 @@ body { -webkit-text-size-adjust: 100%; }
       <button class="start-btn">Start Mission →</button>
     </div>
   </div>
+  <div class="test-card" onclick="startDailyTest()">
+    <div class="test-badge">📝 Daily Challenge</div>
+    <h3>🧮 Daily Maths Test</h3>
+    <p>50 questions · Multiplication, Division, Word Problems, Equations &amp; Geometry · Timed</p>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <div id="test-card-status" style="font-size:0.82rem;opacity:.75;">Tap to begin today's test!</div>
+      <button class="start-btn" style="background:linear-gradient(135deg,#FFD166,#FF9F1C);color:#1A1A4E;">Start Test →</button>
+    </div>
+  </div>
   <div class="info-card"><h4>📅 Today's Log</h4><div id="today-log" style="margin-top:8px;font-size:0.86rem;color:#888;">No sessions yet. Let's start! ✨</div></div>
 </div>
 
@@ -327,6 +370,60 @@ body { -webkit-text-size-adjust: 100%; }
         <button class="start-btn" onclick="showScreen('home')" style="background:linear-gradient(135deg,var(--lavender),#7C3AED);color:#fff;">🏠 Home</button>
         <button class="start-btn" id="next-subject-btn" style="background:linear-gradient(135deg,var(--mint),#17C3B2);color:#fff;">Next →</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- DAILY TEST -->
+<div id="screen-test" class="screen">
+  <div id="test-intro-view">
+    <div class="test-header" style="flex-direction:column;align-items:flex-start;">
+      <button onclick="showScreen('home')" style="background:rgba(255,255,255,0.15);border:none;color:#fff;border-radius:50px;padding:7px 16px;font-weight:800;cursor:pointer;font-size:0.85rem;margin-bottom:10px;">← Home</button>
+      <div style="font-family:var(--font-head);font-size:1.6rem;">🧮 Daily Maths Test</div>
+      <div style="opacity:.75;font-size:0.88rem;margin-top:4px;">50 questions · Timed · Graded</div>
+    </div>
+    <div class="test-results-card" style="text-align:center;">
+      <div style="font-size:3rem;margin-bottom:8px;">📝</div>
+      <div style="font-family:var(--font-head);font-size:1.4rem;color:var(--navy);margin-bottom:12px;">Ready for your Daily Maths Challenge?</div>
+      <p style="color:#666;font-size:0.92rem;margin-bottom:8px;">This test covers <strong>Multiplication · Division · Word Problems · Equations · Geometry</strong></p>
+      <p style="color:#888;font-size:0.82rem;margin-bottom:24px;">50 questions · No hints · Your time is recorded · Results shown at the end</p>
+      <div id="test-last-score" style="margin-bottom:20px;"></div>
+      <button onclick="beginTest()" class="test-submit-btn" style="font-size:1.1rem;padding:16px 48px;">Start Test 🚀</button>
+    </div>
+  </div>
+  <div id="test-active-view" style="display:none;">
+    <div class="test-header">
+      <button onclick="confirmQuitTest()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;border-radius:50px;padding:7px 14px;font-weight:800;cursor:pointer;font-size:0.82rem;">✕ Quit</button>
+      <div class="test-q-num">Q <span id="test-q-current">1</span> / 50</div>
+      <div class="test-progress-bar-wrap"><div class="test-progress-bar-fill" id="test-prog-fill" style="width:2%"></div></div>
+      <div class="test-timer" id="test-timer">0:00</div>
+    </div>
+    <div id="test-q-container"></div>
+    <div class="test-nav">
+      <button class="test-skip-btn" onclick="skipTestQuestion()">Skip →</button>
+      <button class="test-submit-btn" onclick="submitTestAnswer()">Confirm Answer ✓</button>
+    </div>
+  </div>
+  <div id="test-results-view" style="display:none;">
+    <div class="test-header" style="flex-direction:column;align-items:flex-start;">
+      <button onclick="showScreen('home')" style="background:rgba(255,255,255,0.15);border:none;color:#fff;border-radius:50px;padding:7px 16px;font-weight:800;cursor:pointer;font-size:0.85rem;margin-bottom:10px;">🏠 Home</button>
+      <div style="font-family:var(--font-head);font-size:1.5rem;">Test Results</div>
+    </div>
+    <div class="test-results-card">
+      <div class="test-score-big" id="test-score-display"></div>
+      <div class="test-grade" id="test-grade-display"></div>
+      <div style="display:flex;justify-content:center;gap:24px;margin-bottom:20px;flex-wrap:wrap;">
+        <div style="text-align:center;"><div style="font-size:1.5rem;font-weight:800;color:#7C3AED;" id="test-pct-display"></div><div style="font-size:0.78rem;color:#aaa;">Score</div></div>
+        <div style="text-align:center;"><div style="font-size:1.5rem;font-weight:800;color:#06D6A0;" id="test-correct-display"></div><div style="font-size:0.78rem;color:#aaa;">Correct</div></div>
+        <div style="text-align:center;"><div style="font-size:1.5rem;font-weight:800;color:#FF6B6B;" id="test-wrong-display"></div><div style="font-size:0.78rem;color:#aaa;">Wrong</div></div>
+        <div style="text-align:center;"><div style="font-size:1.5rem;font-weight:800;color:#FFD166;" id="test-time-display"></div><div style="font-size:0.78rem;color:#aaa;">Time</div></div>
+      </div>
+      <button onclick="beginTest()" class="test-submit-btn" style="width:100%;margin-bottom:10px;">🔁 Try Again</button>
+      <button onclick="showScreen('home')" style="width:100%;background:none;border:2px solid #ddd;border-radius:50px;padding:12px;font-family:var(--font-body);font-weight:800;cursor:pointer;color:#888;">🏠 Home</button>
+    </div>
+    <div class="test-results-card">
+      <h4 style="font-family:var(--font-head);color:var(--navy);margin-bottom:16px;">📋 Question Review</h4>
+      <div id="test-review-list"></div>
     </div>
   </div>
 </div>
@@ -4282,6 +4379,253 @@ updateDashboard();
 })();
 var todayNow=new Date().toDateString();
 if(state.lastDay&&state.lastDay!==todayNow){var yest=new Date();yest.setDate(yest.getDate()-1);if(state.lastDay!==yest.toDateString()){state.streak=0;saveState();}}
+
+// ── DAILY MATHS TEST ─────────────────────────────────────────────
+var DAILY_TEST_QUESTIONS = [
+// ── MULTIPLICATION ───────────────────────────────────────────────
+{id:1,topic:'Multiplication',text:'What is 47 × 8?',type:'input',correct:['376'],feedback:'47×8: (40×8)+(7×8)=320+56=376'},
+{id:2,topic:'Multiplication',text:'A school has 24 classrooms. Each classroom has 32 students. How many students in total?',type:'input',correct:['768'],feedback:'24×32=768'},
+{id:3,topic:'Multiplication',text:'What is 135 × 6?',type:'input',correct:['810'],feedback:'135×6=(100×6)+(35×6)=600+210=810'},
+{id:4,topic:'Multiplication',text:'A baker makes 18 trays of muffins. Each tray holds 24 muffins. How many muffins altogether?',type:'input',correct:['432'],feedback:'18×24=432'},
+{id:5,topic:'Multiplication',text:'What is 57 × 34?',type:'choice',choices:['1,838','1,938','1,958','1,818'],correct:1,feedback:'57×34=(57×30)+(57×4)=1710+228=1938'},
+{id:6,topic:'Multiplication',text:'A factory produces 265 widgets per hour. How many does it produce in 8 hours?',type:'input',correct:['2120','2,120'],feedback:'265×8=2120'},
+{id:7,topic:'Multiplication',text:'What is 96 × 25?',type:'choice',choices:['2,300','2,400','2,350','2,450'],correct:1,feedback:'96×25=96×(100÷4)=(9600÷4)=2400'},
+{id:8,topic:'Multiplication',text:'There are 12 eggs in a carton. A supermarket receives 144 cartons. How many eggs is that?',type:'input',correct:['1728','1,728'],feedback:'12×144=1728'},
+{id:9,topic:'Multiplication',text:'What is 63 × 42?',type:'input',correct:['2646','2,646'],feedback:'63×42=(63×40)+(63×2)=2520+126=2646'},
+{id:10,topic:'Multiplication',text:'A cinema has 38 rows with 26 seats per row. What is the total seating capacity?',type:'choice',choices:['898','978','988','968'],correct:2,feedback:'38×26=(40×26)−(2×26)=1040−52=988'},
+// ── DIVISION ─────────────────────────────────────────────────────
+{id:11,topic:'Division',text:'What is 756 ÷ 9?',type:'input',correct:['84'],feedback:'756÷9: 9×80=720, 756−720=36, 36÷9=4 → 84'},
+{id:12,topic:'Division',text:'432 students are split equally into 16 teams. How many students per team?',type:'input',correct:['27'],feedback:'432÷16=27'},
+{id:13,topic:'Division',text:'What is 1,248 ÷ 8?',type:'choice',choices:['146','152','156','148'],correct:2,feedback:'1248÷8=156'},
+{id:14,topic:'Division',text:'A bag of 952 marbles is shared equally among 7 children. How many does each child get, and how many are left over?',type:'input',correct:['136 remainder 0','136','136 each'],feedback:'952÷7=136 exactly'},
+{id:15,topic:'Division',text:'What is 945 ÷ 15?',type:'input',correct:['63'],feedback:'945÷15=63'},
+{id:16,topic:'Division',text:'A school bus holds 48 pupils. 336 students need transport. How many full buses are needed?',type:'input',correct:['7'],feedback:'336÷48=7'},
+{id:17,topic:'Division',text:'1,320 ÷ 12 = ?',type:'choice',choices:['105','110','115','120'],correct:1,feedback:'1320÷12=110'},
+{id:18,topic:'Division',text:'Pens cost 35p each. Aisha spends £8.75 exactly on pens. How many pens does she buy?',type:'input',correct:['25'],feedback:'875÷35=25'},
+{id:19,topic:'Division',text:'What is 2,016 ÷ 24?',type:'input',correct:['84'],feedback:'2016÷24=84'},
+{id:20,topic:'Division',text:'A ribbon 7.2 m long is cut into pieces of 0.9 m each. How many pieces are there?',type:'input',correct:['8'],feedback:'7.2÷0.9=8'},
+// ── WORD PROBLEMS ────────────────────────────────────────────────
+{id:21,topic:'Word Problems',text:'Priya saves £12.50 a week for 8 weeks, then spends £34.75 on a book and £27.50 on stationery. How much money does she have left?',type:'input',correct:['37.75','£37.75'],feedback:'8×£12.50=£100. £100−£34.75−£27.50=£37.75'},
+{id:22,topic:'Word Problems',text:'A train travels at 95 km/h. It leaves at 10:15 am and arrives at 1:45 pm. How far does it travel?',type:'input',correct:['332.5','332.5 km'],feedback:'Time = 3.5 hours. 95×3.5=332.5 km'},
+{id:23,topic:'Word Problems',text:'A rectangular field is 85 m long and 62 m wide. A farmer plants crops on 3/4 of the field. What area has crops?',type:'input',correct:['3967.5','3967.5 m2'],feedback:'Total area=85×62=5270 m². 3/4×5270=3952.5 m²'},
+{id:24,topic:'Word Problems',text:'Marcus earns £9.50 per hour. He works 6 hours on Monday, 4.5 hours on Tuesday, and 7 hours on Friday. What are his total earnings for those three days?',type:'input',correct:['166.25','£166.25'],feedback:'Total hours=6+4.5+7=17.5. 17.5×£9.50=£166.25'},
+{id:25,topic:'Word Problems',text:'A swimming pool holds 450,000 litres. It is filled at a rate of 1,200 litres per minute. How many hours and minutes does it take to fill completely?',type:'input',correct:['6 hours 15 minutes','6h 15min','375 minutes'],feedback:'450000÷1200=375 minutes=6 hours 15 minutes'},
+{id:26,topic:'Word Problems',text:'Three friends share a restaurant bill of £93.60 equally. They each also pay a tip of 10%. How much does each person pay in total?',type:'input',correct:['34.32','£34.32'],feedback:'£93.60÷3=£31.20 each. 10% tip=£3.12. Total=£34.32 each'},
+{id:27,topic:'Word Problems',text:'A jar contains red, blue and green sweets. There are 48 sweets altogether. 1/4 are red, 1/3 are blue, and the rest are green. How many green sweets are there?',type:'input',correct:['20'],feedback:'Red=12, Blue=16, Green=48−12−16=20'},
+{id:28,topic:'Word Problems',text:'A car uses 1 litre of petrol every 14 km. Petrol costs £1.68 per litre. How much does petrol cost for a 350 km journey?',type:'input',correct:['42','£42'],feedback:'350÷14=25 litres. 25×£1.68=£42'},
+{id:29,topic:'Word Problems',text:'Zara runs a 5 km race in 28 minutes 20 seconds. What is her average speed in km per minute? Give your answer as a fraction in simplest form.',type:'input',correct:['3/17','0.176'],feedback:'5 km ÷ (28⅓ min) = 5 ÷ (85/3) = 15/85 = 3/17 km/min'},
+{id:30,topic:'Word Problems',text:'A box of chocolates contains 36 chocolates. Dark chocolate makes up 5/12 of the box, milk chocolate is 1/3, and the rest are white. How many white chocolates are there?',type:'input',correct:['9'],feedback:'Dark=15, Milk=12, White=36−15−12=9'},
+{id:31,topic:'Word Problems',text:'Tom has £200. He spends 35% on clothes, 20% on books and saves the rest. How much does he save?',type:'input',correct:['90','£90'],feedback:'35%+20%=55% spent. 45% saved. 45% of £200=£90'},
+{id:32,topic:'Word Problems',text:'A recipe for 12 biscuits needs 240g flour, 120g butter and 80g sugar. How much flour is needed to make 30 biscuits?',type:'input',correct:['600','600g'],feedback:'Scale factor=30÷12=2.5. 240×2.5=600g'},
+{id:33,topic:'Word Problems',text:'Two taps fill a tank. Tap A fills it in 6 hours. Tap B fills it in 4 hours. Working together, how many hours will it take to fill the tank?',type:'choice',choices:['2 hours','2.4 hours','3 hours','5 hours'],correct:1,feedback:'A fills 1/6 per hour, B fills 1/4 per hour. Together: 1/6+1/4=5/12 per hour. Time=12/5=2.4 hours'},
+{id:34,topic:'Word Problems',text:'In a class of 30, 18 students play football, 12 play tennis, and 5 play both. How many students play NEITHER sport?',type:'input',correct:['5'],feedback:'Football only=13, Tennis only=7, Both=5. Total=25. Neither=30−25=5'},
+// ── EQUATIONS & ALGEBRA ──────────────────────────────────────────
+{id:35,topic:'Equations',text:'Solve: 4x + 7 = 31',type:'input',correct:['6','x=6'],feedback:'4x=31−7=24. x=24÷4=6'},
+{id:36,topic:'Equations',text:'Solve: 3y − 11 = 19',type:'input',correct:['10','y=10'],feedback:'3y=19+11=30. y=30÷3=10'},
+{id:37,topic:'Equations',text:'Solve: 5x + 3 = 2x + 18',type:'input',correct:['5','x=5'],feedback:'5x−2x=18−3 → 3x=15 → x=5'},
+{id:38,topic:'Equations',text:'If n² + 5 = 30, what is n? (n is a positive whole number)',type:'input',correct:['5','n=5'],feedback:'n²=30−5=25. √25=5'},
+{id:39,topic:'Equations',text:'A number is doubled, then 9 is subtracted, giving 27. What is the number?',type:'input',correct:['18'],feedback:'2n−9=27 → 2n=36 → n=18'},
+{id:40,topic:'Equations',text:'Solve: (x + 4) × 3 = 33',type:'input',correct:['7','x=7'],feedback:'x+4=33÷3=11. x=11−4=7'},
+{id:41,topic:'Equations',text:'Expand: 4(3x − 5)',type:'choice',choices:['12x−5','7x−20','12x−20','12x+20'],correct:2,feedback:'4×3x=12x and 4×(−5)=−20 → 12x−20'},
+{id:42,topic:'Equations',text:'If 2a + 3b = 24 and a = 6, what is the value of b?',type:'input',correct:['4','b=4'],feedback:'2(6)+3b=24 → 12+3b=24 → 3b=12 → b=4'},
+// ── GEOMETRY ─────────────────────────────────────────────────────
+{id:43,topic:'Geometry',text:'A triangle has angles of 47° and 68°. What is the third angle?',type:'input',correct:['65','65°'],feedback:'Angles in a triangle sum to 180°. 180−47−68=65°'},
+{id:44,topic:'Geometry',text:'Find the area of a triangle with base 14 cm and height 9 cm.',type:'input',correct:['63','63 cm2','63 cm²'],feedback:'Area=½×base×height=½×14×9=63 cm²'},
+{id:45,topic:'Geometry',text:'A circle has a radius of 7 cm. What is its area? (Use π ≈ 3.14)',type:'input',correct:['153.86','153.86 cm2'],feedback:'Area=π×r²=3.14×49=153.86 cm²'},
+{id:46,topic:'Geometry',text:'What is the circumference of a circle with diameter 10 cm? (Use π ≈ 3.14)',type:'input',correct:['31.4','31.4 cm'],feedback:'Circumference=π×d=3.14×10=31.4 cm'},
+{id:47,topic:'Geometry',text:'A rectangle has a perimeter of 56 cm. Its length is 18 cm. What is its width?',type:'input',correct:['10','10 cm'],feedback:'2(l+w)=56 → l+w=28 → w=28−18=10 cm'},
+{id:48,topic:'Geometry',text:'What is the volume of a cuboid 8 cm long, 5 cm wide and 4 cm tall?',type:'input',correct:['160','160 cm3','160 cm³'],feedback:'Volume=l×w×h=8×5×4=160 cm³'},
+{id:49,topic:'Geometry',text:'Two angles on a straight line are in the ratio 2:3. What are the two angles?',type:'choice',choices:['60° and 120°','72° and 108°','80° and 100°','90° and 90°'],correct:1,feedback:'Straight line=180°. Ratio 2:3 → parts=5. One part=36°. Angles=72° and 108°'},
+{id:50,topic:'Geometry',text:'A quadrilateral has angles of 95°, 112°, and 78°. What is the fourth angle?',type:'input',correct:['75','75°'],feedback:'Angles in a quadrilateral sum to 360°. 360−95−112−78=75°'}
+];
+
+var testState = {
+  active: false,
+  questions: [],
+  answers: [],
+  currentQ: 0,
+  startTime: null,
+  timerInterval: null
+};
+
+function startDailyTest(){
+  // Update card status with last score
+  if(state.testHistory && state.testHistory.length){
+    var last = state.testHistory[state.testHistory.length-1];
+    var d = new Date(last.ts);
+    document.getElementById('test-card-status').textContent =
+      'Last: '+last.score+'/50 ('+last.pct+'%) on '+d.toLocaleDateString();
+  }
+  showScreen('test');
+  showTestView('intro');
+}
+
+function showTestView(which){
+  document.getElementById('test-intro-view').style.display   = which==='intro'   ? '' : 'none';
+  document.getElementById('test-active-view').style.display  = which==='active'  ? '' : 'none';
+  document.getElementById('test-results-view').style.display = which==='results' ? '' : 'none';
+}
+
+function beginTest(){
+  // Shuffle questions for variety each attempt
+  var shuffled = DAILY_TEST_QUESTIONS.slice().sort(function(){ return Math.random()-0.5; });
+  testState.questions = shuffled;
+  testState.answers = new Array(shuffled.length).fill(null);
+  testState.currentQ = 0;
+  testState.startTime = Date.now();
+  if(testState.timerInterval) clearInterval(testState.timerInterval);
+  testState.timerInterval = setInterval(updateTestTimer, 1000);
+  showTestView('active');
+  renderTestQuestion();
+}
+
+function updateTestTimer(){
+  var elapsed = Math.floor((Date.now()-testState.startTime)/1000);
+  var m = Math.floor(elapsed/60), s = elapsed%60;
+  document.getElementById('test-timer').textContent = m+':'+(s<10?'0':'')+s;
+}
+
+function renderTestQuestion(){
+  var q = testState.questions[testState.currentQ];
+  var n = testState.currentQ+1;
+  document.getElementById('test-q-current').textContent = n;
+  document.getElementById('test-prog-fill').style.width = Math.round(n/50*100)+'%';
+
+  var saved = testState.answers[testState.currentQ];
+  var html = '<div class="test-question-card">';
+  html += '<div style="font-size:0.75rem;font-weight:800;color:#7C3AED;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;">'+q.topic+'</div>';
+  html += '<div class="test-question-text">'+q.text+'</div>';
+
+  if(q.type==='choice'){
+    html += '<div class="test-choices">';
+    q.choices.forEach(function(c,i){
+      var sel = saved===i ? ' selected' : '';
+      html += '<button class="test-choice-btn'+sel+'" onclick="selectTestChoice('+i+')">'+String.fromCharCode(65+i)+'. '+c+'</button>';
+    });
+    html += '</div>';
+  } else {
+    var val = (saved!==null && typeof saved==='string') ? saved : '';
+    html += '<input class="test-input" id="test-text-input" type="text" placeholder="Type your answer here..." value="'+val+'" onkeydown="if(event.key===\'Enter\')submitTestAnswer()"/>';
+  }
+  html += '</div>';
+  document.getElementById('test-q-container').innerHTML = html;
+  if(q.type==='input'){
+    var inp = document.getElementById('test-text-input');
+    if(inp) setTimeout(function(){ inp.focus(); }, 80);
+  }
+}
+
+function selectTestChoice(idx){
+  testState.answers[testState.currentQ] = idx;
+  renderTestQuestion();
+}
+
+function submitTestAnswer(){
+  var q = testState.questions[testState.currentQ];
+  var answer;
+  if(q.type==='choice'){
+    answer = testState.answers[testState.currentQ];
+    if(answer===null){ alert('Please select an answer first!'); return; }
+  } else {
+    var inp = document.getElementById('test-text-input');
+    answer = inp ? inp.value.trim() : '';
+    if(!answer){ alert('Please type your answer first!'); return; }
+    testState.answers[testState.currentQ] = answer;
+  }
+  advanceTest();
+}
+
+function skipTestQuestion(){
+  testState.answers[testState.currentQ] = null;
+  advanceTest();
+}
+
+function advanceTest(){
+  if(testState.currentQ < testState.questions.length-1){
+    testState.currentQ++;
+    renderTestQuestion();
+  } else {
+    finishTest();
+  }
+}
+
+function finishTest(){
+  clearInterval(testState.timerInterval);
+  var elapsed = Math.floor((Date.now()-testState.startTime)/1000);
+  var correct=0, results=[];
+  testState.questions.forEach(function(q,i){
+    var ans = testState.answers[i];
+    var isCorrect = false;
+    if(q.type==='choice'){
+      isCorrect = (ans===q.correct);
+    } else {
+      if(ans!==null){
+        var clean = String(ans).toLowerCase().replace(/[^0-9a-z./]/g,'');
+        isCorrect = q.correct.some(function(c){
+          return String(c).toLowerCase().replace(/[^0-9a-z./]/g,'') === clean;
+        });
+      }
+    }
+    if(isCorrect) correct++;
+    results.push({q:q, ans:ans, isCorrect:isCorrect});
+  });
+
+  var pct = Math.round(correct/50*100);
+  var m=Math.floor(elapsed/60), s=elapsed%60;
+  var timeStr = m+'m '+s+'s';
+
+  // Save to state
+  if(!state.testHistory) state.testHistory=[];
+  state.testHistory.push({ts:Date.now(), score:correct, pct:pct, time:timeStr, date:new Date().toDateString()});
+  saveState();
+
+  // Show results
+  var grade, col;
+  if(pct>=90){grade='🏆 Outstanding!';col='#06D6A0';}
+  else if(pct>=75){grade='⭐ Great work!';col='#FFD166';}
+  else if(pct>=60){grade='👍 Good effort!';col='#6EC6F5';}
+  else if(pct>=40){grade='💪 Keep practising!';col='#A78BFA';}
+  else{grade='📚 Let\'s review these topics!';col='#FF6B6B';}
+
+  document.getElementById('test-score-display').textContent = correct+'/50';
+  document.getElementById('test-score-display').style.color = col;
+  document.getElementById('test-grade-display').textContent = grade;
+  document.getElementById('test-grade-display').style.color = col;
+  document.getElementById('test-pct-display').textContent = pct+'%';
+  document.getElementById('test-correct-display').textContent = correct;
+  document.getElementById('test-wrong-display').textContent = 50-correct;
+  document.getElementById('test-time-display').textContent = timeStr;
+
+  // Build review list
+  var reviewHtml = '';
+  results.forEach(function(r,i){
+    var cls = r.isCorrect ? 'correct-item' : 'wrong-item';
+    var icon = r.isCorrect ? '✅' : '❌';
+    var userAns = (r.ans===null||r.ans==='') ? '(skipped)' :
+      (r.q.type==='choice' ? r.q.choices[r.ans] : r.ans);
+    var correctAns = r.q.type==='choice' ? r.q.choices[r.q.correct] : r.q.correct[0];
+    reviewHtml += '<div class="test-review-item '+cls+'">';
+    reviewHtml += '<div class="test-review-q">'+icon+' <strong>Q'+(i+1)+'</strong> ['+r.q.topic+'] '+r.q.text+'</div>';
+    if(!r.isCorrect){
+      reviewHtml += '<div class="test-review-a" style="color:#FF6B6B;">Your answer: '+(userAns||'—')+'</div>';
+      reviewHtml += '<div class="test-review-a" style="color:#06D6A0;">Correct: '+correctAns+'</div>';
+      reviewHtml += '<div class="test-review-a" style="color:#888;font-style:italic;margin-top:3px;">'+r.q.feedback+'</div>';
+    }
+    reviewHtml += '</div>';
+  });
+  document.getElementById('test-review-list').innerHTML = reviewHtml;
+  showTestView('results');
+  // Award XP
+  state.xp += Math.round(pct/2);
+  saveState();
+}
+
+function confirmQuitTest(){
+  if(confirm('Quit the test? Your progress will be lost.')){
+    clearInterval(testState.timerInterval);
+    showTestView('intro');
+  }
+}
 
 </script>
 <!-- Supabase table needed: CREATE TABLE student_state (id text PRIMARY KEY, state_json text, updated_at timestamptz); ALTER TABLE student_state ENABLE ROW LEVEL SECURITY; CREATE POLICY "allow all" ON student_state FOR ALL USING (true) WITH CHECK (true); -->
