@@ -210,6 +210,59 @@ body{font-family:var(--font-body);min-height:100vh;background:linear-gradient(13
 .test-review-item.wrong-item{border-left-color:#FF6B6B;}
 .test-review-q{font-size:0.9rem;font-weight:700;color:var(--navy);margin-bottom:6px;}
 .test-review-a{font-size:0.85rem;margin-top:4px;}
+/* ── INTEGERS SPECIAL LESSON ── */
+.special-lesson-card{background:linear-gradient(135deg,#0F4C81,#1565C0,#3B82F6);border-radius:var(--radius);padding:22px;box-shadow:0 8px 32px rgba(21,101,192,0.4);color:#fff;margin-top:10px;cursor:pointer;transition:transform .18s,box-shadow .18s;border:2px solid rgba(147,197,253,0.5);position:relative;overflow:hidden;}
+.special-lesson-card::before{content:'✨';position:absolute;top:10px;right:20px;font-size:2rem;opacity:.25;}
+.special-lesson-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(21,101,192,0.5);}
+.special-badge{background:rgba(255,255,255,0.2);border-radius:50px;padding:4px 12px;font-size:0.75rem;font-weight:800;display:inline-block;margin-bottom:8px;}
+.special-lesson-card h3{font-family:var(--font-head);font-size:1.3rem;margin:8px 0 4px;}
+.special-lesson-card p{font-size:0.83rem;opacity:.85;margin-bottom:12px;}
+.int-header{background:linear-gradient(135deg,#0F4C81,#1565C0);color:#fff;border-radius:var(--radius);padding:18px 22px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.int-header-title{font-family:var(--font-head);font-size:1.3rem;}
+.int-slide-counter-pill{font-size:0.82rem;opacity:.8;font-weight:700;background:rgba(255,255,255,0.18);border-radius:50px;padding:4px 12px;}
+.int-slide-card{background:var(--card-bg);border-radius:var(--radius);padding:26px 24px;box-shadow:var(--shadow);margin-bottom:16px;}
+.int-slide-icon{font-size:2.8rem;text-align:center;display:block;margin-bottom:8px;}
+.int-slide-title{font-family:var(--font-head);font-size:1.4rem;color:var(--navy);text-align:center;margin-bottom:14px;}
+.int-slide-body{font-size:0.95rem;color:#333;line-height:1.7;margin-bottom:14px;}
+.int-visual-box{background:linear-gradient(135deg,#EEF2FF,#E0F2FE);border-radius:14px;padding:16px 18px;font-family:monospace;font-size:0.85rem;color:#1A1A4E;white-space:pre-wrap;margin-bottom:12px;border-left:4px solid #3B82F6;overflow-x:auto;}
+.int-example-box{background:#F0FFF4;border-radius:14px;padding:14px 18px;font-size:0.88rem;color:#065F46;white-space:pre-wrap;border-left:4px solid #06D6A0;margin-bottom:12px;}
+.int-dots{display:flex;justify-content:center;gap:8px;margin:10px 0;}
+.int-dot{width:10px;height:10px;border-radius:50%;background:#D1D5DB;display:inline-block;cursor:pointer;transition:background .2s,transform .2s;flex-shrink:0;}
+.int-dot.active{background:#1565C0;transform:scale(1.3);}
+.int-slide-nav{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px;}
+.int-nav-btn{border:none;border-radius:50px;padding:12px 28px;font-family:var(--font-body);font-weight:800;font-size:0.95rem;cursor:pointer;transition:transform .15s;}
+.int-nav-btn:hover{transform:scale(1.04);}
+.int-prev-btn{background:#F3F4F6;color:#666;}
+.int-next-btn{background:linear-gradient(135deg,#1565C0,#3B82F6);color:#fff;flex:1;max-width:220px;}
+.int-q-header{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:linear-gradient(135deg,#0F4C81,#1565C0);border-radius:var(--radius);color:#fff;margin-bottom:16px;}
+.int-q-progress-text{font-family:var(--font-head);font-size:1.05rem;color:#FFD166;}
+.int-score-pill{background:rgba(255,255,255,0.2);border-radius:50px;padding:5px 14px;font-weight:800;font-size:0.88rem;}
+.int-q-card{background:var(--card-bg);border-radius:var(--radius);padding:24px 22px;box-shadow:var(--shadow);margin-bottom:14px;border-left:5px solid #1565C0;}
+.int-q-num-badge{background:#EEF2FF;border-radius:50px;padding:4px 14px;font-size:0.78rem;font-weight:800;color:#1565C0;display:inline-block;margin-bottom:10px;}
+.int-q-text{font-size:1rem;font-weight:700;color:var(--navy);line-height:1.65;margin-bottom:18px;}
+.int-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;}
+.int-choice-btn{background:#F3F4F6;border:2.5px solid #E5E7EB;border-radius:14px;padding:13px 12px;font-family:var(--font-body);font-size:0.91rem;font-weight:700;color:var(--navy);cursor:pointer;transition:all .15s;text-align:left;}
+.int-choice-btn:hover{background:#EEF2FF;border-color:#1565C0;color:#0F4C81;}
+.int-choice-btn.selected{background:#1565C0;border-color:#1565C0;color:#fff;}
+.int-choice-btn.correct{background:#06D6A0;border-color:#06D6A0;color:#fff;}
+.int-choice-btn.wrong{background:#FF6B6B;border-color:#FF6B6B;color:#fff;}
+.int-input{width:100%;border:2.5px solid #E5E7EB;border-radius:14px;padding:14px 18px;font-family:var(--font-body);font-size:1rem;font-weight:700;color:var(--navy);outline:none;margin-bottom:6px;transition:border-color .2s;}
+.int-input:focus{border-color:#1565C0;}
+.int-feedback{margin:8px 0;}
+.int-fb{border-radius:12px;padding:12px 16px;font-size:0.9rem;font-weight:700;line-height:1.5;}
+.int-fb.correct{background:#D1FAE5;color:#065F46;border-left:4px solid #06D6A0;}
+.int-fb.wrong{background:#FEE2E2;color:#991B1B;border-left:4px solid #FF6B6B;}
+.int-q-nav{display:flex;flex-direction:column;gap:10px;margin-top:6px;}
+.int-submit-btn{background:linear-gradient(135deg,#1565C0,#3B82F6);color:#fff;border:none;border-radius:50px;padding:14px 32px;font-family:var(--font-body);font-weight:800;font-size:1rem;cursor:pointer;transition:transform .15s;align-self:flex-end;}
+.int-submit-btn:hover{transform:scale(1.04);}
+.int-next-q-btn{background:linear-gradient(135deg,#065F46,#06D6A0);color:#fff;border:none;border-radius:50px;padding:14px 32px;font-family:var(--font-body);font-weight:800;font-size:1rem;cursor:pointer;transition:transform .15s;align-self:flex-end;}
+.int-next-q-btn:hover{transform:scale(1.04);}
+.int-results-card{background:var(--card-bg);border-radius:var(--radius);padding:30px 24px;box-shadow:var(--shadow);text-align:center;}
+.int-res-score-big{font-family:var(--font-head);font-size:4rem;color:var(--navy);margin:8px 0;}
+.int-res-pct{font-family:var(--font-head);font-size:1.8rem;color:#1565C0;margin-bottom:6px;}
+.int-res-grade{font-family:var(--font-head);font-size:1.3rem;margin-bottom:6px;}
+.int-res-msg{font-size:0.95rem;color:#666;margin-bottom:24px;line-height:1.6;}
+.int-res-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
 /* iOS Safari touch fixes */
 * { -webkit-tap-highlight-color: transparent; }
 button, .subject-card, .choice-btn, .chore-item, .start-btn, .back-btn, 
@@ -295,6 +348,15 @@ body { -webkit-text-size-adjust: 100%; }
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
       <div id="test-card-status" style="font-size:0.82rem;opacity:.75;">Tap to begin today's test!</div>
       <button class="start-btn" style="background:linear-gradient(135deg,#FFD166,#FF9F1C);color:#1A1A4E;">Start Test →</button>
+    </div>
+  </div>
+  <div class="special-lesson-card" onclick="startIntegersLesson()">
+    <div class="special-badge">⭐ Special Lesson — Today Only!</div>
+    <h3>🔢 Integers &amp; Number Lines</h3>
+    <p>Learn positive &amp; negative numbers, the number line, adding &amp; subtracting integers — with 20 practice questions!</p>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <div style="font-size:0.82rem;opacity:.75;">8 concept slides · 20 questions · No hints</div>
+      <button class="start-btn" style="background:linear-gradient(135deg,#FFD166,#FF9F1C);color:#1A1A4E;">Start Lesson →</button>
     </div>
   </div>
   <div class="info-card"><h4>📅 Today's Log</h4><div id="today-log" style="margin-top:8px;font-size:0.86rem;color:#888;">No sessions yet. Let's start! ✨</div></div>
@@ -424,6 +486,61 @@ body { -webkit-text-size-adjust: 100%; }
     <div class="test-results-card">
       <h4 style="font-family:var(--font-head);color:var(--navy);margin-bottom:16px;">📋 Question Review</h4>
       <div id="test-review-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- INTEGERS SPECIAL LESSON -->
+<div id="screen-integers" class="screen">
+  <div class="int-header">
+    <button onclick="showScreen('home')" style="background:rgba(255,255,255,0.15);border:none;color:#fff;border-radius:50px;padding:7px 16px;font-weight:800;cursor:pointer;font-size:0.85rem;">← Home</button>
+    <div class="int-header-title">🔢 Integers &amp; Number Lines</div>
+    <div class="int-slide-counter-pill" id="int-slide-counter">Slide 1 of 8</div>
+  </div>
+
+  <!-- CONCEPT SLIDES VIEW -->
+  <div id="int-lesson-view">
+    <div class="int-slide-card">
+      <span id="int-slide-icon" class="int-slide-icon">🔢</span>
+      <div id="int-slide-title" class="int-slide-title"></div>
+      <div id="int-slide-body" class="int-slide-body"></div>
+      <div class="int-visual-box" id="int-visual-box"></div>
+      <div class="int-example-box" id="int-example-box"></div>
+      <div class="int-dots" id="int-dots"></div>
+      <div class="int-slide-nav">
+        <button class="int-nav-btn int-prev-btn" id="int-prev-btn" onclick="prevIntSlide()" style="display:none;">← Back</button>
+        <button class="int-nav-btn int-next-btn" id="int-next-btn" onclick="nextIntSlide()">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE QUESTIONS VIEW -->
+  <div id="int-practice-view" style="display:none;">
+    <div class="int-q-header">
+      <div class="int-q-progress-text">Q <span id="int-q-num">1</span> / <span id="int-q-total">20</span></div>
+      <div class="int-score-pill" id="int-score-pill">✅ 0</div>
+    </div>
+    <div id="int-q-container"></div>
+    <div class="int-q-nav">
+      <div id="int-feedback" class="int-feedback"></div>
+      <button class="int-submit-btn" id="int-submit-btn" onclick="submitIntAnswer()">Confirm Answer ✓</button>
+      <button class="int-next-q-btn" id="int-next-q-btn" onclick="nextIntQuestion()" style="display:none;">Next →</button>
+    </div>
+  </div>
+
+  <!-- RESULTS VIEW -->
+  <div id="int-results-view" style="display:none;">
+    <div class="int-results-card">
+      <div style="font-size:3.5rem;margin-bottom:10px;">🏆</div>
+      <div class="int-res-score-big" id="int-res-score">0 / 20</div>
+      <div class="int-res-pct" id="int-res-pct">0%</div>
+      <div class="int-res-grade" id="int-res-grade"></div>
+      <div class="int-res-msg" id="int-res-msg"></div>
+      <div class="int-res-btns">
+        <button onclick="restartIntLesson()" class="int-submit-btn">🔁 Try Again</button>
+        <button onclick="intState.slide=0;showIntView('lesson');renderIntSlide();" style="background:linear-gradient(135deg,#0F4C81,#1565C0);color:#fff;border:none;border-radius:50px;padding:14px 28px;font-family:var(--font-body);font-weight:800;cursor:pointer;font-size:0.95rem;">📚 Review Slides</button>
+        <button onclick="showScreen('home')" style="background:none;border:2px solid #ddd;border-radius:50px;padding:14px 28px;font-family:var(--font-body);font-weight:800;cursor:pointer;color:#888;font-size:0.95rem;">🏠 Home</button>
+      </div>
     </div>
   </div>
 </div>
@@ -4625,6 +4742,265 @@ function confirmQuitTest(){
     clearInterval(testState.timerInterval);
     showTestView('intro');
   }
+}
+
+// ── INTEGERS SPECIAL LESSON ──────────────────────────────────────
+var INT_SLIDES = [
+  {
+    title: 'What Are Integers?',
+    icon: '🔢',
+    body: 'Integers are WHOLE numbers — they can be positive (greater than zero), negative (less than zero), or zero itself. No fractions, no decimals! Just complete whole values.',
+    visual:
+'Examples of INTEGERS:           NOT integers:\n  -100, -7, -3, -1, 0, 1, 5, 999    ✗  3.5  (decimal)\n                                   ✗  ½   (fraction)\n✔ Any whole number                 ✗  0.01 (decimal)',
+    example:
+'Is 7 an integer?   ✅ YES — it is a whole number.\nIs -3 an integer?  ✅ YES — negative whole numbers count!\nIs 4.5 an integer? ❌ NO  — it has a decimal part.'
+  },
+  {
+    title: 'The Number Line',
+    icon: '📏',
+    body: 'Every integer has a home on the NUMBER LINE. Numbers get BIGGER as you go RIGHT and SMALLER as you go LEFT. Zero sits in the middle — it is neither positive nor negative.',
+    visual:
+'  ←─────────────────────────────────────────→\n-10  -8  -6  -4  -2   0  +2  +4  +6  +8  +10\n\n NEGATIVE               POSITIVE\n (further left           (further right\n  = smaller)              = bigger)',
+    example:
+'Where is -6?  → Six steps to the LEFT of zero.\nWhere is +4?  → Four steps to the RIGHT of zero.\nWhich is bigger: -6 or -2?\n  -2 is BIGGER (it is further to the right!)'
+  },
+  {
+    title: 'Positive Numbers',
+    icon: '⬆️',
+    body: 'Positive numbers are greater than zero. We can write them with a + sign, but usually we just write the number on its own. They represent things that are ABOVE, EARNED, or GAINED.',
+    visual:
+'Real-life POSITIVE integers:\n  +5   → 5 floors ABOVE ground\n  +20  → 20 degrees above freezing (warm day!)\n  +£10 → £10 in your pocket (you earned it!)\n  +100 → 100 metres above sea level',
+    example:
+'Write as a positive integer:\n"The plane is 3,000 metres above sea level." → +3000\n"Sam earns £15 pocket money."                → +15\n"The temperature is 8 degrees above zero."  → +8'
+  },
+  {
+    title: 'Negative Numbers',
+    icon: '⬇️',
+    body: 'Negative numbers are LESS than zero. We ALWAYS write the minus sign in front. They represent things that are BELOW, OWED, or LOST.',
+    visual:
+'Real-life NEGATIVE integers:\n  -3   → 3 floors BELOW ground (basement)\n  -10  → 10 degrees below freezing (very cold!)\n  -£5  → £5 you OWE someone (debt)\n  -50  → 50 metres below sea level (underwater)',
+    example:
+'Write as a negative integer:\n"The submarine is 200 m below sea level." → -200\n"The temperature is 12 degrees below zero."→ -12\n"Mia owes her friend £7."                 → -7'
+  },
+  {
+    title: 'Zero — The Middle Ground',
+    icon: '0️⃣',
+    body: 'Zero (0) is special — it is neither positive nor negative. It sits right in the middle of the number line. It often represents a starting point, sea level, or freezing point.',
+    visual:
+'  ← Negative  |  Positive →\n  -5 -4 -3 -2 -1  0  1  2  3  4  5\n               ↑\n          Zero (0)\n     neither + nor -\n     the "starting point"',
+    example:
+'Freezing point of water = 0°C\nSea level height = 0 metres\nBreaking even (no profit, no loss) = 0\n\nKey fact: -1 < 0 < 1\nZero is bigger than ALL negative numbers\nand smaller than ALL positive numbers.'
+  },
+  {
+    title: 'Comparing Integers',
+    icon: '⚖️',
+    body: 'On the number line, the number further to the RIGHT is always BIGGER. A positive number is ALWAYS bigger than a negative number. Watch out — with negatives, the bigger-looking digit can be the smaller number!',
+    visual:
+'Compare using the number line:\n  -10  -7  -3  -1   0   2   5   8\n  ←────────────────────────────→\n  smallest                   biggest\n\n  -7 < -3  (−7 is further left)\n  -1 > -5  (−1 is further right)\n   0 > -8  (0 is always bigger than negatives)',
+    example:
+'True or False?\n  -6 > -2  → ❌ FALSE  (-6 is further left, so smaller)\n  -1 > -8  → ✅ TRUE   (-1 is to the right of -8)\n   3 > -10 → ✅ TRUE   (positives beat negatives always)\n\nOrder from least to greatest: -4, 2, -1, 0\n  Answer: -4, -1, 0, 2'
+  },
+  {
+    title: 'Adding Integers',
+    icon: '➕',
+    body: 'Two rules cover all cases:\n• SAME signs → add the numbers, keep the sign.\n• DIFFERENT signs → subtract the smaller from the bigger, keep the sign of the bigger number.',
+    visual:
+'Same signs:\n  +5 + +3 = +8   (both positive → add → positive)\n  -5 + -3 = -8   (both negative → add → negative)\n\nDifferent signs:\n  +5 + -3 = +2   (5 is bigger, positive wins)\n  -5 + +3 = -2   (5 is bigger, negative wins)\n  +3 + -7 = -4   (7 is bigger, negative wins)',
+    example:
+'Work these out:\n  -4 + (-6) = -10  ✓ (same sign: 4+6=10, keep −)\n   8 + (-5) = +3   ✓ (8 bigger, positive wins)\n  -9 +  2  = -7   ✓ (9 bigger, negative wins)\n   0 + (-3)= -3   ✓ (adding negative = going left)'
+  },
+  {
+    title: 'Subtracting Integers — The Big Secret!',
+    icon: '🔄',
+    body: 'SUBTRACTING a negative is the same as ADDING a positive! The two negatives cancel each other out. Remember: "minus a minus = plus".',
+    visual:
+'THE RULE:  a − (−b) = a + b\n\n  5 − (−3) = 5 + 3 = 8\n  Think: "remove a debt of 3" = you gain 3!\n\n  -2 − (−4) = -2 + 4 = 2\n  -8 − (−1) = -8 + 1 = -7\n   0 − (−5) = 0 + 5 = 5',
+    example:
+'Solve step-by-step:\n  9 − (−3):\n    → change to 9 + 3 = 12  ✓\n\n  -12 − (−5):\n    → change to -12 + 5 = -7  ✓\n\n  "A diver at -18m rises 6m."\n    → -18 + 6 = -12m  ✓'
+  }
+];
+
+var INT_QUESTIONS = [
+  {type:'choice', text:'Which of these IS an integer?', choices:['3.5','−7','½','0.01'], answer:1, tip:'Integers are whole numbers. −7 is a whole number with a negative sign.'},
+  {type:'choice', text:'On the number line, which number is furthest to the LEFT (smallest)?', choices:['−8','−3','0','5'], answer:0, tip:'Further left always means smaller. −8 is the smallest here.'},
+  {type:'choice', text:'What is −5 + 8?', choices:['−13','3','13','−3'], answer:1, tip:'Different signs: 8 − 5 = 3. The bigger number (8) is positive, so the answer is +3.'},
+  {type:'input', text:'What is −4 + (−6)? Type just the number.', answer:'-10', tip:'Same signs: add 4 + 6 = 10, keep the negative sign → −10.'},
+  {type:'choice', text:'Which statement is TRUE?', choices:['−6 > −2','−3 > 0','−1 > −8','−5 > 2'], answer:2, tip:'On the number line, −1 is to the RIGHT of −8, so −1 > −8. ✓'},
+  {type:'input', text:'What is 9 − (−3)? (Subtracting a negative — remember the rule!)', answer:'12', tip:'Subtracting a negative = adding a positive. 9 + 3 = 12.'},
+  {type:'choice', text:'The temperature is 2°C. It drops to −5°C. How many degrees did it drop in total?', choices:['3°','7°','−3°','−7°'], answer:1, tip:'2 to −5 is a drop of 2 + 5 = 7 degrees. Temperature changes are always positive amounts.'},
+  {type:'choice', text:'What is −10 + 4?', choices:['−14','−6','6','14'], answer:1, tip:'Different signs: 10 − 4 = 6. The bigger number (10) is negative, so the answer is −6.'},
+  {type:'input', text:'What is −3 + (−7) + 5?', answer:'-5', tip:'Step 1: −3 + (−7) = −10. Step 2: −10 + 5 = −5.'},
+  {type:'choice', text:'Order these from LEAST to GREATEST: −4, 2, −1, 0', choices:['−4, −1, 0, 2','2, 0, −1, −4','0, −1, −4, 2','−1, −4, 0, 2'], answer:0, tip:'Use the number line: −4 is furthest left, then −1, then 0, then 2.'},
+  {type:'choice', text:'What is −6 + 9?', choices:['−15','3','−3','15'], answer:1, tip:'Different signs: 9 − 6 = 3. The bigger number (9) is positive, so the answer is +3.'},
+  {type:'input', text:'A submarine is at −40 metres. It rises 15 metres. What is its new depth? (include the − sign)', answer:'-25', tip:'−40 + 15 = −25. It moved up but is still below sea level.'},
+  {type:'choice', text:'What is −8 − (−3)? (Remember the subtraction rule!)', choices:['−11','−5','5','11'], answer:1, tip:'−8 − (−3) = −8 + 3 = −5. Change to addition, then apply the different-signs rule.'},
+  {type:'choice', text:'Marcus owes £6 (−6). He then earns £10 (+10). What is his balance?', choices:['−£16','£4','−£4','£16'], answer:1, tip:'−6 + 10 = +4. The bigger number (10) is positive, so he ends up with £4.'},
+  {type:'input', text:'What is −12 − (−5)?', answer:'-7', tip:'−12 − (−5) = −12 + 5 = −7. Bigger number (12) is negative, so answer is −7.'},
+  {type:'choice', text:'Which number is BETWEEN −5 and 0 on the number line?', choices:['−6','1','−3','−10'], answer:2, tip:'−3 sits between −5 and 0. −6 and −10 are less than −5; 1 is greater than 0.'},
+  {type:'input', text:'A mountain peak is 12m above sea level. A cave entrance is 8m below sea level. What is the total difference in height? (in metres)', answer:'20', tip:'12 − (−8) = 12 + 8 = 20 metres. Subtracting a negative!'},
+  {type:'choice', text:'What is 0 − (−5)?', choices:['−5','0','5','−10'], answer:2, tip:'0 − (−5) = 0 + 5 = 5. Removing a negative is the same as adding.'},
+  {type:'input', text:'Work this out: −15 + 7 + (−3) + 11 = ?', answer:'0', tip:'−15 + 7 = −8, then −8 + (−3) = −11, then −11 + 11 = 0. '},
+  {type:'choice', text:'A diver goes from sea level (0) to −18m, then rises 6m. Where is the diver now?', choices:['−24m','−12m','12m','24m'], answer:1, tip:'0 + (−18) = −18, then −18 + 6 = −12m. Still below sea level!'}
+];
+
+var intState = {slide:0, mode:'lesson', qIndex:0, score:0, selectedChoice:null};
+
+function startIntegersLesson(){
+  intState = {slide:0, mode:'lesson', qIndex:0, score:0, selectedChoice:null};
+  showScreen('integers');
+  showIntView('lesson');
+  renderIntSlide();
+}
+
+function showIntView(view){
+  document.getElementById('int-lesson-view').style.display   = view==='lesson'   ? 'block' : 'none';
+  document.getElementById('int-practice-view').style.display = view==='practice' ? 'block' : 'none';
+  document.getElementById('int-results-view').style.display  = view==='results'  ? 'block' : 'none';
+}
+
+function renderIntSlide(){
+  var s = INT_SLIDES[intState.slide];
+  document.getElementById('int-slide-icon').textContent  = s.icon;
+  document.getElementById('int-slide-title').textContent = s.title;
+  document.getElementById('int-slide-body').textContent  = s.body;
+  document.getElementById('int-visual-box').textContent  = s.visual;
+  document.getElementById('int-example-box').textContent = s.example;
+  document.getElementById('int-slide-counter').textContent = 'Slide '+(intState.slide+1)+' of '+INT_SLIDES.length;
+
+  var prevBtn = document.getElementById('int-prev-btn');
+  var nextBtn = document.getElementById('int-next-btn');
+  prevBtn.style.display = intState.slide === 0 ? 'none' : 'inline-block';
+  nextBtn.textContent = intState.slide === INT_SLIDES.length-1 ? 'Start Practice! 🚀' : 'Next →';
+
+  var dotsHtml = '';
+  for(var i=0;i<INT_SLIDES.length;i++){
+    dotsHtml += '<span class="int-dot'+(i===intState.slide?' active':'')
+      +'" onclick="goToIntSlide('+i+')"></span>';
+  }
+  document.getElementById('int-dots').innerHTML = dotsHtml;
+}
+
+function prevIntSlide(){
+  if(intState.slide > 0){ intState.slide--; renderIntSlide(); }
+}
+
+function nextIntSlide(){
+  if(intState.slide < INT_SLIDES.length-1){
+    intState.slide++;
+    renderIntSlide();
+  } else {
+    intState.mode = 'practice';
+    intState.qIndex = 0;
+    intState.score = 0;
+    intState.selectedChoice = null;
+    showIntView('practice');
+    renderIntQuestion();
+  }
+}
+
+function goToIntSlide(i){ intState.slide=i; renderIntSlide(); }
+
+function renderIntQuestion(){
+  var q = INT_QUESTIONS[intState.qIndex];
+  document.getElementById('int-q-num').textContent   = intState.qIndex+1;
+  document.getElementById('int-q-total').textContent = INT_QUESTIONS.length;
+  document.getElementById('int-score-pill').textContent = '✅ '+intState.score;
+  document.getElementById('int-feedback').innerHTML = '';
+  document.getElementById('int-submit-btn').style.display  = 'inline-block';
+  document.getElementById('int-next-q-btn').style.display  = 'none';
+  intState.selectedChoice = null;
+
+  var html = '<div class="int-q-card">';
+  html += '<span class="int-q-num-badge">Q'+(intState.qIndex+1)+'</span>';
+  html += '<div class="int-q-text">'+q.text+'</div>';
+  if(q.type==='choice'){
+    html += '<div class="int-choices">';
+    q.choices.forEach(function(c,i){
+      html += '<button class="int-choice-btn" id="int-ch-'+i+'" onclick="selectIntChoice('+i+')">'+c+'</button>';
+    });
+    html += '</div>';
+  } else {
+    html += '<input class="int-input" id="int-inp" type="text" inputmode="numeric" placeholder="Type your answer…" onkeydown="if(event.key===\'Enter\')submitIntAnswer();"/>';
+  }
+  html += '</div>';
+  document.getElementById('int-q-container').innerHTML = html;
+  if(q.type==='input') setTimeout(function(){ var el=document.getElementById('int-inp'); if(el) el.focus(); },100);
+}
+
+function selectIntChoice(i){
+  intState.selectedChoice = i;
+  document.querySelectorAll('.int-choice-btn').forEach(function(b){ b.classList.remove('selected'); });
+  var btn = document.getElementById('int-ch-'+i);
+  if(btn) btn.classList.add('selected');
+}
+
+function submitIntAnswer(){
+  var q = INT_QUESTIONS[intState.qIndex];
+  var correct = false;
+
+  if(q.type==='choice'){
+    if(intState.selectedChoice === null) return;
+    correct = intState.selectedChoice === q.answer;
+    document.querySelectorAll('.int-choice-btn').forEach(function(b){ b.classList.remove('selected'); });
+    var cBtn = document.getElementById('int-ch-'+q.answer);
+    if(cBtn) cBtn.classList.add('correct');
+    if(!correct){
+      var wBtn = document.getElementById('int-ch-'+intState.selectedChoice);
+      if(wBtn) wBtn.classList.add('wrong');
+    }
+  } else {
+    var inp = document.getElementById('int-inp');
+    if(!inp || !inp.value.trim()) return;
+    var raw = inp.value.trim().replace(/\s/g,'');
+    correct = raw === String(q.answer).replace(/\s/g,'');
+    inp.style.border = correct ? '3px solid #06D6A0' : '3px solid #FF6B6B';
+    inp.disabled = true;
+  }
+
+  if(correct) intState.score++;
+
+  var fb = document.getElementById('int-feedback');
+  var answerStr = q.type==='choice' ? q.choices[q.answer] : q.answer;
+  fb.innerHTML = correct
+    ? '<div class="int-fb correct">✅ Correct! '+q.tip+'</div>'
+    : '<div class="int-fb wrong">❌ Not quite. The answer is <strong>'+answerStr+'</strong>. '+q.tip+'</div>';
+
+  document.getElementById('int-submit-btn').style.display = 'none';
+  var isLast = intState.qIndex === INT_QUESTIONS.length-1;
+  var nBtn = document.getElementById('int-next-q-btn');
+  nBtn.textContent = isLast ? 'See Results 🏆' : 'Next Question →';
+  nBtn.style.display = 'inline-block';
+}
+
+function nextIntQuestion(){
+  if(intState.qIndex === INT_QUESTIONS.length-1){
+    showIntResults();
+  } else {
+    intState.qIndex++;
+    intState.selectedChoice = null;
+    renderIntQuestion();
+  }
+}
+
+function showIntResults(){
+  showIntView('results');
+  var total = INT_QUESTIONS.length;
+  var pct   = Math.round(intState.score/total*100);
+  var grade, msg;
+  if(pct>=90){grade='⭐⭐⭐ Superstar!';   msg='Outstanding! You have mastered integers! That was brilliant work.';}
+  else if(pct>=75){grade='🌟🌟 Brilliant!';  msg='Great work! You understand integers really well. A little more practice and you will be perfect!';}
+  else if(pct>=60){grade='👍 Good Job!';     msg='Good effort! Go back through the slides and focus on the adding and subtracting rules, then try again!';}
+  else{grade='📚 Keep Learning!';             msg='Integers can be tricky at first! Review all 8 slides carefully and try again — you can do it!';}
+  document.getElementById('int-res-score').textContent = intState.score+' / '+total;
+  document.getElementById('int-res-pct').textContent   = pct+'%';
+  document.getElementById('int-res-grade').textContent = grade;
+  document.getElementById('int-res-msg').textContent   = msg;
+}
+
+function restartIntLesson(){
+  intState.qIndex=0; intState.score=0; intState.selectedChoice=null;
+  showIntView('practice');
+  renderIntQuestion();
 }
 
 </script>
