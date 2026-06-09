@@ -563,6 +563,12 @@ body { -webkit-text-size-adjust: 100%; }
   </div>
 
   <div class="chart-card" style="margin-bottom:16px;">
+    <h4>🧪 Test &amp; Lesson Results</h4>
+    <div style="font-size:0.78rem;color:rgba(255,255,255,0.5);margin-bottom:12px;">Every answer from Daily Maths Tests and the Integers Lesson — stored on this device, no Supabase needed</div>
+    <div id="test-detail-section"><div style="color:rgba(255,255,255,0.3);font-size:0.85rem;">No tests completed yet.</div></div>
+  </div>
+
+  <div class="chart-card" style="margin-bottom:16px;">
     <h4>📋 Detailed Answer Report</h4>
     <div style="font-size:0.78rem;color:rgba(255,255,255,0.5);margin-bottom:10px;">Every question answered — see exactly what she wrote and whether it was right ✅ or wrong ❌</div>
     <div id="question-log-section"><div style="color:rgba(255,255,255,0.3);font-size:0.85rem;">Loading...</div></div>
@@ -4008,6 +4014,65 @@ async function updateParentDashboard(){
   }
 
   if(bannerEl)bannerEl.innerHTML=useDB?'<div style="background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border-radius:10px;padding:8px 14px;margin-bottom:10px;font-size:0.8rem;color:#065F46;font-weight:700;">✅ Live from Supabase — '+sessions.length+' sessions across all devices</div>':'<div style="background:#FFF3CD;border-radius:10px;padding:8px 14px;margin-bottom:10px;font-size:0.8rem;color:#856404;">⚠️ Showing local data — no Supabase sessions found yet</div>';
+
+  // ── TEST & LESSON ANSWER LOG (local, no Supabase needed) ─────────
+  var tdEl = document.getElementById('test-detail-section');
+  if(tdEl){
+    var th = (state.testHistory||[]).filter(function(t){return t.results&&t.results.length;});
+    var ih = (state.intHistory||[]).filter(function(t){return t.results&&t.results.length;});
+    if(!th.length && !ih.length){
+      tdEl.innerHTML='<div style="color:rgba(255,255,255,0.3);font-size:0.85rem;">No tests completed yet — finish a Daily Maths Test or the Integers Lesson to see results here.</div>';
+    } else {
+      var tdHtml='';
+      th.slice(-5).reverse().forEach(function(t){
+        var d=new Date(t.ts);
+        var heading='🧮 Daily Maths Test — '+d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' · '+t.score+'/50 ('+t.pct+'%)'+' · ⏱ '+t.time;
+        tdHtml+=renderAnswerTable(heading, t.results, true);
+      });
+      ih.slice(-5).reverse().forEach(function(t){
+        var d=new Date(t.ts);
+        var heading='🔢 Integers Lesson — '+d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' · '+t.score+'/'+t.total+' ('+t.pct+'%)';
+        tdHtml+=renderAnswerTable(heading, t.results, false);
+      });
+      tdEl.innerHTML=tdHtml;
+    }
+  }
+}
+
+function renderAnswerTable(heading, results, showTopic){
+  var correct=results.filter(function(r){return r.isCorrect;}).length;
+  var wrongCount=results.length-correct;
+  var html='<div style="margin-bottom:22px;">';
+  html+='<div style="font-weight:800;color:rgba(255,255,255,0.9);font-size:0.88rem;margin-bottom:6px;">'+heading+'</div>';
+  html+='<div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px;">';
+  html+='<span style="font-size:0.82rem;color:#34D399;font-weight:700;">✅ '+correct+' correct</span>';
+  html+='<span style="font-size:0.82rem;color:#F87171;font-weight:700;">❌ '+wrongCount+' wrong</span>';
+  html+='</div>';
+  html+='<div style="overflow-x:auto;border-radius:10px;border:1px solid rgba(255,255,255,0.08);">';
+  html+='<table style="width:100%;border-collapse:collapse;font-size:0.79rem;min-width:460px;">';
+  html+='<thead><tr style="background:rgba(255,255,255,0.06);">';
+  html+='<th style="padding:7px 9px;text-align:left;color:rgba(255,255,255,0.4);font-size:0.68rem;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;">#</th>';
+  if(showTopic) html+='<th style="padding:7px 9px;text-align:left;color:rgba(255,255,255,0.4);font-size:0.68rem;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;">Topic</th>';
+  html+='<th style="padding:7px 9px;text-align:left;color:rgba(255,255,255,0.4);font-size:0.68rem;letter-spacing:1px;text-transform:uppercase;min-width:180px;">Question</th>';
+  html+='<th style="padding:7px 9px;text-align:left;color:rgba(255,255,255,0.4);font-size:0.68rem;letter-spacing:1px;text-transform:uppercase;">Her Answer</th>';
+  html+='<th style="padding:7px 9px;text-align:left;color:rgba(255,255,255,0.4);font-size:0.68rem;letter-spacing:1px;text-transform:uppercase;">Correct</th>';
+  html+='<th style="padding:7px 9px;text-align:center;color:rgba(255,255,255,0.4);font-size:0.68rem;letter-spacing:1px;text-transform:uppercase;">✓</th>';
+  html+='</tr></thead><tbody>';
+  results.forEach(function(r,i){
+    var ok=r.isCorrect;
+    var rowBg=ok?'rgba(6,214,160,0.05)':'rgba(255,107,107,0.08)';
+    var qtxt=(r.text||'').length>80?r.text.substring(0,80)+'…':r.text;
+    html+='<tr style="border-top:1px solid rgba(255,255,255,0.04);background:'+rowBg+';">';
+    html+='<td style="padding:7px 9px;color:rgba(255,255,255,0.4);">'+(i+1)+'</td>';
+    if(showTopic) html+='<td style="padding:7px 9px;color:rgba(255,255,255,0.55);font-size:0.73rem;white-space:nowrap;">'+(r.topic||'')+'</td>';
+    html+='<td style="padding:7px 9px;color:rgba(255,255,255,0.8);line-height:1.4;">'+qtxt+'</td>';
+    html+='<td style="padding:7px 9px;font-weight:800;color:'+(ok?'#34D399':'#F87171')+'">'+(r.userAns||'—')+'</td>';
+    html+='<td style="padding:7px 9px;color:rgba(255,255,255,0.55);">'+(r.correctAns||'—')+'</td>';
+    html+='<td style="padding:7px 9px;text-align:center;">'+(ok?'✅':'❌')+'</td>';
+    html+='</tr>';
+  });
+  html+='</tbody></table></div></div>';
+  return html;
 }
 
 function renderQuestionLogTable(logs){
@@ -4693,7 +4758,15 @@ function finishTest(){
 
   // Save to state
   if(!state.testHistory) state.testHistory=[];
-  state.testHistory.push({ts:Date.now(), score:correct, pct:pct, time:timeStr, date:new Date().toDateString()});
+  state.testHistory.push({
+    ts:Date.now(), score:correct, pct:pct, time:timeStr, date:new Date().toDateString(),
+    results:results.map(function(r){
+      var uAns=(r.ans===null||r.ans==='')? '(skipped)':(r.q.type==='choice'?r.q.choices[r.ans]:r.ans);
+      var cAns=r.q.type==='choice'?r.q.choices[r.q.correct]:r.q.correct[0];
+      return {topic:r.q.topic, text:r.q.text, userAns:uAns, correctAns:cAns, isCorrect:r.isCorrect};
+    })
+  });
+  if(state.testHistory.length>5) state.testHistory=state.testHistory.slice(-5);
   saveState();
 
   // Show results
@@ -4846,7 +4919,7 @@ var INT_QUESTIONS = [
 var intState = {slide:0, mode:'lesson', qIndex:0, score:0, selectedChoice:null};
 
 function startIntegersLesson(){
-  intState = {slide:0, mode:'lesson', qIndex:0, score:0, selectedChoice:null};
+  intState = {slide:0, mode:'lesson', qIndex:0, score:0, selectedChoice:null, answers:[]};
   showScreen('integers');
   showIntView('lesson');
   renderIntSlide();
@@ -4893,6 +4966,7 @@ function nextIntSlide(){
     intState.qIndex = 0;
     intState.score = 0;
     intState.selectedChoice = null;
+    intState.answers = [];
     showIntView('practice');
     renderIntQuestion();
   }
@@ -4957,6 +5031,11 @@ function submitIntAnswer(){
     inp.disabled = true;
   }
 
+  var userAnsDisplay = q.type==='choice'
+    ? (intState.selectedChoice!==null ? q.choices[intState.selectedChoice] : '(none)')
+    : (document.getElementById('int-inp') ? document.getElementById('int-inp').value.trim() : '');
+  var correctAnsDisplay = q.type==='choice' ? q.choices[q.answer] : String(q.answer);
+  intState.answers.push({q:intState.qIndex, isCorrect:correct, userAns:userAnsDisplay, correctAns:correctAnsDisplay});
   if(correct) intState.score++;
 
   var fb = document.getElementById('int-feedback');
@@ -4995,10 +5074,21 @@ function showIntResults(){
   document.getElementById('int-res-pct').textContent   = pct+'%';
   document.getElementById('int-res-grade').textContent = grade;
   document.getElementById('int-res-msg').textContent   = msg;
+
+  if(!state.intHistory) state.intHistory=[];
+  state.intHistory.push({
+    ts:Date.now(), date:new Date().toDateString(),
+    score:intState.score, total:total, pct:pct,
+    results:intState.answers.map(function(a){
+      return {text:INT_QUESTIONS[a.q].text, userAns:a.userAns, correctAns:a.correctAns, isCorrect:a.isCorrect};
+    })
+  });
+  if(state.intHistory.length>5) state.intHistory=state.intHistory.slice(-5);
+  saveState();
 }
 
 function restartIntLesson(){
-  intState.qIndex=0; intState.score=0; intState.selectedChoice=null;
+  intState.qIndex=0; intState.score=0; intState.selectedChoice=null; intState.answers=[];
   showIntView('practice');
   renderIntQuestion();
 }
