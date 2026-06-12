@@ -351,12 +351,21 @@ body { -webkit-text-size-adjust: 100%; }
     </div>
   </div>
   <div class="special-lesson-card" onclick="startIntegersLesson()">
-    <div class="special-badge">⭐ Special Lesson — Today Only!</div>
+    <div class="special-badge">⭐ Phase 1</div>
     <h3>🔢 Integers &amp; Number Lines</h3>
-    <p>Learn positive &amp; negative numbers, the number line, adding &amp; subtracting integers — with 20 practice questions!</p>
+    <p>Positive &amp; negative numbers, the number line, adding &amp; subtracting integers — 8 slides + 20 questions.</p>
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-      <div style="font-size:0.82rem;opacity:.75;">8 concept slides · 20 questions · No hints</div>
-      <button class="start-btn" style="background:linear-gradient(135deg,#FFD166,#FF9F1C);color:#1A1A4E;">Start Lesson →</button>
+      <div style="font-size:0.82rem;opacity:.75;">8 concept slides · 20 questions</div>
+      <button class="start-btn" style="background:linear-gradient(135deg,#FFD166,#FF9F1C);color:#1A1A4E;">Start →</button>
+    </div>
+  </div>
+  <div class="special-lesson-card" onclick="startInt2()" style="background:linear-gradient(135deg,#065F46,#0D9488,#14B8A6);border-color:rgba(153,246,228,0.5);margin-top:8px;">
+    <div class="special-badge">🚀 Phase 2 — New!</div>
+    <h3>🔢 Integers Phase 2</h3>
+    <p>Phase 1 review quiz · Multiplying integers · Integer sequences · Distance between integers · 30 questions!</p>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <div style="font-size:0.82rem;opacity:.75;">10 review + 6 slides + 30 questions</div>
+      <button class="start-btn" style="background:linear-gradient(135deg,#FFD166,#FF9F1C);color:#1A1A4E;">Start →</button>
     </div>
   </div>
   <div class="info-card"><h4>📅 Today's Log</h4><div id="today-log" style="margin-top:8px;font-size:0.86rem;color:#888;">No sessions yet. Let's start! ✨</div></div>
@@ -539,6 +548,91 @@ body { -webkit-text-size-adjust: 100%; }
       <div class="int-res-btns">
         <button onclick="restartIntLesson()" class="int-submit-btn">🔁 Try Again</button>
         <button onclick="intState.slide=0;showIntView('lesson');renderIntSlide();" style="background:linear-gradient(135deg,#0F4C81,#1565C0);color:#fff;border:none;border-radius:50px;padding:14px 28px;font-family:var(--font-body);font-weight:800;cursor:pointer;font-size:0.95rem;">📚 Review Slides</button>
+        <button onclick="showScreen('home')" style="background:none;border:2px solid #ddd;border-radius:50px;padding:14px 28px;font-family:var(--font-body);font-weight:800;cursor:pointer;color:#888;font-size:0.95rem;">🏠 Home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INTEGERS PHASE 2 -->
+<div id="screen-integers2" class="screen">
+  <div class="int-header" style="background:linear-gradient(135deg,#065F46,#0D9488);">
+    <button onclick="showScreen('home')" style="background:rgba(255,255,255,0.15);border:none;color:#fff;border-radius:50px;padding:7px 16px;font-weight:800;cursor:pointer;font-size:0.85rem;">← Home</button>
+    <div class="int-header-title">🔢 Integers Phase 2</div>
+    <div class="int-slide-counter-pill" id="int2-step-pill">Review</div>
+  </div>
+
+  <!-- PHASE 1 REVIEW TEST -->
+  <div id="int2-review-view">
+    <div class="int-q-header" style="background:linear-gradient(135deg,#065F46,#0D9488);">
+      <div class="int-q-progress-text">Review Q <span id="int2-rq-num">1</span> / 10</div>
+      <div class="int-score-pill" id="int2-review-score-pill">✅ 0</div>
+    </div>
+    <div style="background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border-radius:14px;padding:13px 18px;margin-bottom:14px;border-left:4px solid #059669;">
+      <div style="font-weight:800;color:#065F46;font-size:0.88rem;">📚 Phase 1 Review — Let's see what you remember!</div>
+      <div style="font-size:0.81rem;color:#047857;margin-top:3px;">10 quick questions on what you learned last time. No hints!</div>
+    </div>
+    <div id="int2-review-q-container"></div>
+    <div class="int-q-nav">
+      <div id="int2-review-feedback" class="int-feedback"></div>
+      <button class="int-submit-btn" id="int2-review-submit" onclick="submitInt2ReviewAnswer()" style="background:linear-gradient(135deg,#0D9488,#14B8A6);">Confirm Answer ✓</button>
+      <button class="int-next-q-btn" id="int2-review-next" onclick="nextInt2ReviewQ()" style="display:none;">Next →</button>
+    </div>
+  </div>
+
+  <!-- REVIEW RESULTS TRANSITION -->
+  <div id="int2-review-results-view" style="display:none;">
+    <div class="int-results-card">
+      <div style="font-size:3rem;margin-bottom:10px;" id="int2-review-emoji">🎉</div>
+      <div style="font-family:var(--font-head);font-size:1.4rem;color:var(--navy);margin-bottom:8px;">Phase 1 Review Done!</div>
+      <div style="font-family:var(--font-head);font-size:3.2rem;margin:8px 0;" id="int2-review-score-display"></div>
+      <div id="int2-review-grade" style="font-size:0.95rem;color:#555;margin-bottom:24px;line-height:1.6;"></div>
+      <button onclick="startInt2Lesson()" style="background:linear-gradient(135deg,#065F46,#0D9488);color:#fff;border:none;border-radius:50px;padding:16px 44px;font-family:var(--font-body);font-weight:800;font-size:1.05rem;cursor:pointer;">Continue to New Lesson 📚</button>
+    </div>
+  </div>
+
+  <!-- NEW CONCEPT SLIDES -->
+  <div id="int2-lesson-view" style="display:none;">
+    <div class="int-slide-card">
+      <span id="int2-slide-icon" class="int-slide-icon"></span>
+      <div id="int2-slide-title" class="int-slide-title"></div>
+      <div id="int2-slide-body" class="int-slide-body"></div>
+      <div class="int-visual-box" id="int2-visual-box" style="border-left-color:#0D9488;"></div>
+      <div class="int-example-box" id="int2-example-box"></div>
+      <div class="int-dots" id="int2-dots"></div>
+      <div class="int-slide-nav">
+        <button class="int-nav-btn int-prev-btn" id="int2-prev-btn" onclick="prevInt2Slide()" style="display:none;">← Back</button>
+        <button class="int-nav-btn int-next-btn" id="int2-next-btn" onclick="nextInt2Slide()" style="background:linear-gradient(135deg,#065F46,#0D9488);">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 30 QUESTION TEST -->
+  <div id="int2-practice-view" style="display:none;">
+    <div class="int-q-header" style="background:linear-gradient(135deg,#065F46,#0D9488);">
+      <div class="int-q-progress-text">Q <span id="int2-q-num">1</span> / 30</div>
+      <div class="int-score-pill" id="int2-score-pill">✅ 0</div>
+    </div>
+    <div id="int2-q-container"></div>
+    <div class="int-q-nav">
+      <div id="int2-feedback" class="int-feedback"></div>
+      <button class="int-submit-btn" id="int2-submit-btn" onclick="submitInt2Answer()" style="background:linear-gradient(135deg,#0D9488,#14B8A6);">Confirm Answer ✓</button>
+      <button class="int-next-q-btn" id="int2-next-q-btn" onclick="nextInt2Question()" style="display:none;">Next →</button>
+    </div>
+  </div>
+
+  <!-- FINAL RESULTS -->
+  <div id="int2-results-view" style="display:none;">
+    <div class="int-results-card">
+      <div style="font-size:3.5rem;margin-bottom:10px;">🏆</div>
+      <div style="font-family:var(--font-head);font-size:1.1rem;color:#0D9488;margin-bottom:4px;">Integers Phase 2 Complete!</div>
+      <div class="int-res-score-big" id="int2-res-score"></div>
+      <div class="int-res-pct" id="int2-res-pct" style="color:#0D9488;"></div>
+      <div class="int-res-grade" id="int2-res-grade"></div>
+      <div class="int-res-msg" id="int2-res-msg"></div>
+      <div class="int-res-btns">
+        <button onclick="restartInt2()" class="int-submit-btn" style="background:linear-gradient(135deg,#065F46,#0D9488);">🔁 Try Again</button>
+        <button onclick="int2State.slide=0;showInt2View('lesson');renderInt2Slide();" style="background:linear-gradient(135deg,#065F46,#0D9488);color:#fff;border:none;border-radius:50px;padding:14px 28px;font-family:var(--font-body);font-weight:800;cursor:pointer;font-size:0.95rem;">📚 Review Slides</button>
         <button onclick="showScreen('home')" style="background:none;border:2px solid #ddd;border-radius:50px;padding:14px 28px;font-family:var(--font-body);font-weight:800;cursor:pointer;color:#888;font-size:0.95rem;">🏠 Home</button>
       </div>
     </div>
@@ -5091,6 +5185,351 @@ function restartIntLesson(){
   intState.qIndex=0; intState.score=0; intState.selectedChoice=null; intState.answers=[];
   showIntView('practice');
   renderIntQuestion();
+}
+
+// ── INTEGERS PHASE 2 ──────────────────────────────────────────────
+
+var INT2_REVIEW_QUESTIONS = [
+  {type:'choice', text:'What is −8 + 5?', choices:['−13','−3','3','13'], answer:1, tip:'Different signs: 8−5=3. The bigger number (8) is negative, so the answer is −3.'},
+  {type:'input',  text:'What is −6 + (−4)?', answer:'-10', tip:'Same signs (both negative): 6+4=10, keep the negative. Answer: −10.'},
+  {type:'choice', text:'Which number is SMALLER: −7 or −2?', choices:['−7','−2','They are equal','Cannot tell'], answer:0, tip:'On the number line, −7 is further to the left, so it is smaller.'},
+  {type:'input',  text:'What is 4 − (−3)?', answer:'7', tip:'Subtracting a negative = adding a positive. 4 + 3 = 7.'},
+  {type:'choice', text:'What is −9 − (−5)?', choices:['−14','−4','4','14'], answer:1, tip:'−9 − (−5) = −9 + 5 = −4. Bigger number (9) is negative.'},
+  {type:'input',  text:'−3 + (−2) + 8 = ?', answer:'3', tip:'Step 1: −3 + (−2) = −5. Step 2: −5 + 8 = 3.'},
+  {type:'choice', text:'The temperature is −4°C. It rises 9 degrees. What is the new temperature?', choices:['−13°C','5°C','−5°C','13°C'], answer:1, tip:'−4 + 9 = 5°C. The bigger number (9) is positive, so the answer is positive.'},
+  {type:'input',  text:'A lift is on floor 3. It goes DOWN 8 floors. What floor is it on now? (Use − for below ground)', answer:'-5', tip:'3 − 8 = −5. Five floors below ground.'},
+  {type:'choice', text:'What is −12 + 7?', choices:['−19','−5','5','19'], answer:1, tip:'Different signs: 12−7=5. The bigger number (12) is negative, so the answer is −5.'},
+  {type:'input',  text:'What is 0 − (−6)?', answer:'6', tip:'0 − (−6) = 0 + 6 = 6. Subtracting a negative always adds!'}
+];
+
+var INT2_SLIDES = [
+  {
+    title:'Multiplying Integers — The Sign Rules',
+    icon:'✖️',
+    body:'When we multiply two integers, the SIGN of the answer depends on the signs of the two numbers. There are only two rules to remember: same signs give a POSITIVE result; different signs give a NEGATIVE result.',
+    visual:
+'SAME SIGNS → POSITIVE ✅\n  +3 × +4 = +12   (positive × positive)\n  −3 × −4 = +12   (negative × negative!)\n\nDIFFERENT SIGNS → NEGATIVE ❌\n  +3 × −4 = −12   (positive × negative)\n  −3 × +4 = −12   (negative × positive)\n\nMemory trick: SAME signs → POSITIVE\n              DIFFERENT signs → NEGATIVE',
+    example:
+'Work out the sign FIRST, then multiply:\n  6 × 7     = +42   (++ same → positive ✓)\n  6 × (−7)  = −42   (+− different → negative ✓)\n  (−6)×(−7) = +42   (−− same → positive ✓)\n  (−6)× 7   = −42   (−+ different → negative ✓)'
+  },
+  {
+    title:'Multiplying — Real-Life Examples',
+    icon:'💡',
+    body:'Think of a negative number as going in the OPPOSITE direction. When you reverse a reversal, you end up going forwards — that\'s why negative × negative = positive!',
+    visual:
+'"A diver goes DOWN 4 metres every minute.\n After 3 minutes, where is she?"\n  Change per minute = −4 m\n  Time = 3 minutes\n  Position = −4 × 3 = −12 m\n  → 12 metres BELOW sea level!\n\n"What if she had been going UP 4 m per minute?\n That would be +4 × 3 = +12 m above sea level."',
+    example:
+'Solve these — check your sign first!\n  (−3) × 5:\n    Different signs → NEGATIVE\n    3 × 5 = 15\n    Answer: −15 ✓\n\n  (−4) × (−6):\n    Same signs → POSITIVE\n    4 × 6 = 24\n    Answer: +24 ✓'
+  },
+  {
+    title:'Integer Sequences',
+    icon:'🔢',
+    body:'A SEQUENCE is a list of numbers following a pattern. To find the pattern, look at what you add or subtract to get from one term to the next. Sequences can pass straight through zero into negative territory!',
+    visual:
+'Counting UP through negatives (+3 each time):\n  −10, −7, −4, −1, 2, 5, 8 ...\n  (starts negative, crosses zero, becomes positive!)\n\nCounting DOWN through negatives (−4 each time):\n  12, 8, 4, 0, −4, −8, −12 ...\n  (starts positive, crosses zero, becomes negative!)\n\nTo find the RULE: pick any two next-door terms\nand subtract: e.g. −7 − (−10) = +3 (add 3)',
+    example:
+'Find the rule, then the next two terms:\n  −20, −15, −10, −5, ?, ?\n  Rule: +5 each time\n  Next: 0, 5  ✓\n\n  6, 3, 0, −3, −6, ?, ?\n  Rule: −3 each time\n  Next: −9, −12  ✓'
+  },
+  {
+    title:'Distance Between Two Integers',
+    icon:'📏',
+    body:'The DISTANCE between two integers is how many steps apart they are on the number line. Distance is always a POSITIVE number — it is just a measurement, never negative.',
+    visual:
+'Distance between −5 and 3:\n  ←────────────────────────────→\n  −5  −4  −3  −2  −1   0   1   2   3\n  ├───────────────────────────────┤\n  Count: 8 steps apart!\n\nFormula: Distance = BIGGER − SMALLER\n          = 3 − (−5) = 3 + 5 = 8  ✓\n\n(Remember: subtracting a negative = adding!)',
+    example:
+'Find the distance between:\n  −7 and 4:\n    4 − (−7) = 4 + 7 = 11  ✓\n\n  −3 and −9:\n    −3 is bigger. Distance = −3 − (−9) = −3 + 9 = 6  ✓\n\n  Temperature goes from −6°C to 8°C:\n    Rise = 8 − (−6) = 8 + 6 = 14°C  ✓'
+  },
+  {
+    title:'Multi-Step Problems',
+    icon:'🧩',
+    body:'Now we can combine addition, subtraction AND multiplication! The rule is: multiply FIRST, then add or subtract. Work through one step at a time and you\'ll get it right every time.',
+    visual:
+'MULTIPLY FIRST — then add/subtract:\n\n  3 × (−2) + 8:\n    Step 1: 3 × (−2) = −6\n    Step 2: −6 + 8   = +2  ✓\n\n  (−4) × (−3) − 5:\n    Step 1: (−4) × (−3) = +12\n    Step 2: 12 − 5      = 7   ✓',
+    example:
+'Try these step by step:\n  (−2) × 4 + 10:\n    Step 1: (−2) × 4 = −8\n    Step 2: −8 + 10  = 2   ✓\n\n  (−3) × (−2) + (−4):\n    Step 1: (−3) × (−2) = +6\n    Step 2: 6 + (−4)    = 2   ✓\n\n  (−2) × 4 + (−1) × (−6):\n    Step 1a: (−2)×4 = −8\n    Step 1b: (−1)×(−6) = +6\n    Step 2: −8 + 6 = −2   ✓'
+  },
+  {
+    title:'Integers Master Summary — You\'re Ready! 🌟',
+    icon:'🌟',
+    body:'You now know the full Phase 2 toolbox. Here is everything in one place before the big 30-question test!',
+    visual:
+'ADDING:   Same signs → add & keep sign\n          −5 + (−3) = −8\n          Different signs → subtract, keep bigger\'s sign\n          −8 + 5 = −3\n\nSUBTRACTING: −(negative) = +\n          4 − (−3) = 4 + 3 = 7\n\nMULTIPLYING: Same signs → POSITIVE\n          (−4) × (−3) = +12\n          Different signs → NEGATIVE\n          (−4) × 3 = −12\n\nSEQUENCES: find what you add each time\nDISTANCE:  bigger − smaller (always positive)',
+    example:
+'Quick checks — make sure you agree:\n  −7 + 4        = −3          ✓\n  6 − (−2)      = 8           ✓\n  (−3) × (−5)   = +15         ✓\n  (−6) × 4      = −24         ✓\n  Next in −10,−7,−4,−1: 2     ✓\n  Distance −8 to 5: 5−(−8)=13 ✓'
+  }
+];
+
+var INT2_QUESTIONS = [
+  // ── PHASE 1 REVIEW (Q1–Q8) ─────────────────────────────────────
+  {type:'choice', text:'What is −8 + 5?', choices:['−13','−3','3','13'], answer:1, topic:'Review: Adding', tip:'Different signs: 8−5=3. Negative wins (8>5). Answer: −3.'},
+  {type:'input',  text:'What is −6 + (−4)?', answer:'-10', topic:'Review: Adding', tip:'Same signs: 6+4=10, both negative. Answer: −10.'},
+  {type:'choice', text:'What is −9 − (−5)?', choices:['−14','−4','4','14'], answer:1, topic:'Review: Subtracting', tip:'−9−(−5) = −9+5 = −4. The bigger number (9) is negative.'},
+  {type:'input',  text:'What is 5 − (−7)?', answer:'12', topic:'Review: Subtracting', tip:'5−(−7) = 5+7 = 12.'},
+  {type:'choice', text:'Order from SMALLEST to LARGEST: −2, 5, −6, 0', choices:['−6, −2, 0, 5','5, 0, −2, −6','−2, −6, 0, 5','0, −2, −6, 5'], answer:0, topic:'Review: Comparing', tip:'On the number line from left to right: −6, −2, 0, 5.'},
+  {type:'input',  text:'−3 + (−2) + 9 = ?', answer:'4', topic:'Review: Adding', tip:'−3+(−2)=−5. Then −5+9=4.'},
+  {type:'choice', text:'A diver is at −15m. She swims up 9m. What is her new depth?', choices:['−24m','−6m','6m','24m'], answer:1, topic:'Review: Word problem', tip:'−15+9=−6m. Still below sea level!'},
+  {type:'input',  text:'What is −20 + 8 + (−3)?', answer:'-15', topic:'Review: Adding', tip:'−20+8=−12. Then −12+(−3)=−15.'},
+  // ── MULTIPLYING INTEGERS (Q9–Q16) ──────────────────────────────
+  {type:'input',  text:'What is 3 × (−4)?', answer:'-12', topic:'Multiplication', tip:'Different signs → negative. 3×4=12, so 3×(−4)=−12.'},
+  {type:'choice', text:'What is (−2) × (−6)?', choices:['−12','12','−8','8'], answer:1, topic:'Multiplication', tip:'Same signs (both negative) → positive! 2×6=12.'},
+  {type:'input',  text:'What is (−5) × 3?', answer:'-15', topic:'Multiplication', tip:'Different signs → negative. 5×3=15, so (−5)×3=−15.'},
+  {type:'choice', text:'What is (−7) × (−2)?', choices:['−14','14','−9','9'], answer:1, topic:'Multiplication', tip:'Same signs → positive! 7×2=14.'},
+  {type:'input',  text:'What is 4 × (−8)?', answer:'-32', topic:'Multiplication', tip:'Different signs → negative. 4×8=32, so 4×(−8)=−32.'},
+  {type:'choice', text:'When you multiply two numbers with DIFFERENT signs, the result is always...', choices:['Positive','Negative','Zero','It depends'], answer:1, topic:'Multiplication', tip:'Different signs ALWAYS give a negative result — no exceptions!'},
+  {type:'input',  text:'What is (−3) × (−3)?', answer:'9', topic:'Multiplication', tip:'Same signs (both negative) → positive! 3×3=9.'},
+  {type:'choice', text:'What is (−9) × 2?', choices:['−11','−18','11','18'], answer:1, topic:'Multiplication', tip:'Different signs → negative. 9×2=18, so (−9)×2=−18.'},
+  // ── SEQUENCES (Q17–Q22) ─────────────────────────────────────────
+  {type:'choice', text:'What is the NEXT number? −10, −7, −4, −1, ___', choices:['−13','0','2','3'], answer:2, topic:'Sequences', tip:'Pattern: add 3 each time. −1+3=2.'},
+  {type:'input',  text:'What is the next number? 8, 4, 0, −4, ___', answer:'-8', topic:'Sequences', tip:'Pattern: subtract 4 each time. −4−4=−8.'},
+  {type:'choice', text:'What number is MISSING? −3, ___, 3, 6, 9', choices:['−6','−1','0','1'], answer:2, topic:'Sequences', tip:'Pattern: add 3 each time. −3+3=0.'},
+  {type:'choice', text:'The sequence is: 15, 10, 5, 0, −5, −10. What is the rule?', choices:['Add 5 each time','Subtract 5 each time','Multiply by −1','Divide by 2'], answer:1, topic:'Sequences', tip:'15→10→5→0→−5→−10. Each term is 5 less than the one before.'},
+  {type:'input',  text:'What is the 5th term? −20, −16, −12, −8, ___', answer:'-4', topic:'Sequences', tip:'Pattern: add 4 each time. −8+4=−4.'},
+  {type:'choice', text:'What comes next? −1, −3, −5, −7, ___', choices:['−8','−9','−10','−11'], answer:1, topic:'Sequences', tip:'Pattern: subtract 2 each time. −7−2=−9.'},
+  // ── DISTANCE & REAL-WORLD (Q23–Q27) ─────────────────────────────
+  {type:'choice', text:'How many steps apart are −4 and 6 on the number line?', choices:['2','8','10','12'], answer:2, topic:'Distance', tip:'Distance = bigger − smaller = 6−(−4) = 6+4 = 10 steps.'},
+  {type:'input',  text:'How far apart are −7 and 3 on the number line?', answer:'10', topic:'Distance', tip:'Distance = 3−(−7) = 3+7 = 10.'},
+  {type:'choice', text:'A submarine moves from −15m to −42m. How far did it travel?', choices:['27m','57m','−27m','−57m'], answer:0, topic:'Distance', tip:'Distance = 42−15 = 27m. (Or: −15−(−42) = −15+42 = 27.)'},
+  {type:'input',  text:'A mountain peak is +5m above sea level. A cave entrance is −23m. What is the total height difference?', answer:'28', topic:'Distance', tip:'Distance = 5−(−23) = 5+23 = 28m.'},
+  {type:'choice', text:'The temperature was −6°C in the morning. By noon it was 8°C. How many degrees did it rise?', choices:['2°','10°','14°','−2°'], answer:2, topic:'Distance', tip:'Rise = 8−(−6) = 8+6 = 14°C.'},
+  // ── MULTI-STEP MIXED (Q28–Q30) ────────────────────────────────
+  {type:'input',  text:'3 × (−2) + 8 = ?', answer:'2', topic:'Multi-step', tip:'Step 1: 3×(−2)=−6. Step 2: −6+8=2.'},
+  {type:'choice', text:'(−4) × (−3) − 5 = ?', choices:['17','7','−7','−17'], answer:1, topic:'Multi-step', tip:'Step 1: (−4)×(−3)=+12. Step 2: 12−5=7.'},
+  {type:'input',  text:'(−2) × 4 + (−1) × (−6) = ?', answer:'-2', topic:'Multi-step', tip:'Step 1: (−2)×4=−8. Step 2: (−1)×(−6)=+6. Step 3: −8+6=−2.'}
+];
+
+var int2State = {
+  reviewQ:0, reviewScore:0, reviewSelectedChoice:null, reviewAnswers:[],
+  slide:0,
+  qIndex:0, score:0, selectedChoice:null, answers:[]
+};
+
+function startInt2(){
+  int2State = {reviewQ:0, reviewScore:0, reviewSelectedChoice:null, reviewAnswers:[],
+               slide:0, qIndex:0, score:0, selectedChoice:null, answers:[]};
+  showScreen('integers2');
+  showInt2View('review');
+  renderInt2ReviewQ();
+}
+
+function showInt2View(view){
+  ['int2-review-view','int2-review-results-view','int2-lesson-view','int2-practice-view','int2-results-view']
+    .forEach(function(id){ document.getElementById(id).style.display='none'; });
+  document.getElementById('int2-'+view+'-view').style.display='block';
+  var labels={review:'Review',lesson:'New Lesson','review-results':'Review Done',practice:'Test','results':'Results'};
+  document.getElementById('int2-step-pill').textContent=labels[view]||'';
+}
+
+function renderInt2ReviewQ(){
+  var q = INT2_REVIEW_QUESTIONS[int2State.reviewQ];
+  document.getElementById('int2-rq-num').textContent = int2State.reviewQ+1;
+  document.getElementById('int2-review-score-pill').textContent = '✅ '+int2State.reviewScore;
+  document.getElementById('int2-review-feedback').innerHTML='';
+  document.getElementById('int2-review-submit').style.display='inline-block';
+  document.getElementById('int2-review-next').style.display='none';
+  int2State.reviewSelectedChoice=null;
+  var html='<div class="int-q-card" style="border-left-color:#0D9488;">';
+  html+='<span class="int-q-num-badge" style="background:#ECFDF5;color:#0D9488;">Review Q'+(int2State.reviewQ+1)+'</span>';
+  html+='<div class="int-q-text">'+q.text+'</div>';
+  if(q.type==='choice'){
+    html+='<div class="int-choices">';
+    q.choices.forEach(function(c,i){ html+='<button class="int-choice-btn" id="int2r-ch-'+i+'" onclick="selectInt2ReviewChoice('+i+')">'+c+'</button>'; });
+    html+='</div>';
+  } else {
+    html+='<input class="int-input" id="int2r-inp" type="text" inputmode="numeric" placeholder="Type your answer…" onkeydown="if(event.key===\'Enter\')submitInt2ReviewAnswer();"/>';
+  }
+  html+='</div>';
+  document.getElementById('int2-review-q-container').innerHTML=html;
+  if(q.type==='input') setTimeout(function(){ var el=document.getElementById('int2r-inp'); if(el) el.focus(); },100);
+}
+
+function selectInt2ReviewChoice(i){
+  int2State.reviewSelectedChoice=i;
+  document.querySelectorAll('[id^="int2r-ch-"]').forEach(function(b){ b.classList.remove('selected'); });
+  var btn=document.getElementById('int2r-ch-'+i); if(btn) btn.classList.add('selected');
+}
+
+function submitInt2ReviewAnswer(){
+  var q=INT2_REVIEW_QUESTIONS[int2State.reviewQ];
+  var correct=false, userAnsDisplay='', correctAnsDisplay='';
+  if(q.type==='choice'){
+    if(int2State.reviewSelectedChoice===null) return;
+    correct=int2State.reviewSelectedChoice===q.answer;
+    document.querySelectorAll('[id^="int2r-ch-"]').forEach(function(b){ b.classList.remove('selected'); });
+    var cBtn=document.getElementById('int2r-ch-'+q.answer); if(cBtn) cBtn.classList.add('correct');
+    if(!correct){ var wBtn=document.getElementById('int2r-ch-'+int2State.reviewSelectedChoice); if(wBtn) wBtn.classList.add('wrong'); }
+    userAnsDisplay=int2State.reviewSelectedChoice!==null?q.choices[int2State.reviewSelectedChoice]:'(none)';
+    correctAnsDisplay=q.choices[q.answer];
+  } else {
+    var inp=document.getElementById('int2r-inp'); if(!inp||!inp.value.trim()) return;
+    var raw=inp.value.trim().replace(/\s/g,'');
+    correct=raw===String(q.answer).replace(/\s/g,'');
+    inp.style.border=correct?'3px solid #06D6A0':'3px solid #FF6B6B'; inp.disabled=true;
+    userAnsDisplay=inp.value.trim(); correctAnsDisplay=String(q.answer);
+  }
+  int2State.reviewAnswers.push({isCorrect:correct, userAns:userAnsDisplay, correctAns:correctAnsDisplay, text:q.text});
+  if(correct) int2State.reviewScore++;
+  var fb=document.getElementById('int2-review-feedback');
+  fb.innerHTML=correct
+    ?'<div class="int-fb correct">✅ Correct! '+q.tip+'</div>'
+    :'<div class="int-fb wrong">❌ The answer is <strong>'+correctAnsDisplay+'</strong>. '+q.tip+'</div>';
+  document.getElementById('int2-review-submit').style.display='none';
+  var isLast=int2State.reviewQ===INT2_REVIEW_QUESTIONS.length-1;
+  var nBtn=document.getElementById('int2-review-next');
+  nBtn.textContent=isLast?'See Review Score →':'Next →';
+  nBtn.style.display='inline-block';
+}
+
+function nextInt2ReviewQ(){
+  if(int2State.reviewQ===INT2_REVIEW_QUESTIONS.length-1){
+    showInt2ReviewResults();
+  } else {
+    int2State.reviewQ++;
+    int2State.reviewSelectedChoice=null;
+    renderInt2ReviewQ();
+  }
+}
+
+function showInt2ReviewResults(){
+  showInt2View('review-results');
+  var s=int2State.reviewScore, t=INT2_REVIEW_QUESTIONS.length, pct=Math.round(s/t*100);
+  document.getElementById('int2-review-score-display').textContent=s+' / '+t;
+  var grade, emoji;
+  if(pct>=90){grade='Fantastic! Your Phase 1 knowledge is rock solid! Now let\'s build on it with Phase 2.'; emoji='🌟';}
+  else if(pct>=70){grade='Good work! You remember most of Phase 1. A couple of things to watch out for — the new lesson will help you review those too.'; emoji='👍';}
+  else{grade='Some of Phase 1 needs a bit more practice. That\'s okay! The new lesson will include reminders. Give it your best!'; emoji='📚';}
+  document.getElementById('int2-review-emoji').textContent=emoji;
+  document.getElementById('int2-review-grade').textContent=grade;
+}
+
+function startInt2Lesson(){
+  int2State.slide=0;
+  showInt2View('lesson');
+  renderInt2Slide();
+}
+
+function renderInt2Slide(){
+  var s=INT2_SLIDES[int2State.slide];
+  document.getElementById('int2-slide-icon').textContent=s.icon;
+  document.getElementById('int2-slide-title').textContent=s.title;
+  document.getElementById('int2-slide-body').textContent=s.body;
+  document.getElementById('int2-visual-box').textContent=s.visual;
+  document.getElementById('int2-example-box').textContent=s.example;
+  document.getElementById('int2-step-pill').textContent='Slide '+(int2State.slide+1)+' of '+INT2_SLIDES.length;
+  document.getElementById('int2-prev-btn').style.display=int2State.slide===0?'none':'inline-block';
+  var nextBtn=document.getElementById('int2-next-btn');
+  nextBtn.textContent=int2State.slide===INT2_SLIDES.length-1?'Start 30-Question Test 🚀':'Next →';
+  var dotsHtml='';
+  for(var i=0;i<INT2_SLIDES.length;i++) dotsHtml+='<span class="int-dot'+(i===int2State.slide?' active':'')+'" onclick="goToInt2Slide('+i+')" style="'+(i===int2State.slide?'background:#0D9488;':'')+'"></span>';
+  document.getElementById('int2-dots').innerHTML=dotsHtml;
+}
+
+function prevInt2Slide(){ if(int2State.slide>0){ int2State.slide--; renderInt2Slide(); } }
+
+function nextInt2Slide(){
+  if(int2State.slide<INT2_SLIDES.length-1){ int2State.slide++; renderInt2Slide(); }
+  else {
+    int2State.qIndex=0; int2State.score=0; int2State.selectedChoice=null; int2State.answers=[];
+    showInt2View('practice');
+    renderInt2Question();
+  }
+}
+
+function goToInt2Slide(i){ int2State.slide=i; renderInt2Slide(); }
+
+function renderInt2Question(){
+  var q=INT2_QUESTIONS[int2State.qIndex];
+  document.getElementById('int2-q-num').textContent=int2State.qIndex+1;
+  document.getElementById('int2-score-pill').textContent='✅ '+int2State.score;
+  document.getElementById('int2-feedback').innerHTML='';
+  document.getElementById('int2-submit-btn').style.display='inline-block';
+  document.getElementById('int2-next-q-btn').style.display='none';
+  int2State.selectedChoice=null;
+  var topicColor={Review:'#0D9488',Multiplication:'#7C3AED',Sequences:'#D97706',Distance:'#0284C7','Multi-step':'#DC2626','Review: Adding':'#0D9488','Review: Subtracting':'#0D9488','Review: Comparing':'#0D9488','Review: Word problem':'#0D9488'}[q.topic]||'#0D9488';
+  var html='<div class="int-q-card" style="border-left-color:'+topicColor+';">';
+  html+='<div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;"><span class="int-q-num-badge" style="background:#F0FFFE;color:'+topicColor+';">Q'+(int2State.qIndex+1)+'</span>';
+  html+='<span style="font-size:0.72rem;font-weight:800;color:'+topicColor+';letter-spacing:1px;text-transform:uppercase;">'+q.topic+'</span></div>';
+  html+='<div class="int-q-text">'+q.text+'</div>';
+  if(q.type==='choice'){
+    html+='<div class="int-choices">';
+    q.choices.forEach(function(c,i){ html+='<button class="int-choice-btn" id="int2-ch-'+i+'" onclick="selectInt2Choice('+i+')">'+c+'</button>'; });
+    html+='</div>';
+  } else {
+    html+='<input class="int-input" id="int2-inp" type="text" inputmode="numeric" placeholder="Type your answer…" onkeydown="if(event.key===\'Enter\')submitInt2Answer();"/>';
+  }
+  html+='</div>';
+  document.getElementById('int2-q-container').innerHTML=html;
+  if(q.type==='input') setTimeout(function(){ var el=document.getElementById('int2-inp'); if(el) el.focus(); },100);
+}
+
+function selectInt2Choice(i){
+  int2State.selectedChoice=i;
+  document.querySelectorAll('[id^="int2-ch-"]').forEach(function(b){ b.classList.remove('selected'); });
+  var btn=document.getElementById('int2-ch-'+i); if(btn) btn.classList.add('selected');
+}
+
+function submitInt2Answer(){
+  var q=INT2_QUESTIONS[int2State.qIndex];
+  var correct=false, userAnsDisplay='', correctAnsDisplay='';
+  if(q.type==='choice'){
+    if(int2State.selectedChoice===null) return;
+    correct=int2State.selectedChoice===q.answer;
+    document.querySelectorAll('[id^="int2-ch-"]').forEach(function(b){ b.classList.remove('selected'); });
+    var cBtn=document.getElementById('int2-ch-'+q.answer); if(cBtn) cBtn.classList.add('correct');
+    if(!correct){ var wBtn=document.getElementById('int2-ch-'+int2State.selectedChoice); if(wBtn) wBtn.classList.add('wrong'); }
+    userAnsDisplay=int2State.selectedChoice!==null?q.choices[int2State.selectedChoice]:'(none)';
+    correctAnsDisplay=q.choices[q.answer];
+  } else {
+    var inp=document.getElementById('int2-inp'); if(!inp||!inp.value.trim()) return;
+    var raw=inp.value.trim().replace(/\s/g,'');
+    correct=raw===String(q.answer).replace(/\s/g,'');
+    inp.style.border=correct?'3px solid #06D6A0':'3px solid #FF6B6B'; inp.disabled=true;
+    userAnsDisplay=inp.value.trim(); correctAnsDisplay=String(q.answer);
+  }
+  int2State.answers.push({isCorrect:correct, userAns:userAnsDisplay, correctAns:correctAnsDisplay, text:q.text, topic:q.topic});
+  if(correct) int2State.score++;
+  document.getElementById('int2-score-pill').textContent='✅ '+int2State.score;
+  var fb=document.getElementById('int2-feedback');
+  fb.innerHTML=correct
+    ?'<div class="int-fb correct">✅ Correct! '+q.tip+'</div>'
+    :'<div class="int-fb wrong">❌ The answer is <strong>'+correctAnsDisplay+'</strong>. '+q.tip+'</div>';
+  document.getElementById('int2-submit-btn').style.display='none';
+  var isLast=int2State.qIndex===INT2_QUESTIONS.length-1;
+  var nBtn=document.getElementById('int2-next-q-btn');
+  nBtn.textContent=isLast?'See Results 🏆':'Next →';
+  nBtn.style.display='inline-block';
+}
+
+function nextInt2Question(){
+  if(int2State.qIndex===INT2_QUESTIONS.length-1){ showInt2Results(); }
+  else { int2State.qIndex++; int2State.selectedChoice=null; renderInt2Question(); }
+}
+
+function showInt2Results(){
+  showInt2View('results');
+  var total=INT2_QUESTIONS.length, pct=Math.round(int2State.score/total*100);
+  var grade, msg;
+  if(pct>=90){grade='⭐⭐⭐ Integer Master!'; msg='Incredible! You have nailed Phase 2 — multiplying integers, sequences, distance, multi-step problems. You are flying!';}
+  else if(pct>=75){grade='🌟🌟 Brilliant!'; msg='Really impressive! You have got the main ideas down. Review any mistakes and try again to get even higher!';}
+  else if(pct>=60){grade='👍 Good Effort!'; msg='You are getting there! Go back through the slides — especially multiplication signs and sequences — then try again.';}
+  else{grade='📚 Keep Going!'; msg='Integers Phase 2 is tricky! Re-read all 6 slides carefully, then try the test again. You can do it!';}
+  document.getElementById('int2-res-score').textContent=int2State.score+' / '+total;
+  document.getElementById('int2-res-pct').textContent=pct+'%';
+  document.getElementById('int2-res-grade').textContent=grade;
+  document.getElementById('int2-res-msg').textContent=msg;
+  if(!state.int2History) state.int2History=[];
+  state.int2History.push({
+    ts:Date.now(), date:new Date().toDateString(), score:int2State.score, total:total, pct:pct,
+    reviewScore:int2State.reviewScore, reviewTotal:INT2_REVIEW_QUESTIONS.length,
+    results:int2State.answers.map(function(a){ return {text:a.text, topic:a.topic, userAns:a.userAns, correctAns:a.correctAns, isCorrect:a.isCorrect}; })
+  });
+  if(state.int2History.length>5) state.int2History=state.int2History.slice(-5);
+  saveState();
+}
+
+function restartInt2(){
+  int2State.qIndex=0; int2State.score=0; int2State.selectedChoice=null; int2State.answers=[];
+  showInt2View('practice');
+  renderInt2Question();
 }
 
 </script>
