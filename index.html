@@ -368,6 +368,24 @@ body { -webkit-text-size-adjust: 100%; }
       <button class="start-btn" style="background:linear-gradient(135deg,#FFD166,#FF9F1C);color:#1A1A4E;">Start →</button>
     </div>
   </div>
+  <div class="special-lesson-card" onclick="startAlg2()" style="background:linear-gradient(135deg,#4C1D95,#6D28D9,#8B5CF6);border-color:rgba(196,181,253,0.55);margin-top:8px;">
+    <div class="special-badge">🚀 Part 2 — New!</div>
+    <h3>🔤 Algebra — Part 2</h3>
+    <p>Letters &amp; variables · Simplifying expressions · One- &amp; two-step equations · Substitution · Word problems — 6 slides + 50 questions!</p>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <div style="font-size:0.82rem;opacity:.75;">6 concept slides · 50 questions</div>
+      <button class="start-btn" style="background:linear-gradient(135deg,#FFD166,#FF9F1C);color:#1A1A4E;">Start →</button>
+    </div>
+  </div>
+  <div class="special-lesson-card" onclick="startAlg3()" style="background:linear-gradient(135deg,#9D174D,#DB2777,#F472B6);border-color:rgba(251,207,232,0.55);margin-top:8px;">
+    <div class="special-badge">🎯 Today's Special Lesson</div>
+    <h3>🧩 Algebra — Grouped Terms &amp; Word Problems</h3>
+    <p>Solving for X when brackets are involved · Which side is X being subtracted from? · Turning "equal groups" word problems into letter expressions — 5 slides + 20 questions!</p>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <div style="font-size:0.82rem;opacity:.75;">5 concept slides · 20 questions</div>
+      <button class="start-btn" style="background:linear-gradient(135deg,#FFD166,#FF9F1C);color:#1A1A4E;">Start →</button>
+    </div>
+  </div>
   <div class="info-card"><h4>📅 Today's Log</h4><div id="today-log" style="margin-top:8px;font-size:0.86rem;color:#888;">No sessions yet. Let's start! ✨</div></div>
 </div>
 
@@ -633,6 +651,118 @@ body { -webkit-text-size-adjust: 100%; }
       <div class="int-res-btns">
         <button onclick="restartInt2()" class="int-submit-btn" style="background:linear-gradient(135deg,#065F46,#0D9488);">🔁 Try Again</button>
         <button onclick="int2State.slide=0;showInt2View('lesson');renderInt2Slide();" style="background:linear-gradient(135deg,#065F46,#0D9488);color:#fff;border:none;border-radius:50px;padding:14px 28px;font-family:var(--font-body);font-weight:800;cursor:pointer;font-size:0.95rem;">📚 Review Slides</button>
+        <button onclick="showScreen('home')" style="background:none;border:2px solid #ddd;border-radius:50px;padding:14px 28px;font-family:var(--font-body);font-weight:800;cursor:pointer;color:#888;font-size:0.95rem;">🏠 Home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ALGEBRA PART 2 -->
+<div id="screen-algebra2" class="screen">
+  <div class="int-header" style="background:linear-gradient(135deg,#4C1D95,#6D28D9);">
+    <button onclick="showScreen('home')" style="background:rgba(255,255,255,0.15);border:none;color:#fff;border-radius:50px;padding:7px 16px;font-weight:800;cursor:pointer;font-size:0.85rem;">← Home</button>
+    <div class="int-header-title">🔤 Algebra — Part 2</div>
+    <div class="int-slide-counter-pill" id="alg2-step-pill">Lesson</div>
+  </div>
+
+  <!-- CONCEPT SLIDES -->
+  <div id="alg2-lesson-view">
+    <div class="int-slide-card">
+      <span id="alg2-slide-icon" class="int-slide-icon"></span>
+      <div id="alg2-slide-title" class="int-slide-title"></div>
+      <div id="alg2-slide-body" class="int-slide-body"></div>
+      <div class="int-visual-box" id="alg2-visual-box" style="border-left-color:#7C3AED;"></div>
+      <div class="int-example-box" id="alg2-example-box"></div>
+      <div class="int-dots" id="alg2-dots"></div>
+      <div class="int-slide-nav">
+        <button class="int-nav-btn int-prev-btn" id="alg2-prev-btn" onclick="prevAlg2Slide()" style="display:none;">← Back</button>
+        <button class="int-nav-btn int-next-btn" id="alg2-next-btn" onclick="nextAlg2Slide()" style="background:linear-gradient(135deg,#4C1D95,#6D28D9);">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 50 QUESTION TEST -->
+  <div id="alg2-practice-view" style="display:none;">
+    <div class="int-q-header" style="background:linear-gradient(135deg,#4C1D95,#6D28D9);">
+      <div class="int-q-progress-text">Q <span id="alg2-q-num">1</span> / 50</div>
+      <div class="int-score-pill" id="alg2-score-pill">✅ 0</div>
+    </div>
+    <div id="alg2-q-container"></div>
+    <div class="int-q-nav">
+      <div id="alg2-feedback" class="int-feedback"></div>
+      <button class="int-submit-btn" id="alg2-submit-btn" onclick="submitAlg2Answer()" style="background:linear-gradient(135deg,#6D28D9,#8B5CF6);">Confirm Answer ✓</button>
+      <button class="int-next-q-btn" id="alg2-next-q-btn" onclick="nextAlg2Question()" style="display:none;">Next →</button>
+    </div>
+  </div>
+
+  <!-- FINAL RESULTS -->
+  <div id="alg2-results-view" style="display:none;">
+    <div class="int-results-card">
+      <div style="font-size:3.5rem;margin-bottom:10px;">🏆</div>
+      <div style="font-family:var(--font-head);font-size:1.1rem;color:#6D28D9;margin-bottom:4px;">Algebra Part 2 Complete!</div>
+      <div class="int-res-score-big" id="alg2-res-score"></div>
+      <div class="int-res-pct" id="alg2-res-pct" style="color:#6D28D9;"></div>
+      <div class="int-res-grade" id="alg2-res-grade"></div>
+      <div class="int-res-msg" id="alg2-res-msg"></div>
+      <div class="int-res-btns">
+        <button onclick="restartAlg2()" class="int-submit-btn" style="background:linear-gradient(135deg,#4C1D95,#6D28D9);">🔁 Try Again</button>
+        <button onclick="alg2State.slide=0;showAlg2View('lesson');renderAlg2Slide();" style="background:linear-gradient(135deg,#4C1D95,#6D28D9);color:#fff;border:none;border-radius:50px;padding:14px 28px;font-family:var(--font-body);font-weight:800;cursor:pointer;font-size:0.95rem;">📚 Review Slides</button>
+        <button onclick="showScreen('home')" style="background:none;border:2px solid #ddd;border-radius:50px;padding:14px 28px;font-family:var(--font-body);font-weight:800;cursor:pointer;color:#888;font-size:0.95rem;">🏠 Home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ALGEBRA SPECIAL LESSON (TODAY) -->
+<div id="screen-algebra3" class="screen">
+  <div class="int-header" style="background:linear-gradient(135deg,#9D174D,#DB2777);">
+    <button onclick="showScreen('home')" style="background:rgba(255,255,255,0.15);border:none;color:#fff;border-radius:50px;padding:7px 16px;font-weight:800;cursor:pointer;font-size:0.85rem;">← Home</button>
+    <div class="int-header-title">🧩 Algebra — Grouped Terms &amp; Word Problems</div>
+    <div class="int-slide-counter-pill" id="alg3-step-pill">Lesson</div>
+  </div>
+
+  <!-- CONCEPT SLIDES -->
+  <div id="alg3-lesson-view">
+    <div class="int-slide-card">
+      <span id="alg3-slide-icon" class="int-slide-icon"></span>
+      <div id="alg3-slide-title" class="int-slide-title"></div>
+      <div id="alg3-slide-body" class="int-slide-body"></div>
+      <div class="int-visual-box" id="alg3-visual-box" style="border-left-color:#DB2777;"></div>
+      <div class="int-example-box" id="alg3-example-box"></div>
+      <div class="int-dots" id="alg3-dots"></div>
+      <div class="int-slide-nav">
+        <button class="int-nav-btn int-prev-btn" id="alg3-prev-btn" onclick="prevAlg3Slide()" style="display:none;">← Back</button>
+        <button class="int-nav-btn int-next-btn" id="alg3-next-btn" onclick="nextAlg3Slide()" style="background:linear-gradient(135deg,#9D174D,#DB2777);">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 20 QUESTION PRACTICE -->
+  <div id="alg3-practice-view" style="display:none;">
+    <div class="int-q-header" style="background:linear-gradient(135deg,#9D174D,#DB2777);">
+      <div class="int-q-progress-text">Q <span id="alg3-q-num">1</span> / 20</div>
+      <div class="int-score-pill" id="alg3-score-pill">✅ 0</div>
+    </div>
+    <div id="alg3-q-container"></div>
+    <div class="int-q-nav">
+      <div id="alg3-feedback" class="int-feedback"></div>
+      <button class="int-submit-btn" id="alg3-submit-btn" onclick="submitAlg3Answer()" style="background:linear-gradient(135deg,#DB2777,#F472B6);">Confirm Answer ✓</button>
+      <button class="int-next-q-btn" id="alg3-next-q-btn" onclick="nextAlg3Question()" style="display:none;">Next →</button>
+    </div>
+  </div>
+
+  <!-- FINAL RESULTS -->
+  <div id="alg3-results-view" style="display:none;">
+    <div class="int-results-card">
+      <div style="font-size:3.5rem;margin-bottom:10px;">🏆</div>
+      <div style="font-family:var(--font-head);font-size:1.1rem;color:#DB2777;margin-bottom:4px;">Today's Algebra Lesson Complete!</div>
+      <div class="int-res-score-big" id="alg3-res-score"></div>
+      <div class="int-res-pct" id="alg3-res-pct" style="color:#DB2777;"></div>
+      <div class="int-res-grade" id="alg3-res-grade"></div>
+      <div class="int-res-msg" id="alg3-res-msg"></div>
+      <div class="int-res-btns">
+        <button onclick="restartAlg3()" class="int-submit-btn" style="background:linear-gradient(135deg,#9D174D,#DB2777);">🔁 Try Again</button>
+        <button onclick="alg3State.slide=0;showAlg3View('lesson');renderAlg3Slide();" style="background:linear-gradient(135deg,#9D174D,#DB2777);color:#fff;border:none;border-radius:50px;padding:14px 28px;font-family:var(--font-body);font-weight:800;cursor:pointer;font-size:0.95rem;">📚 Review Slides</button>
         <button onclick="showScreen('home')" style="background:none;border:2px solid #ddd;border-radius:50px;padding:14px 28px;font-family:var(--font-body);font-weight:800;cursor:pointer;color:#888;font-size:0.95rem;">🏠 Home</button>
       </div>
     </div>
@@ -2352,46 +2482,46 @@ function buildMathSession(){
   ['math'].forEach(function(s){(state.accuracy&&state.accuracy[s]||[]).slice(-10).forEach(function(v){overallAcc+=v;accCount++;});});
   var diffLevel=accCount>0?(overallAcc/accCount>=80?3:overallAcc/accCount>=60?2:1):1;
 
-  // ── PART 1: Warmup — multiplication, division, fractions (15 q) ──
+  // ── PART 1: Multiplication — 15 questions (4th grade: 2-digit × 1-digit) ──
   var warmupQs=[];
-  // 5 multiplication
-  for(var i=0;i<5;i++){
-    var a=diffLevel>=2?rng(12,99):rng(2,12),b=diffLevel>=2?rng(2,12):rng(2,12),ans=a*b;
-    warmupQs.push({d:diffLevel,type:'input',skill:'Multiplication',concept:'Multiplying numbers',
-      text:'What is '+a+' × '+b+'?',hint:'💡 Use times tables or long multiplication.',
+  for(var i=0;i<15;i++){
+    var a=rng(11,99),b=rng(2,12),ans=a*b;
+    warmupQs.push({d:1,type:'input',skill:'Multiplication',concept:'Multiplying numbers',
+      text:'What is '+a+' × '+b+'?',hint:'💡 Break it up: (tens×'+b+') + (ones×'+b+')',
       workedExample:'23 × 4: (20×4)+(3×4)=80+12=92',reteachNote:a+'×'+b+'='+ans,
       correct:[String(ans)],feedback:'✅ '+ans+'!',wrongFeedback:a+' × '+b+' = '+ans});
   }
-  // 5 division
-  for(var i=0;i<5;i++){
-    var b=rng(2,12),ans=diffLevel>=2?rng(10,25):rng(2,12),a=b*ans;
-    warmupQs.push({d:diffLevel,type:'input',skill:'Division',concept:'Dividing numbers',
+  // ── PART 2: Division — 15 questions (4th grade: no remainders) ──
+  for(var i=0;i<15;i++){
+    var b=rng(2,12),ans=rng(2,20),a=b*ans;
+    warmupQs.push({d:1,type:'input',skill:'Division',concept:'Dividing numbers',
       text:'What is '+a+' ÷ '+b+'?',hint:'💡 Think: '+b+' × ? = '+a,
       workedExample:'84 ÷ 7: 7×12=84, so answer=12',reteachNote:a+'÷'+b+'='+ans,
       correct:[String(ans)],feedback:'✅ '+ans+'!',wrongFeedback:a+' ÷ '+b+' = '+ans});
   }
-  // 5 fractions
+  // ── PART 3: Fractions — 10 questions ──
   var denoms=[2,3,4,5,6,8];
-  for(var i=0;i<5;i++){
+  for(var i=0;i<10;i++){
     var d1=denoms[rng(0,denoms.length-1)],n1=rng(1,d1-1);
     var d2=denoms.filter(function(x){return x!==d1;})[rng(0,denoms.length-2)],n2=rng(1,d2-1);
     var lcm=d1*d2/gcd(d1,d2),nn1=n1*(lcm/d1),nn2=n2*(lcm/d2),sn=nn1+nn2,g=gcd(sn,lcm);
-    warmupQs.push({d:i<3?1:2,type:'input',skill:'Fractions',concept:'Adding unlike fractions',
+    warmupQs.push({d:i<6?1:2,type:'input',skill:'Fractions',concept:'Adding unlike fractions',
       text:'Work out: '+n1+'/'+d1+' + '+n2+'/'+d2,hint:'💡 LCD = '+lcm,
       workedExample:'1/3+1/4: LCD=12. 4/12+3/12=7/12',reteachNote:'LCD='+lcm+'. Answer='+sn/g+'/'+(lcm/g),
       correct:[sn/g+'/'+(lcm/g),sn+'/'+lcm],feedback:'✅ '+sn/g+'/'+(lcm/g)+'!',
       wrongFeedback:'LCD='+lcm+'. Convert: '+n1+'/'+d1+'='+nn1+'/'+lcm+', '+n2+'/'+d2+'='+nn2+'/'+lcm+'. Add: '+sn+'/'+lcm+'='+sn/g+'/'+(lcm/g)});
   }
 
-  // ── PART 2: Equations lesson + 8 equations questions ──────────
+  // ── PART 4: Equations lesson + 10 equations questions ──────────
   var eqLesson={type:'lesson_break',conceptId:'equations',skill:'Lesson',concept:'📐 Equations — Solving for X'};
   var eqQs=generateConceptQuestions('equations',seed,diffLevel);
 
-  // ── PART 3: Geometry lesson + 8 geometry questions ────────────
+  // ── PART 5: Geometry lesson + 10 geometry questions ────────────
   var geoLesson={type:'lesson_break',conceptId:'angles',skill:'Lesson',concept:'📏 Shapes & Angles'};
   var geoQs=generateConceptQuestions('angles',seed+1,diffLevel);
 
-  var allQs=warmupQs.concat([eqLesson]).concat(eqQs.slice(0,8)).concat([geoLesson]).concat(geoQs.slice(0,8));
+  // Total: 15 mult + 15 div + 10 fractions + 10 equations + 10 geometry = 60 questions
+  var allQs=warmupQs.concat([eqLesson]).concat(eqQs.slice(0,10)).concat([geoLesson]).concat(geoQs.slice(0,10));
 
   return {
     concept:'equations',
@@ -2430,9 +2560,9 @@ function buildReadingSession(){
   var pool5 = READING_5TH.slice();
   var selected;
   if(level===4){
-    selected = getDailySubset(pool4, 8, 11).concat(getDailySubset(pool5, 2, 13));
+    selected = getDailySubset(pool4, 16, 11).concat(getDailySubset(pool5, 4, 13));
   } else {
-    selected = getDailySubset(pool4, 2, 17).concat(getDailySubset(pool5, 8, 19));
+    selected = getDailySubset(pool4, 4, 17).concat(getDailySubset(pool5, 16, 19));
   }
   return { questions: selected, level: level };
 }
@@ -2470,14 +2600,14 @@ function buildScienceSession(){
       cqs.sort(function(a,b){return (a.d||1)-(b.d||1);});
       cqs=[cqs[0],cqs[cqs.length-1],cqs[1]].filter(Boolean);
     }
-    qs=qs.concat(cqs.slice(0,3));
+    qs=qs.concat(cqs.slice(0,5));
   });
   return {questions:qs};
 }
 
 function buildAwarenessSession(){
   var pool = AWARENESS_QUESTIONS.slice();
-  return {questions: getDailySubset(pool, 8, 53)};
+  return {questions: getDailySubset(pool, 20, 53)};
 }
 
 // ── LESSON RENDERING ──────────────────────────────────────────
@@ -4114,8 +4244,11 @@ async function updateParentDashboard(){
   if(tdEl){
     var th = (state.testHistory||[]).filter(function(t){return t.results&&t.results.length;});
     var ih = (state.intHistory||[]).filter(function(t){return t.results&&t.results.length;});
-    if(!th.length && !ih.length){
-      tdEl.innerHTML='<div style="color:rgba(255,255,255,0.3);font-size:0.85rem;">No tests completed yet — finish a Daily Maths Test or the Integers Lesson to see results here.</div>';
+    var ih2 = (state.int2History||[]).filter(function(t){return t.results&&t.results.length;});
+    var ah2 = (state.alg2History||[]).filter(function(t){return t.results&&t.results.length;});
+    var ah3 = (state.alg3History||[]).filter(function(t){return t.results&&t.results.length;});
+    if(!th.length && !ih.length && !ih2.length && !ah2.length && !ah3.length){
+      tdEl.innerHTML='<div style="color:rgba(255,255,255,0.3);font-size:0.85rem;">No tests completed yet — finish a Daily Maths Test or a special lesson to see results here.</div>';
     } else {
       var tdHtml='';
       th.slice(-5).reverse().forEach(function(t){
@@ -4127,6 +4260,21 @@ async function updateParentDashboard(){
         var d=new Date(t.ts);
         var heading='🔢 Integers Lesson — '+d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' · '+t.score+'/'+t.total+' ('+t.pct+'%)';
         tdHtml+=renderAnswerTable(heading, t.results, false);
+      });
+      ih2.slice(-5).reverse().forEach(function(t){
+        var d=new Date(t.ts);
+        var heading='🔢 Integers Phase 2 — '+d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' · '+t.score+'/'+t.total+' ('+t.pct+'%)';
+        tdHtml+=renderAnswerTable(heading, t.results, false);
+      });
+      ah2.slice(-5).reverse().forEach(function(t){
+        var d=new Date(t.ts);
+        var heading='🔤 Algebra Part 2 — '+d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' · '+t.score+'/'+t.total+' ('+t.pct+'%)';
+        tdHtml+=renderAnswerTable(heading, t.results, true);
+      });
+      ah3.slice(-5).reverse().forEach(function(t){
+        var d=new Date(t.ts);
+        var heading='🧩 Algebra — Grouped Terms & Word Problems — '+d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' · '+t.score+'/'+t.total+' ('+t.pct+'%)';
+        tdHtml+=renderAnswerTable(heading, t.results, true);
       });
       tdEl.innerHTML=tdHtml;
     }
@@ -4664,55 +4812,57 @@ var DAILY_TEST_QUESTIONS = [
 {id:3, topic:'Multiplication', text:'A class has 6 rows with 8 desks in each row. How many desks altogether?', type:'input', correct:['48'], feedback:'6×8=48.'},
 {id:4, topic:'Multiplication', text:'What is 24 × 3?', type:'input', correct:['72'], feedback:'24×3: 20×3=60, 4×3=12. 60+12=72.'},
 {id:5, topic:'Multiplication', text:'What is 13 × 5?', type:'choice', choices:['60','65','63','70'], correct:1, feedback:'13×5=65. Think: 10×5=50, 3×5=15. 50+15=65.'},
-{id:6, topic:'Multiplication', text:'There are 12 eggs in a carton. How many eggs are in 7 cartons?', type:'input', correct:['84'], feedback:'12×7=84.'},
-{id:7, topic:'Multiplication', text:'What is 25 × 4?', type:'choice', choices:['90','95','100','105'], correct:2, feedback:'25×4=100. Think: 25×4 = 100 (like 4 quarters make £1!).'},
-{id:8, topic:'Multiplication', text:'What is 36 × 4?', type:'input', correct:['144'], feedback:'36×4: 30×4=120, 6×4=24. 120+24=144.'},
-{id:9, topic:'Multiplication', text:'A cinema has 8 rows with 15 seats in each row. How many seats altogether?', type:'input', correct:['120'], feedback:'8×15=120. Think: 8×10=80, 8×5=40. 80+40=120.'},
-{id:10, topic:'Multiplication', text:'What is 11 × 9?', type:'choice', choices:['89','99','98','100'], correct:1, feedback:'11×9=99. Think: 10×9=90, plus 1×9=9. 90+9=99.'},
+{id:6, topic:'Multiplication', text:'What is 36 × 4?', type:'input', correct:['144'], feedback:'36×4: 30×4=120, 6×4=24. 120+24=144.'},
 // ── DIVISION ─────────────────────────────────────────────────────
-{id:11, topic:'Division', text:'What is 56 ÷ 8?', type:'input', correct:['7'], feedback:'56÷8=7. Check: 7×8=56 ✓'},
-{id:12, topic:'Division', text:'What is 72 ÷ 9?', type:'choice', choices:['7','8','9','6'], correct:1, feedback:'72÷9=8. Check: 8×9=72 ✓'},
-{id:13, topic:'Division', text:'35 children are split equally into 5 groups. How many children in each group?', type:'input', correct:['7'], feedback:'35÷5=7.'},
-{id:14, topic:'Division', text:'What is 96 ÷ 4?', type:'choice', choices:['22','24','26','28'], correct:1, feedback:'96÷4=24. Think: 80÷4=20, 16÷4=4. 20+4=24.'},
-{id:15, topic:'Division', text:'What is 84 ÷ 7?', type:'input', correct:['12'], feedback:'84÷7=12. Check: 7×12=84 ✓'},
-{id:16, topic:'Division', text:'A farmer has 48 apples. He packs them into bags of 6. How many bags does he fill?', type:'input', correct:['8'], feedback:'48÷6=8.'},
-{id:17, topic:'Division', text:'What is 132 ÷ 4?', type:'choice', choices:['31','33','34','36'], correct:1, feedback:'132÷4: 120÷4=30, 12÷4=3. 30+3=33.'},
-{id:18, topic:'Division', text:'What is 125 ÷ 5?', type:'input', correct:['25'], feedback:'125÷5=25. Think: 100÷5=20, 25÷5=5. 20+5=25.'},
-{id:19, topic:'Division', text:'What is 91 ÷ 7?', type:'input', correct:['13'], feedback:'91÷7=13. Check: 7×13=91 ✓'},
-{id:20, topic:'Division', text:'48 stickers shared equally among 6 friends. How many stickers each?', type:'choice', choices:['6','7','8','9'], correct:2, feedback:'48÷6=8.'},
+{id:7, topic:'Division', text:'What is 56 ÷ 8?', type:'input', correct:['7'], feedback:'56÷8=7. Check: 7×8=56 ✓'},
+{id:8, topic:'Division', text:'What is 72 ÷ 9?', type:'choice', choices:['7','8','9','6'], correct:1, feedback:'72÷9=8. Check: 8×9=72 ✓'},
+{id:9, topic:'Division', text:'35 children are split equally into 5 groups. How many children in each group?', type:'input', correct:['7'], feedback:'35÷5=7.'},
+{id:10, topic:'Division', text:'What is 96 ÷ 4?', type:'choice', choices:['22','24','26','28'], correct:1, feedback:'96÷4=24. Think: 80÷4=20, 16÷4=4. 20+4=24.'},
+{id:11, topic:'Division', text:'What is 84 ÷ 7?', type:'input', correct:['12'], feedback:'84÷7=12. Check: 7×12=84 ✓'},
+{id:12, topic:'Division', text:'What is 132 ÷ 4?', type:'choice', choices:['31','33','34','36'], correct:1, feedback:'132÷4: 120÷4=30, 12÷4=3. 30+3=33.'},
 // ── WORD PROBLEMS ────────────────────────────────────────────────
-{id:21, topic:'Word Problems', text:'Mia has 48 stickers. She gives 1/4 to her friend. How many stickers does she give away?', type:'input', correct:['12'], feedback:'1/4 of 48 = 48÷4 = 12 stickers.'},
-{id:22, topic:'Word Problems', text:'A book has 120 pages. Tom reads 35 pages on Monday and 42 pages on Tuesday. How many pages does he still have left to read?', type:'choice', choices:['40','41','43','45'], correct:2, feedback:'120 − 35 − 42 = 43 pages left.'},
-{id:23, topic:'Word Problems', text:'A shop sells pencils for 8p each. How much do 9 pencils cost in pence?', type:'input', correct:['72','72p','72 pence'], feedback:'8×9=72p.'},
-{id:24, topic:'Word Problems', text:'30 students are split into equal groups of 6. How many groups are there?', type:'input', correct:['5'], feedback:'30÷6=5 groups.'},
-{id:25, topic:'Word Problems', text:'Zara has £24. She spends £9 on a book and £7 on a game. How much money does she have left?', type:'choice', choices:['£6','£7','£8','£5'], correct:2, feedback:'£24 − £9 − £7 = £8.'},
-{id:26, topic:'Word Problems', text:'A rectangle is 12 cm long and 5 cm wide. What is its perimeter?', type:'input', correct:['34','34 cm'], feedback:'Perimeter = 2×(12+5) = 2×17 = 34 cm.'},
-{id:27, topic:'Word Problems', text:'A school day starts at 9:00 am and ends at 3:30 pm. How long is the school day?', type:'choice', choices:['5 hours 30 minutes','6 hours','6 hours 30 minutes','7 hours'], correct:2, feedback:'From 9:00 am to 3:30 pm = 6 hours 30 minutes.'},
-{id:28, topic:'Word Problems', text:'There are 365 days in a year. How many days are there in 3 years?', type:'input', correct:['1095','1,095'], feedback:'365×3: 300×3=900, 65×3=195. 900+195=1,095.'},
-{id:29, topic:'Word Problems', text:'A garden is 8 m long and 6 m wide. What is its area?', type:'input', correct:['48','48 m2'], feedback:'Area = 8×6 = 48 m².'},
-{id:30, topic:'Word Problems', text:'Sam has 72 cards. He gives 1/3 to his brother. How many cards does Sam keep?', type:'choice', choices:['24','36','48','54'], correct:2, feedback:'1/3 of 72 = 72÷3 = 24 given away. 72−24=48 kept.'},
-{id:31, topic:'Word Problems', text:'There are 4 wheels on a car. How many wheels are there on 15 cars?', type:'input', correct:['60'], feedback:'4×15=60. Think: 4×10=40, 4×5=20. 40+20=60.'},
-{id:32, topic:'Word Problems', text:'A baker makes 9 cupcakes per batch. She bakes 8 batches. How many cupcakes altogether?', type:'input', correct:['72'], feedback:'9×8=72.'},
-{id:33, topic:'Word Problems', text:'A trip takes 3 hours 20 minutes. It starts at 10:00 am. What time does it end?', type:'choice', choices:['12:20 pm','1:00 pm','1:20 pm','2:20 pm'], correct:2, feedback:'10:00 am + 3 hours = 1:00 pm, + 20 minutes = 1:20 pm.'},
-{id:34, topic:'Word Problems', text:'A class raised £156 for charity. They split it equally between 4 charities. How much did each charity receive?', type:'input', correct:['39','£39'], feedback:'156÷4=39. Check: 4×39=156 ✓'},
+{id:13, topic:'Word Problems', text:'A box contains 6 pencils. How many pencils are in 3 boxes?', type:'input', correct:['18'], feedback:'3 boxes × 6 pencils = 18. Equal groups → multiply!'},
+{id:14, topic:'Word Problems', text:'Two girls divide 12 balloons equally. How many balloons does each girl get?', type:'input', correct:['6'], feedback:'12 balloons shared by 2 girls: 12÷2=6 each.'},
+{id:15, topic:'Word Problems', text:'There are six rabbits in a hutch. Three girls each take out one rabbit to pet. How many rabbits are still in the hutch?', type:'input', correct:['3'], feedback:'3 rabbits are taken out: 6−3=3 left in the hutch.'},
+{id:16, topic:'Word Problems', text:'Chipmunk Kuzya collected 7 little bags of rice. Each bag has 8 grains. How many grains did Kuzya collect in total?', type:'input', correct:['56'], feedback:'7 bags × 8 grains = 56 grains. Equal groups → multiply.'},
+{id:17, topic:'Word Problems', text:'A farmer has 9 crates with 12 apples in each crate. He sells 45 apples at the market. How many apples does he have left?', type:'input', correct:['63'], feedback:'9×12=108 apples total. 108−45=63 left. Two steps: multiply, then subtract.'},
+{id:18, topic:'Word Problems', text:'A baker has 84 cupcakes. She puts them equally into 7 boxes, then sells 3 of the boxes. How many cupcakes does she have left?', type:'input', correct:['48'], feedback:'84÷7=12 cupcakes per box. 7−3=4 boxes left. 4×12=48 cupcakes left.'},
+{id:19, topic:'Word Problems', text:'Liam saved $15 each week for 6 weeks. Then he spent $40 on a game. How much money does he have left?', type:'input', correct:['50','$50'], feedback:'15×6=90 saved. 90−40=50 left.'},
+{id:20, topic:'Word Problems', text:'A pack of 4 juice boxes costs $3. How much would 20 juice boxes cost?', type:'choice', choices:['$12','$15','$18','$20'], correct:1, feedback:'20÷4=5 packs needed. 5×$3=$15.'},
+// ── FRACTIONS (Addition — like the LCM worksheet) ─────────────────
+{id:21, topic:'Fractions', text:'What is 1/2 + 1/3?', type:'input', correct:['5/6'], feedback:'LCD=6. 1/2=3/6, 1/3=2/6. 3/6+2/6=5/6.'},
+{id:22, topic:'Fractions', text:'What is 2/5 + 1/4?', type:'input', correct:['13/20'], feedback:'LCD=20. 2/5=8/20, 1/4=5/20. 8/20+5/20=13/20.'},
+{id:23, topic:'Fractions', text:'Find the LCM of 6 and 10, then work out: 1/6 + 3/10', type:'input', correct:['7/15','14/30'], feedback:'LCM(6,10)=30. 1/6=5/30, 3/10=9/30. Sum=14/30, simplified = 7/15.'},
+{id:24, topic:'Fractions', text:'Find the LCM of 8 and 10, then work out: 3/8 + 1/10', type:'input', correct:['19/40'], feedback:'LCM(8,10)=40. 3/8=15/40, 1/10=4/40. 15/40+4/40=19/40.'},
+{id:25, topic:'Fractions', text:'Find the LCM of 8 and 12, then work out: 5/8 + 1/12', type:'input', correct:['17/24'], feedback:'LCM(8,12)=24. 5/8=15/24, 1/12=2/24. 15/24+2/24=17/24.'},
+{id:26, topic:'Fractions', text:'Find the LCM of 9 and 12, then work out: 5/9 + 1/12', type:'input', correct:['23/36'], feedback:'LCM(9,12)=36. 5/9=20/36, 1/12=3/36. 20/36+3/36=23/36.'},
+{id:27, topic:'Fractions', text:'Find the LCM of 4 and 14, then work out: 1/4 + 3/14', type:'input', correct:['13/28'], feedback:'LCM(4,14)=28. 1/4=7/28, 3/14=6/28. 7/28+6/28=13/28.'},
+{id:28, topic:'Fractions', text:'Find the LCM of 6 and 14, then work out: 5/6 + 1/14. Simplify your answer.', type:'input', correct:['19/21','38/42'], feedback:'LCM(6,14)=42. 5/6=35/42, 1/14=3/42. Sum=38/42, simplified = 19/21.'},
+{id:29, topic:'Fractions', text:'Find the LCM of 9 and 15, then work out: 2/9 + 4/15', type:'input', correct:['22/45'], feedback:'LCM(9,15)=45. 2/9=10/45, 4/15=12/45. 10/45+12/45=22/45.'},
+{id:30, topic:'Fractions', text:'Find the LCM of 4 and 18, then work out: 3/4 + 5/18. Write your answer as a mixed number.', type:'input', correct:['1 1/36','37/36'], feedback:'LCM(4,18)=36. 3/4=27/36, 5/18=10/36. Sum=37/36 = 1 whole and 1/36 left over.'},
+// ── EQUATIONS (Solve for X — with grouped terms) ──────────────────
+{id:31, topic:'Equations', text:'Solve for X:  X − 48 = 16', type:'input', correct:['64'], feedback:'Add 48 to both sides: X = 16 + 48 = 64.'},
+{id:32, topic:'Equations', text:'Solve for X:  X − (16 + 23) = 39', type:'input', correct:['78'], feedback:'Work out the bracket first: 16+23=39. Then X − 39 = 39, so X = 39+39 = 78.'},
+{id:33, topic:'Equations', text:'Solve for X:  62 − X = 37', type:'input', correct:['25'], feedback:'X is being subtracted from 62. Rearrange: X = 62 − 37 = 25.'},
+{id:34, topic:'Equations', text:'Solve for X:  (18 + 49) − X = 17', type:'input', correct:['50'], feedback:'Bracket first: 18+49=67. Then 67 − X = 17, so X = 67 − 17 = 50.'},
+{id:35, topic:'Equations', text:'Solve for X:  X − (12 + 18) = 25', type:'input', correct:['55'], feedback:'Bracket first: 12+18=30. Then X − 30 = 25, so X = 25+30 = 55.'},
+{id:36, topic:'Equations', text:'Solve for X:  90 − X = 34', type:'choice', choices:['46','56','64','124'], correct:1, feedback:'X = 90 − 34 = 56.'},
 // ── MISSING NUMBERS ──────────────────────────────────────────────
-{id:35, topic:'Missing Numbers', text:'What is the missing number? □ + 17 = 45', type:'input', correct:['28'], feedback:'45 − 17 = 28. Check: 28+17=45 ✓'},
-{id:36, topic:'Missing Numbers', text:'What is the missing number? 9 × □ = 63', type:'input', correct:['7'], feedback:'63 ÷ 9 = 7. Check: 9×7=63 ✓'},
-{id:37, topic:'Missing Numbers', text:'What is the missing number? 48 ÷ □ = 6', type:'input', correct:['8'], feedback:'48 ÷ 6 = 8. Check: 48÷8=6 ✓'},
-{id:38, topic:'Missing Numbers', text:'□ − 24 = 38. What is the missing number?', type:'choice', choices:['58','62','64','66'], correct:1, feedback:'38 + 24 = 62. Check: 62−24=38 ✓'},
-{id:39, topic:'Missing Numbers', text:'If n × 4 = 52, what is n?', type:'input', correct:['13'], feedback:'52 ÷ 4 = 13. Check: 13×4=52 ✓'},
+{id:37, topic:'Missing Numbers', text:'What is the missing number? □ + 17 = 45', type:'input', correct:['28'], feedback:'45 − 17 = 28. Check: 28+17=45 ✓'},
+{id:38, topic:'Missing Numbers', text:'What is the missing number? 9 × □ = 63', type:'input', correct:['7'], feedback:'63 ÷ 9 = 7. Check: 9×7=63 ✓'},
+{id:39, topic:'Missing Numbers', text:'□ − 24 = 38. What is the missing number?', type:'choice', choices:['58','62','64','66'], correct:1, feedback:'38 + 24 = 62. Check: 62−24=38 ✓'},
 {id:40, topic:'Missing Numbers', text:'5 × □ + 3 = 28. What is the missing number?', type:'input', correct:['5'], feedback:'28−3=25. 25÷5=5. Check: 5×5+3=28 ✓'},
-{id:41, topic:'Missing Numbers', text:'A number is multiplied by 6 and the answer is 54. What is the number?', type:'choice', choices:['6','8','9','11'], correct:2, feedback:'54 ÷ 6 = 9. Check: 9×6=54 ✓'},
-{id:42, topic:'Missing Numbers', text:'□ + □ + □ = 27. All three boxes are the same number. What is it?', type:'input', correct:['9'], feedback:'27 ÷ 3 = 9. Check: 9+9+9=27 ✓'},
 // ── GEOMETRY ─────────────────────────────────────────────────────
-{id:43, topic:'Geometry', text:'What is the area of a rectangle that is 9 cm long and 4 cm wide?', type:'input', correct:['36','36 cm2'], feedback:'Area = length × width = 9×4 = 36 cm².'},
-{id:44, topic:'Geometry', text:'A square has sides of 7 cm. What is its perimeter?', type:'choice', choices:['14 cm','21 cm','28 cm','35 cm'], correct:2, feedback:'Perimeter = 4×7 = 28 cm. A square has 4 equal sides.'},
-{id:45, topic:'Geometry', text:'How many degrees are in a right angle?', type:'input', correct:['90','90°'], feedback:'A right angle is exactly 90°. It looks like the corner of a square.'},
-{id:46, topic:'Geometry', text:'An angle measures 135°. What type of angle is it?', type:'choice', choices:['Acute','Right angle','Obtuse','Reflex'], correct:2, feedback:'Obtuse! Obtuse angles are greater than 90° and less than 180°. 135° fits.'},
-{id:47, topic:'Geometry', text:'The angles in a triangle are 60°, 70°, and ?°. What is the missing angle?', type:'input', correct:['50','50°'], feedback:'Angles in a triangle add up to 180°. 180 − 60 − 70 = 50°.'},
-{id:48, topic:'Geometry', text:'How many lines of symmetry does a square have?', type:'choice', choices:['1','2','3','4'], correct:3, feedback:'A square has 4 lines of symmetry: top-bottom, left-right, and the two diagonals.'},
-{id:49, topic:'Geometry', text:'Two angles on a straight line must add up to ?°', type:'input', correct:['180','180°'], feedback:'Angles on a straight line always add up to 180°.'},
-{id:50, topic:'Geometry', text:'A rectangle is 10 cm long and 3 cm wide. What is its area?', type:'input', correct:['30','30 cm2'], feedback:'Area = 10×3 = 30 cm².'}
+{id:41, topic:'Geometry', text:'What is the area of a rectangle that is 9 cm long and 4 cm wide?', type:'input', correct:['36','36 cm2'], feedback:'Area = length × width = 9×4 = 36 cm².'},
+{id:42, topic:'Geometry', text:'A square has sides of 7 cm. What is its perimeter?', type:'choice', choices:['14 cm','21 cm','28 cm','35 cm'], correct:2, feedback:'Perimeter = 4×7 = 28 cm. A square has 4 equal sides.'},
+{id:43, topic:'Geometry', text:'How many degrees are in a right angle?', type:'input', correct:['90','90°'], feedback:'A right angle is exactly 90°. It looks like the corner of a square.'},
+{id:44, topic:'Geometry', text:'An angle measures 135°. What type of angle is it?', type:'choice', choices:['Acute','Right angle','Obtuse','Reflex'], correct:2, feedback:'Obtuse! Obtuse angles are greater than 90° and less than 180°. 135° fits.'},
+{id:45, topic:'Geometry', text:'The angles in a triangle are 60°, 70°, and ?°. What is the missing angle?', type:'input', correct:['50','50°'], feedback:'Angles in a triangle add up to 180°. 180 − 60 − 70 = 50°.'},
+{id:46, topic:'Geometry', text:'How many lines of symmetry does a square have?', type:'choice', choices:['1','2','3','4'], correct:3, feedback:'A square has 4 lines of symmetry: top-bottom, left-right, and the two diagonals.'},
+{id:47, topic:'Geometry', text:'Two angles on a straight line must add up to ?°', type:'input', correct:['180','180°'], feedback:'Angles on a straight line always add up to 180°.'},
+{id:48, topic:'Geometry', text:'A rectangle is 10 cm long and 3 cm wide. What is its area?', type:'input', correct:['30','30 cm2'], feedback:'Area = 10×3 = 30 cm².'},
+{id:49, topic:'Word Problems', text:'A school library has 320 fiction books and 180 non-fiction books. How many books in total?', type:'input', correct:['500'], feedback:'320+180=500 books.'},
+{id:50, topic:'Word Problems', text:'A trip takes 3 hours 20 minutes. It starts at 10:00 am. What time does it end?', type:'choice', choices:['12:20 pm','1:00 pm','1:20 pm','2:20 pm'], correct:2, feedback:'10:00 am + 3 hours = 1:00 pm, + 20 minutes = 1:20 pm.'}
 ];
 
 var testState = {
@@ -5530,6 +5680,480 @@ function restartInt2(){
   int2State.qIndex=0; int2State.score=0; int2State.selectedChoice=null; int2State.answers=[];
   showInt2View('practice');
   renderInt2Question();
+}
+
+// ── ALGEBRA PART 2 ────────────────────────────────────────────────
+
+var ALG2_SLIDES = [
+  {
+    title:'What Is Algebra?',
+    icon:'🔤',
+    body:'In algebra we use LETTERS (like x, n or a) to stand for numbers we do not know yet. A letter that stands for an unknown number is called a VARIABLE. Most of the time, our job is to work out what number the letter is hiding.',
+    visual:
+'4n means "4 times n"  (the × sign is hidden!)\n  the number in front (4) is the COEFFICIENT\n  the letter (n) is the VARIABLE\n\nEXPRESSION  →  3x + 2     (no equals sign)\nEQUATION    →  3x + 2 = 11 (HAS an equals sign)\n\nAn equation is a puzzle: find the value of the letter.',
+    example:
+'Writing words as algebra:\n  "a number, n, plus 6"        → n + 6\n  "three times a number m"     → 3m\n  "a number x, take away 5"    → x − 5\n  "a number y, shared by 2"    → y ÷ 2  (or y/2)'
+  },
+  {
+    title:'Simplifying — Collecting Like Terms',
+    icon:'🧹',
+    body:'LIKE TERMS are terms with exactly the same letter. We can add or subtract like terms to make an expression shorter. We can NOT combine terms with different letters — 3a and 2b must stay apart.',
+    visual:
+'LIKE TERMS (same letter) → combine them:\n  3a + 2a = 5a        (3 lots + 2 lots = 5 lots of a)\n  8x − 3x = 5x\n  a + a + a = 3a\n\nUNLIKE TERMS (different letters) → leave them:\n  4a + 3b stays as 4a + 3b\n  5x + 2 stays as 5x + 2  (a number is not an x)',
+    example:
+'Simplify step by step:\n  6n + 2n − 3n\n    = (6 + 2 − 3) n = 5n  ✓\n\n  5x + 2 + 3x + 4\n    = (5x + 3x) + (2 + 4)\n    = 8x + 6  ✓  (x-terms together, numbers together)'
+  },
+  {
+    title:'One-Step Equations — The Balance Rule',
+    icon:'⚖️',
+    body:'An equation is like a balance scale: both sides must stay EQUAL. To find the letter, get it ALONE on one side. Whatever you do to one side, you must do to the other. Always UNDO using the opposite operation.',
+    visual:
+'Opposite (inverse) operations:\n  +  is undone by  −\n  ×  is undone by  ÷\n\n  x + 5 = 12   → subtract 5 → x = 7\n  x − 4 = 10   → add 4      → x = 14\n  3x = 21      → divide by 3 → x = 7\n  x ÷ 2 = 6    → multiply by 2 → x = 12',
+    example:
+'Solve x + 8 = 20:\n  Subtract 8 from BOTH sides:\n  x = 20 − 8 = 12\n  Check: 12 + 8 = 20 ✓\n\nSolve 5x = 45:\n  Divide BOTH sides by 5:\n  x = 45 ÷ 5 = 9\n  Check: 5 × 9 = 45 ✓'
+  },
+  {
+    title:'Two-Step Equations',
+    icon:'🪜',
+    body:'Some equations need TWO steps. The trick is to undo the operations in REVERSE order: first undo the adding or subtracting, THEN undo the multiplying or dividing. Work down one step at a time.',
+    visual:
+'2x + 3 = 11\n  Step 1: undo + 3 → subtract 3 → 2x = 8\n  Step 2: undo × 2 → divide by 2 → x = 4\n  Check: 2 × 4 + 3 = 11 ✓\n\n3x − 5 = 16\n  Step 1: undo − 5 → add 5 → 3x = 21\n  Step 2: undo × 3 → divide by 3 → x = 7',
+    example:
+'Sam doubles a number and adds 9. The result is 31.\n  Equation: 2n + 9 = 31\n  Step 1: 31 − 9 = 22   (undo the + 9)\n  Step 2: 22 ÷ 2 = 11   (undo the × 2)\n  Sam\'s number = 11.  Check: 11×2+9 = 31 ✓'
+  },
+  {
+    title:'Substitution — Putting Numbers In',
+    icon:'🔁',
+    body:'SUBSTITUTION means swapping a letter for its number, then working out the answer. Replace every letter with its value, then follow the normal order of operations. Take care with squares and with negative numbers!',
+    visual:
+'If x = 4:\n  3x + 2 = 3 × 4 + 2 = 12 + 2 = 14\n\nIf a = 3 and b = 5:\n  a + b = 3 + 5 = 8\n\nIf x = 2:\n  x² = x × x = 2 × 2 = 4   (NOT 2 × 2... it is squared!)',
+    example:
+'Careful with negatives:\n  If a = 4 and b = −3:\n    a + b = 4 + (−3) = 1\n    2a − b = 2×4 − (−3)\n           = 8 + 3 = 11\n    (subtracting a negative ADDS — a key rule!)'
+  },
+  {
+    title:'Word Problems & Master Summary 🌟',
+    icon:'🌟',
+    body:'To solve a word problem: let a LETTER stand for the unknown, write an equation, then solve it. Here is your whole Part 2 toolbox in one place before the 50-question test!',
+    visual:
+'WORD → EQUATION:\n  "Tom has x books, Mia has twice as many,\n   together 18"  →  x + 2x = 18 → 3x = 18 → x = 6\n\nTOOLBOX:\n  Simplify: add like terms only (3a+2a=5a)\n  One-step: undo with the opposite operation\n  Two-step: undo +/− first, then ×/÷\n  Substitute: swap letter for number, then work out',
+    example:
+'Quick checks — do you agree?\n  3a + 4a              = 7a        ✓\n  x + 5 = 12   →  x    = 7         ✓\n  2x + 3 = 11  →  x    = 4         ✓\n  If a=5: 2a           = 10        ✓\n  A number × 7 = 91 → number = 13  ✓'
+  }
+];
+
+var ALG2_QUESTIONS = [
+  // ── LETTERS & EXPRESSIONS (Q1–Q6) ──────────────────────────────
+  {type:'choice', text:'In the expression 4n, what does the letter n stand for?', choices:['A number we do not know yet','Always the number 4','A spelling mistake','Nothing at all'], answer:0, topic:'Expressions', tip:'A letter standing for an unknown number is called a variable.'},
+  {type:'choice', text:'What does 5x mean?', choices:['5 plus x','5 times x','x divided by 5','5 minus x'], answer:1, topic:'Expressions', tip:'A number written next to a letter means multiply: 5x = 5 × x.'},
+  {type:'choice', text:'Which of these is an EQUATION (not just an expression)?', choices:['3x + 2','x + 4 = 9','7a − 1','2n'], answer:1, topic:'Expressions', tip:'An equation always has an equals (=) sign.'},
+  {type:'choice', text:'How do you write "a number, n, plus 6"?', choices:['n + 6','6n','n − 6','6 − n'], answer:0, topic:'Expressions', tip:'"plus 6" means add 6 to n: n + 6.'},
+  {type:'choice', text:'How do you write "three times a number m"?', choices:['m + 3','3m','m − 3','m ÷ 3'], answer:1, topic:'Expressions', tip:'"three times" means multiply by 3: 3m.'},
+  {type:'choice', text:'In the term 7y, the number 7 is called the...', choices:['variable','coefficient','equation','remainder'], answer:1, topic:'Expressions', tip:'The number in front of a letter is the coefficient. The letter is the variable.'},
+  // ── SIMPLIFYING / LIKE TERMS (Q7–Q15) ──────────────────────────
+  {type:'choice', text:'Simplify: 3a + 4a', choices:['7a','12a','7','a7'], answer:0, topic:'Simplifying', tip:'Same letter → add the coefficients: 3 + 4 = 7, so 7a.'},
+  {type:'choice', text:'Simplify: 8x − 3x', choices:['5x','11x','5','24x'], answer:0, topic:'Simplifying', tip:'8 − 3 = 5, keep the x: 5x.'},
+  {type:'choice', text:'Simplify: 2b + 5b + b', choices:['7b','8b','7','10b'], answer:1, topic:'Simplifying', tip:'A lonely b counts as 1b. 2 + 5 + 1 = 8, so 8b.'},
+  {type:'choice', text:'Can you simplify 4a + 3b?', choices:['Yes, it is 7ab','Yes, it is 7','No — they are not like terms','No — you can never add letters'], answer:2, topic:'Simplifying', tip:'a and b are different letters, so 4a + 3b cannot be combined.'},
+  {type:'choice', text:'Simplify: 6n + 2n − 3n', choices:['5n','11n','5','8n'], answer:0, topic:'Simplifying', tip:'6 + 2 − 3 = 5, keep the n: 5n.'},
+  {type:'choice', text:'Simplify: 5x + 2 + 3x + 4', choices:['8x + 6','10x','8x + 24','14x'], answer:0, topic:'Simplifying', tip:'x-terms: 5x + 3x = 8x. Numbers: 2 + 4 = 6. Answer: 8x + 6.'},
+  {type:'choice', text:'Simplify: 9y − 4y + 2', choices:['5y + 2','7y','5y','13y + 2'], answer:0, topic:'Simplifying', tip:'9y − 4y = 5y. The +2 has no y, so it stays: 5y + 2.'},
+  {type:'choice', text:'Which pair are LIKE terms?', choices:['3a and 5b','2x and 7x','4 and 3y','x and x²'], answer:1, topic:'Simplifying', tip:'Like terms have exactly the same letter: 2x and 7x both have a plain x.'},
+  {type:'choice', text:'Simplify: a + a + a', choices:['3a','a³','3','aaa'], answer:0, topic:'Simplifying', tip:'Three lots of a is 3 × a = 3a (adding, not multiplying the letters).'},
+  // ── ONE-STEP EQUATIONS (Q16–Q27) ───────────────────────────────
+  {type:'input',  text:'Solve: x + 5 = 12.  x = ?', answer:'7', topic:'One-step', tip:'Subtract 5 from both sides: x = 12 − 5 = 7.'},
+  {type:'input',  text:'Solve: x − 4 = 10.  x = ?', answer:'14', topic:'One-step', tip:'Add 4 to both sides: x = 10 + 4 = 14.'},
+  {type:'input',  text:'Solve: 3x = 21.  x = ?', answer:'7', topic:'One-step', tip:'Divide both sides by 3: x = 21 ÷ 3 = 7.'},
+  {type:'input',  text:'Solve: x ÷ 2 = 6.  x = ?', answer:'12', topic:'One-step', tip:'Multiply both sides by 2: x = 6 × 2 = 12.'},
+  {type:'choice', text:'Solve: x + 8 = 8.  x = ?', choices:['0','8','16','1'], answer:0, topic:'One-step', tip:'Subtract 8 from both sides: x = 8 − 8 = 0.'},
+  {type:'input',  text:'Solve: 5x = 45.  x = ?', answer:'9', topic:'One-step', tip:'Divide both sides by 5: x = 45 ÷ 5 = 9.'},
+  {type:'input',  text:'Solve: x − 9 = 0.  x = ?', answer:'9', topic:'One-step', tip:'Add 9 to both sides: x = 0 + 9 = 9.'},
+  {type:'input',  text:'A number n multiplied by 6 gives 54. What is n?', answer:'9', topic:'One-step', tip:'6n = 54 → n = 54 ÷ 6 = 9.'},
+  {type:'input',  text:'Solve: x + 13 = 20.  x = ?', answer:'7', topic:'One-step', tip:'Subtract 13 from both sides: x = 20 − 13 = 7.'},
+  {type:'choice', text:'To solve x + 7 = 15, what do you do to BOTH sides?', choices:['Add 7','Subtract 7','Multiply by 7','Divide by 7'], answer:1, topic:'One-step', tip:'x is being +7, so undo it by subtracting 7: x = 8.'},
+  {type:'input',  text:'Solve: 4x = 32.  x = ?', answer:'8', topic:'One-step', tip:'Divide both sides by 4: x = 32 ÷ 4 = 8.'},
+  {type:'input',  text:'Solve: x − 6 = 6.  x = ?', answer:'12', topic:'One-step', tip:'Add 6 to both sides: x = 6 + 6 = 12.'},
+  // ── TWO-STEP EQUATIONS (Q28–Q37) ───────────────────────────────
+  {type:'input',  text:'Solve: 2x + 3 = 11.  x = ?', answer:'4', topic:'Two-step', tip:'Undo +3: 11 − 3 = 8. Undo ×2: 8 ÷ 2 = 4.'},
+  {type:'input',  text:'Solve: 3x + 1 = 16.  x = ?', answer:'5', topic:'Two-step', tip:'Undo +1: 16 − 1 = 15. Undo ×3: 15 ÷ 3 = 5.'},
+  {type:'input',  text:'Solve: 2x − 5 = 9.  x = ?', answer:'7', topic:'Two-step', tip:'Undo −5: 9 + 5 = 14. Undo ×2: 14 ÷ 2 = 7.'},
+  {type:'choice', text:'Solve: 4x + 2 = 14.  x = ?', choices:['2','3','4','6'], answer:1, topic:'Two-step', tip:'Undo +2: 14 − 2 = 12. Undo ×4: 12 ÷ 4 = 3.'},
+  {type:'input',  text:'Solve: 5x − 4 = 21.  x = ?', answer:'5', topic:'Two-step', tip:'Undo −4: 21 + 4 = 25. Undo ×5: 25 ÷ 5 = 5.'},
+  {type:'input',  text:'Solve: 3x + 6 = 21.  x = ?', answer:'5', topic:'Two-step', tip:'Undo +6: 21 − 6 = 15. Undo ×3: 15 ÷ 3 = 5.'},
+  {type:'choice', text:'To solve 2x + 5 = 13, what should you undo FIRST?', choices:['Divide by 2','Subtract 5','Add 5','Multiply by 2'], answer:1, topic:'Two-step', tip:'In two-step equations undo the +/− first: subtract 5.'},
+  {type:'input',  text:'Solve: 6x − 7 = 11.  x = ?', answer:'3', topic:'Two-step', tip:'Undo −7: 11 + 7 = 18. Undo ×6: 18 ÷ 6 = 3.'},
+  {type:'input',  text:'Sam doubles a number and adds 9. The result is 31. What was the number?', answer:'11', topic:'Two-step', tip:'2n + 9 = 31. Undo +9: 31 − 9 = 22. Undo ×2: 22 ÷ 2 = 11.'},
+  {type:'choice', text:'Solve: 2x + 7 = 7.  x = ?', choices:['0','7','1','14'], answer:0, topic:'Two-step', tip:'Undo +7: 7 − 7 = 0. Undo ×2: 0 ÷ 2 = 0.'},
+  // ── SUBSTITUTION (Q38–Q44) ─────────────────────────────────────
+  {type:'input',  text:'If a = 5, what is 2a?', answer:'10', topic:'Substitution', tip:'2a = 2 × 5 = 10.'},
+  {type:'input',  text:'If x = 4, what is 3x + 2?', answer:'14', topic:'Substitution', tip:'3 × 4 + 2 = 12 + 2 = 14.'},
+  {type:'input',  text:'If n = 6, what is n − 2?', answer:'4', topic:'Substitution', tip:'6 − 2 = 4.'},
+  {type:'input',  text:'If a = 3 and b = 5, what is a + b?', answer:'8', topic:'Substitution', tip:'3 + 5 = 8.'},
+  {type:'choice', text:'If x = 2, what is x² ?', choices:['4','2','22','x2'], answer:0, topic:'Substitution', tip:'x² means x × x = 2 × 2 = 4.'},
+  {type:'input',  text:'If a = 4 and b = −3, what is a + b?', answer:'1', topic:'Substitution', tip:'4 + (−3) = 4 − 3 = 1.'},
+  {type:'choice', text:'If a = 4 and b = −3, what is 2a − b?', choices:['5','11','8','−11'], answer:1, topic:'Substitution', tip:'2×4 = 8, then 8 − (−3) = 8 + 3 = 11 (subtracting a negative adds!).'},
+  // ── WORD PROBLEMS (Q45–Q50) ────────────────────────────────────
+  {type:'choice', text:'Emma is 3 years older than her brother. Together their ages add to 27. How old is Emma?', choices:['12','13','14','15'], answer:3, topic:'Word problem', tip:'Brother = n, Emma = n+3. n+(n+3)=27 → 2n+3=27 → n=12. Emma = 15.'},
+  {type:'input',  text:'I think of a number, add 4, and get 11. What was my number?', answer:'7', topic:'Word problem', tip:'n + 4 = 11 → n = 11 − 4 = 7.'},
+  {type:'input',  text:'A bag of n marbles is shared equally between 4 friends. Each gets 5 marbles. How many marbles, n, were in the bag?', answer:'20', topic:'Word problem', tip:'n ÷ 4 = 5 → n = 5 × 4 = 20.'},
+  {type:'choice', text:'Tom has x books. Mia has twice as many. Together they have 18. How many does Tom have?', choices:['6','9','12','18'], answer:0, topic:'Word problem', tip:'x + 2x = 18 → 3x = 18 → x = 6.'},
+  {type:'input',  text:'A number multiplied by 7 gives 91. What is the number?', answer:'13', topic:'Word problem', tip:'7n = 91 → n = 91 ÷ 7 = 13.'},
+  {type:'choice', text:'Three identical pencils cost 45p in total. How much is one pencil? (Solve 3p = 45)', choices:['9p','12p','15p','18p'], answer:2, topic:'Word problem', tip:'3p = 45 → p = 45 ÷ 3 = 15p.'}
+];
+
+var alg2State = { slide:0, qIndex:0, score:0, selectedChoice:null, answers:[] };
+
+function startAlg2(){
+  alg2State = { slide:0, qIndex:0, score:0, selectedChoice:null, answers:[] };
+  showScreen('algebra2');
+  showAlg2View('lesson');
+  renderAlg2Slide();
+}
+
+function showAlg2View(view){
+  ['alg2-lesson-view','alg2-practice-view','alg2-results-view']
+    .forEach(function(id){ document.getElementById(id).style.display='none'; });
+  document.getElementById('alg2-'+view+'-view').style.display='block';
+  var labels={lesson:'Lesson',practice:'Test',results:'Results'};
+  document.getElementById('alg2-step-pill').textContent=labels[view]||'';
+}
+
+function renderAlg2Slide(){
+  var s=ALG2_SLIDES[alg2State.slide];
+  document.getElementById('alg2-slide-icon').textContent=s.icon;
+  document.getElementById('alg2-slide-title').textContent=s.title;
+  document.getElementById('alg2-slide-body').textContent=s.body;
+  document.getElementById('alg2-visual-box').textContent=s.visual;
+  document.getElementById('alg2-example-box').textContent=s.example;
+  document.getElementById('alg2-step-pill').textContent='Slide '+(alg2State.slide+1)+' of '+ALG2_SLIDES.length;
+  document.getElementById('alg2-prev-btn').style.display=alg2State.slide===0?'none':'inline-block';
+  var nextBtn=document.getElementById('alg2-next-btn');
+  nextBtn.textContent=alg2State.slide===ALG2_SLIDES.length-1?'Start 50-Question Test 🚀':'Next →';
+  var dotsHtml='';
+  for(var i=0;i<ALG2_SLIDES.length;i++) dotsHtml+='<span class="int-dot'+(i===alg2State.slide?' active':'')+'" onclick="goToAlg2Slide('+i+')" style="'+(i===alg2State.slide?'background:#6D28D9;':'')+'"></span>';
+  document.getElementById('alg2-dots').innerHTML=dotsHtml;
+}
+
+function prevAlg2Slide(){ if(alg2State.slide>0){ alg2State.slide--; renderAlg2Slide(); } }
+
+function nextAlg2Slide(){
+  if(alg2State.slide<ALG2_SLIDES.length-1){ alg2State.slide++; renderAlg2Slide(); }
+  else {
+    alg2State.qIndex=0; alg2State.score=0; alg2State.selectedChoice=null; alg2State.answers=[];
+    showAlg2View('practice');
+    renderAlg2Question();
+  }
+}
+
+function goToAlg2Slide(i){ alg2State.slide=i; renderAlg2Slide(); }
+
+function renderAlg2Question(){
+  var q=ALG2_QUESTIONS[alg2State.qIndex];
+  document.getElementById('alg2-q-num').textContent=alg2State.qIndex+1;
+  document.getElementById('alg2-score-pill').textContent='✅ '+alg2State.score;
+  document.getElementById('alg2-feedback').innerHTML='';
+  document.getElementById('alg2-submit-btn').style.display='inline-block';
+  document.getElementById('alg2-next-q-btn').style.display='none';
+  alg2State.selectedChoice=null;
+  var topicColor={Expressions:'#7C3AED',Simplifying:'#9333EA','One-step':'#6D28D9','Two-step':'#C026D3',Substitution:'#DB2777','Word problem':'#DC2626'}[q.topic]||'#6D28D9';
+  var html='<div class="int-q-card" style="border-left-color:'+topicColor+';">';
+  html+='<div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;"><span class="int-q-num-badge" style="background:#F5F3FF;color:'+topicColor+';">Q'+(alg2State.qIndex+1)+'</span>';
+  html+='<span style="font-size:0.72rem;font-weight:800;color:'+topicColor+';letter-spacing:1px;text-transform:uppercase;">'+q.topic+'</span></div>';
+  html+='<div class="int-q-text">'+q.text+'</div>';
+  if(q.type==='choice'){
+    html+='<div class="int-choices">';
+    q.choices.forEach(function(c,i){ html+='<button class="int-choice-btn" id="alg2-ch-'+i+'" onclick="selectAlg2Choice('+i+')">'+c+'</button>'; });
+    html+='</div>';
+  } else {
+    html+='<input class="int-input" id="alg2-inp" type="text" inputmode="numeric" placeholder="Type your answer…" onkeydown="if(event.key===\'Enter\')submitAlg2Answer();"/>';
+  }
+  html+='</div>';
+  document.getElementById('alg2-q-container').innerHTML=html;
+  if(q.type==='input') setTimeout(function(){ var el=document.getElementById('alg2-inp'); if(el) el.focus(); },100);
+}
+
+function selectAlg2Choice(i){
+  alg2State.selectedChoice=i;
+  document.querySelectorAll('[id^="alg2-ch-"]').forEach(function(b){ b.classList.remove('selected'); });
+  var btn=document.getElementById('alg2-ch-'+i); if(btn) btn.classList.add('selected');
+}
+
+function submitAlg2Answer(){
+  var q=ALG2_QUESTIONS[alg2State.qIndex];
+  var correct=false, userAnsDisplay='', correctAnsDisplay='';
+  if(q.type==='choice'){
+    if(alg2State.selectedChoice===null) return;
+    correct=alg2State.selectedChoice===q.answer;
+    document.querySelectorAll('[id^="alg2-ch-"]').forEach(function(b){ b.classList.remove('selected'); });
+    var cBtn=document.getElementById('alg2-ch-'+q.answer); if(cBtn) cBtn.classList.add('correct');
+    if(!correct){ var wBtn=document.getElementById('alg2-ch-'+alg2State.selectedChoice); if(wBtn) wBtn.classList.add('wrong'); }
+    userAnsDisplay=alg2State.selectedChoice!==null?q.choices[alg2State.selectedChoice]:'(none)';
+    correctAnsDisplay=q.choices[q.answer];
+  } else {
+    var inp=document.getElementById('alg2-inp'); if(!inp||!inp.value.trim()) return;
+    var raw=inp.value.trim().replace(/\s/g,'').replace(/[−–—]/g,'-').toLowerCase();
+    correct=raw===String(q.answer).replace(/\s/g,'').replace(/[−–—]/g,'-').toLowerCase();
+    inp.style.border=correct?'3px solid #06D6A0':'3px solid #FF6B6B'; inp.disabled=true;
+    userAnsDisplay=inp.value.trim(); correctAnsDisplay=String(q.answer);
+  }
+  alg2State.answers.push({isCorrect:correct, userAns:userAnsDisplay, correctAns:correctAnsDisplay, text:q.text, topic:q.topic});
+  if(correct) alg2State.score++;
+  document.getElementById('alg2-score-pill').textContent='✅ '+alg2State.score;
+  var fb=document.getElementById('alg2-feedback');
+  fb.innerHTML=correct
+    ?'<div class="int-fb correct">✅ Correct! '+q.tip+'</div>'
+    :'<div class="int-fb wrong">❌ The answer is <strong>'+correctAnsDisplay+'</strong>. '+q.tip+'</div>';
+  document.getElementById('alg2-submit-btn').style.display='none';
+  var isLast=alg2State.qIndex===ALG2_QUESTIONS.length-1;
+  var nBtn=document.getElementById('alg2-next-q-btn');
+  nBtn.textContent=isLast?'See Results 🏆':'Next →';
+  nBtn.style.display='inline-block';
+}
+
+function nextAlg2Question(){
+  if(alg2State.qIndex===ALG2_QUESTIONS.length-1){ showAlg2Results(); }
+  else { alg2State.qIndex++; alg2State.selectedChoice=null; renderAlg2Question(); }
+}
+
+function showAlg2Results(){
+  showAlg2View('results');
+  var total=ALG2_QUESTIONS.length, pct=Math.round(alg2State.score/total*100);
+  var grade, msg;
+  if(pct>=90){grade='⭐⭐⭐ Algebra Master!'; msg='Incredible! You have nailed expressions, equations, substitution and word problems. You are a real algebraist!';}
+  else if(pct>=75){grade='🌟🌟 Brilliant!'; msg='Really impressive! You have got the main ideas down. Review any mistakes and try again to climb even higher!';}
+  else if(pct>=60){grade='👍 Good Effort!'; msg='You are getting there! Go back through the slides — especially the balance rule and two-step equations — then try again.';}
+  else{grade='📚 Keep Going!'; msg='Algebra takes practice! Re-read all 6 slides carefully, then try the test again. You can do it!';}
+  document.getElementById('alg2-res-score').textContent=alg2State.score+' / '+total;
+  document.getElementById('alg2-res-pct').textContent=pct+'%';
+  document.getElementById('alg2-res-grade').textContent=grade;
+  document.getElementById('alg2-res-msg').textContent=msg;
+  if(!state.alg2History) state.alg2History=[];
+  state.alg2History.push({
+    ts:Date.now(), date:new Date().toDateString(), score:alg2State.score, total:total, pct:pct,
+    results:alg2State.answers.map(function(a){ return {text:a.text, topic:a.topic, userAns:a.userAns, correctAns:a.correctAns, isCorrect:a.isCorrect}; })
+  });
+  if(state.alg2History.length>5) state.alg2History=state.alg2History.slice(-5);
+  saveState();
+}
+
+function restartAlg2(){
+  alg2State.qIndex=0; alg2State.score=0; alg2State.selectedChoice=null; alg2State.answers=[];
+  showAlg2View('practice');
+  renderAlg2Question();
+}
+
+// ── ALGEBRA SPECIAL LESSON (TODAY) — Grouped Terms & Word Problems ──
+var ALG3_SLIDES = [
+  {
+    title:'Brackets Are a Single Chunk',
+    icon:'🧱',
+    body:'When an equation has brackets (parentheses), always work out what is INSIDE the brackets first — treat the whole bracket as one number. Then the equation becomes a simple one-step puzzle.',
+    visual:
+'X − (16 + 23) = 39\n  Step 1: work out the bracket → 16 + 23 = 39\n  Step 2: now it is just  X − 39 = 39\n  Step 3: X = 39 + 39 = 78\n\n(18 + 49) − X = 17\n  Step 1: 18 + 49 = 67\n  Step 2: 67 − X = 17',
+    example:
+'Try it: X − (12 + 18) = 25\n  Bracket: 12 + 18 = 30\n  X − 30 = 25\n  X = 25 + 30 = 55\n  Check: 55 − (12+18) = 55 − 30 = 25 ✓'
+  },
+  {
+    title:'Which Side Is X On? Two Different Moves!',
+    icon:'⚖️',
+    body:'Look VERY carefully at where the X is. "X − a = b" and "a − X = b" look similar but are solved differently! Mixing these up is the #1 mistake — so always ask: is X doing the subtracting, or is X being subtracted?',
+    visual:
+'PATTERN 1 — X is subtracting a number:\n  X − 48 = 16  →  X = 16 + 48 = 64\n  (Undo the −48 by ADDING it back)\n\nPATTERN 2 — X is being subtracted FROM a number:\n  62 − X = 37  →  X = 62 − 37 = 25\n  (The big number minus the leftover = X)',
+    example:
+'Compare these two:\n  X − 20 = 5   →  X = 5 + 20 = 25\n  20 − X = 5   →  X = 20 − 5 = 15\n  Same numbers, different answers — check WHICH side X is on!'
+  },
+  {
+    title:'Mixing the Two Skills',
+    icon:'🧠',
+    body:'Now put both ideas together: simplify the bracket first, THEN check which pattern the equation matches (X − chunk = answer, or chunk − X = answer).',
+    visual:
+'(24 + 16) − X = 15\n  Step 1: bracket → 24+16 = 40\n  Step 2: now it is  40 − X = 15  (Pattern 2: chunk − X)\n  Step 3: X = 40 − 15 = 25\n\nX + (14 + 9) = 50\n  Step 1: bracket → 14+9 = 23\n  Step 2: X + 23 = 50\n  Step 3: X = 50 − 23 = 27',
+    example:
+'Always: (1) solve the bracket, (2) decide the pattern, (3) undo the last operation.'
+  },
+  {
+    title:'Word Problems: Equal Groups Need MULTIPLYING',
+    icon:'🐿️',
+    body:'When a word problem has several equal groups (bags, boxes, rows) and you need the TOTAL, you MULTIPLY the number of groups by the size of each group. A very common mistake is to ADD the two numbers instead — watch out for that trap!',
+    visual:
+'Chipmunk Gadya collected 8 little bags of buckwheat.\nEach bag has B grains.\n  WRONG:  8 + B  (adding does not make sense here)\n  RIGHT:  8 × B  (8 bags, B grains each → multiply)\n\nChipmunk Krisya collected M bags. Each has N grains.\n  Total = M × N   (NOT M + N!)',
+    example:
+'Check with real numbers: if B = 6,\n  8 × B = 8 × 6 = 48 grains — makes sense!\n  8 + B = 8 + 6 = 14 grains — far too few for 8 bags. That is how you spot the mistake.'
+  },
+  {
+    title:'Substituting Into Your Expression',
+    icon:'🔢',
+    body:'Once you have written the correct expression (like 8 × B or M × N), you can SUBSTITUTE real numbers for the letters to get a final answer — just like Algebra Part 2 taught you.',
+    visual:
+'9 bags each hold n stickers. Total = 9 × n\n  If n = 12:  9 × 12 = 108 stickers\n\nA farmer has c crates with 15 apples each. Total = 15 × c\n  If c = 6:  15 × 6 = 90 apples',
+    example:
+'Your toolbox for today:\n  1) Brackets first — always simplify inside ( ) before anything else\n  2) Check which side X is on: "X − a = b" vs "a − X = b"\n  3) Equal groups → MULTIPLY, not add\n  4) Substitute the letter\'s value in last, then work it out'
+  }
+];
+
+var ALG3_QUESTIONS = [
+  // ── EQUATIONS WITH GROUPED TERMS (Q1–Q10) ──────────────────────
+  {type:'input',  text:'Solve for X:  X − 48 = 16', answer:'64', topic:'Grouped Equations', tip:'Add 48 to both sides: X = 16 + 48 = 64.'},
+  {type:'input',  text:'Solve for X:  X − (16 + 23) = 39', answer:'78', topic:'Grouped Equations', tip:'Bracket first: 16+23=39. Then X − 39 = 39, so X = 78.'},
+  {type:'input',  text:'Solve for X:  62 − X = 37', answer:'25', topic:'Grouped Equations', tip:'X is being subtracted from 62, so X = 62 − 37 = 25.'},
+  {type:'input',  text:'Solve for X:  (18 + 49) − X = 17', answer:'50', topic:'Grouped Equations', tip:'Bracket first: 18+49=67. Then 67 − X = 17, so X = 50.'},
+  {type:'input',  text:'Solve for X:  X − 35 = 47', answer:'82', topic:'Grouped Equations', tip:'X = 47 + 35 = 82.'},
+  {type:'input',  text:'Solve for X:  X − (12 + 18) = 25', answer:'55', topic:'Grouped Equations', tip:'Bracket first: 12+18=30. Then X − 30 = 25, so X = 55.'},
+  {type:'input',  text:'Solve for X:  90 − X = 34', answer:'56', topic:'Grouped Equations', tip:'X = 90 − 34 = 56.'},
+  {type:'input',  text:'Solve for X:  (24 + 16) − X = 15', answer:'25', topic:'Grouped Equations', tip:'Bracket first: 24+16=40. Then 40 − X = 15, so X = 25.'},
+  {type:'choice', text:'In the equation 62 − X = 37, which is the correct way to find X?', choices:['X = 62 + 37','X = 62 − 37','X = 37 − 62','X = 37 + 62'], answer:1, topic:'Grouped Equations', tip:'X is being subtracted from 62, so X = 62 − 37.'},
+  {type:'input',  text:'Solve for X:  X + (14 + 9) = 50', answer:'27', topic:'Grouped Equations', tip:'Bracket first: 14+9=23. Then X + 23 = 50, so X = 27.'},
+  // ── WORD PROBLEMS → EXPRESSIONS (Q11–Q20) ──────────────────────
+  {type:'choice', text:'Chipmunk Gadya collected 8 little bags of buckwheat grains. Each bag has B grains. Which expression shows the total number of grains?', choices:['8 + B','B ÷ 8','8 × B','8 − B'], answer:2, topic:'Word Expressions', tip:'Equal groups → multiply: 8 bags × B grains each = 8 × B.'},
+  {type:'input',  text:"Using the rule from before: if each of Gadya's 8 bags has B = 6 grains, how many grains did she collect in total?", answer:'48', topic:'Word Expressions', tip:'8 × B = 8 × 6 = 48.'},
+  {type:'choice', text:'Chipmunk Krisya collected M little bags of barley. Each bag has N grains. Which expression shows the total grains?', choices:['M + N','M × N','M − N','N ÷ M'], answer:1, topic:'Word Expressions', tip:'Equal groups of M bags with N grains each → multiply: M × N.'},
+  {type:'input',  text:'If Krisya collected M = 5 bags and each has N = 9 grains, how many grains in total?', answer:'45', topic:'Word Expressions', tip:'M × N = 5 × 9 = 45.'},
+  {type:'input',  text:'Chipmunk Kuzya collected 7 little bags of rice. Each bag has 8 grains. How many grains did Kuzya collect in total?', answer:'56', topic:'Word Expressions', tip:'7 bags × 8 grains = 56.'},
+  {type:'choice', text:'A farmer has c crates with 15 apples in each crate. Which expression means "total apples"?', choices:['15 + c','15 × c','15 − c','15 ÷ c'], answer:1, topic:'Word Expressions', tip:'Equal groups → multiply: 15 apples × c crates.'},
+  {type:'input',  text:'Using the rule from before: if c = 6 crates, how many apples in total?', answer:'90', topic:'Word Expressions', tip:'15 × c = 15 × 6 = 90.'},
+  {type:'choice', text:'Which of these would give you the WRONG total for equal groups?', choices:['Multiplying number of groups by size of each group','Repeated addition of the group size, once per group','Adding the two numbers together just once','Using multiplication as a shortcut for repeated addition'], answer:2, topic:'Word Expressions', tip:'Adding the two numbers together once (like M + N) ignores that there are many equal groups — that is the trap!'},
+  {type:'input',  text:'9 bags each hold n stickers. If n = 12, how many stickers in total?', answer:'108', topic:'Word Expressions', tip:'9 × n = 9 × 12 = 108.'},
+  {type:'input',  text:'A baker has (25 + 15) buns in the oven. She takes X buns out to sell, leaving 18 buns. Solve: (25 + 15) − X = 18. What is X?', answer:'22', topic:'Word Expressions', tip:'Bracket first: 25+15=40. Then 40 − X = 18, so X = 40 − 18 = 22.'}
+];
+
+var alg3State = { slide:0, qIndex:0, score:0, selectedChoice:null, answers:[] };
+
+function startAlg3(){
+  alg3State = { slide:0, qIndex:0, score:0, selectedChoice:null, answers:[] };
+  showScreen('algebra3');
+  showAlg3View('lesson');
+  renderAlg3Slide();
+}
+
+function showAlg3View(view){
+  ['alg3-lesson-view','alg3-practice-view','alg3-results-view']
+    .forEach(function(id){ document.getElementById(id).style.display='none'; });
+  document.getElementById('alg3-'+view+'-view').style.display='block';
+  var labels={lesson:'Lesson',practice:'Test',results:'Results'};
+  document.getElementById('alg3-step-pill').textContent=labels[view]||'';
+}
+
+function renderAlg3Slide(){
+  var s=ALG3_SLIDES[alg3State.slide];
+  document.getElementById('alg3-slide-icon').textContent=s.icon;
+  document.getElementById('alg3-slide-title').textContent=s.title;
+  document.getElementById('alg3-slide-body').textContent=s.body;
+  document.getElementById('alg3-visual-box').textContent=s.visual;
+  document.getElementById('alg3-example-box').textContent=s.example;
+  document.getElementById('alg3-step-pill').textContent='Slide '+(alg3State.slide+1)+' of '+ALG3_SLIDES.length;
+  document.getElementById('alg3-prev-btn').style.display=alg3State.slide===0?'none':'inline-block';
+  var nextBtn=document.getElementById('alg3-next-btn');
+  nextBtn.textContent=alg3State.slide===ALG3_SLIDES.length-1?'Start 20-Question Test 🚀':'Next →';
+  var dotsHtml='';
+  for(var i=0;i<ALG3_SLIDES.length;i++) dotsHtml+='<span class="int-dot'+(i===alg3State.slide?' active':'')+'" onclick="goToAlg3Slide('+i+')" style="'+(i===alg3State.slide?'background:#DB2777;':'')+'"></span>';
+  document.getElementById('alg3-dots').innerHTML=dotsHtml;
+}
+
+function prevAlg3Slide(){ if(alg3State.slide>0){ alg3State.slide--; renderAlg3Slide(); } }
+
+function nextAlg3Slide(){
+  if(alg3State.slide<ALG3_SLIDES.length-1){ alg3State.slide++; renderAlg3Slide(); }
+  else {
+    alg3State.qIndex=0; alg3State.score=0; alg3State.selectedChoice=null; alg3State.answers=[];
+    showAlg3View('practice');
+    renderAlg3Question();
+  }
+}
+
+function goToAlg3Slide(i){ alg3State.slide=i; renderAlg3Slide(); }
+
+function renderAlg3Question(){
+  var q=ALG3_QUESTIONS[alg3State.qIndex];
+  document.getElementById('alg3-q-num').textContent=alg3State.qIndex+1;
+  document.getElementById('alg3-score-pill').textContent='✅ '+alg3State.score;
+  document.getElementById('alg3-feedback').innerHTML='';
+  document.getElementById('alg3-submit-btn').style.display='inline-block';
+  document.getElementById('alg3-next-q-btn').style.display='none';
+  alg3State.selectedChoice=null;
+  var topicColor={'Grouped Equations':'#DB2777','Word Expressions':'#9D174D'}[q.topic]||'#DB2777';
+  var html='<div class="int-q-card" style="border-left-color:'+topicColor+';">';
+  html+='<div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;"><span class="int-q-num-badge" style="background:#FDF2F8;color:'+topicColor+';">Q'+(alg3State.qIndex+1)+'</span>';
+  html+='<span style="font-size:0.72rem;font-weight:800;color:'+topicColor+';letter-spacing:1px;text-transform:uppercase;">'+q.topic+'</span></div>';
+  html+='<div class="int-q-text">'+q.text+'</div>';
+  if(q.type==='choice'){
+    html+='<div class="int-choices">';
+    q.choices.forEach(function(c,i){ html+='<button class="int-choice-btn" id="alg3-ch-'+i+'" onclick="selectAlg3Choice('+i+')">'+c+'</button>'; });
+    html+='</div>';
+  } else {
+    html+='<input class="int-input" id="alg3-inp" type="text" inputmode="numeric" placeholder="Type your answer…" onkeydown="if(event.key===\'Enter\')submitAlg3Answer();"/>';
+  }
+  html+='</div>';
+  document.getElementById('alg3-q-container').innerHTML=html;
+  if(q.type==='input') setTimeout(function(){ var el=document.getElementById('alg3-inp'); if(el) el.focus(); },100);
+}
+
+function selectAlg3Choice(i){
+  alg3State.selectedChoice=i;
+  document.querySelectorAll('[id^="alg3-ch-"]').forEach(function(b){ b.classList.remove('selected'); });
+  var btn=document.getElementById('alg3-ch-'+i); if(btn) btn.classList.add('selected');
+}
+
+function submitAlg3Answer(){
+  var q=ALG3_QUESTIONS[alg3State.qIndex];
+  var correct=false, userAnsDisplay='', correctAnsDisplay='';
+  if(q.type==='choice'){
+    if(alg3State.selectedChoice===null) return;
+    correct=alg3State.selectedChoice===q.answer;
+    document.querySelectorAll('[id^="alg3-ch-"]').forEach(function(b){ b.classList.remove('selected'); });
+    var cBtn=document.getElementById('alg3-ch-'+q.answer); if(cBtn) cBtn.classList.add('correct');
+    if(!correct){ var wBtn=document.getElementById('alg3-ch-'+alg3State.selectedChoice); if(wBtn) wBtn.classList.add('wrong'); }
+    userAnsDisplay=alg3State.selectedChoice!==null?q.choices[alg3State.selectedChoice]:'(none)';
+    correctAnsDisplay=q.choices[q.answer];
+  } else {
+    var inp=document.getElementById('alg3-inp'); if(!inp||!inp.value.trim()) return;
+    var raw=inp.value.trim().replace(/\s/g,'').replace(/[−–—]/g,'-').toLowerCase();
+    correct=raw===String(q.answer).replace(/\s/g,'').replace(/[−–—]/g,'-').toLowerCase();
+    inp.style.border=correct?'3px solid #06D6A0':'3px solid #FF6B6B'; inp.disabled=true;
+    userAnsDisplay=inp.value.trim(); correctAnsDisplay=String(q.answer);
+  }
+  alg3State.answers.push({isCorrect:correct, userAns:userAnsDisplay, correctAns:correctAnsDisplay, text:q.text, topic:q.topic});
+  if(correct) alg3State.score++;
+  document.getElementById('alg3-score-pill').textContent='✅ '+alg3State.score;
+  var fb=document.getElementById('alg3-feedback');
+  fb.innerHTML=correct
+    ?'<div class="int-fb correct">✅ Correct! '+q.tip+'</div>'
+    :'<div class="int-fb wrong">❌ The answer is <strong>'+correctAnsDisplay+'</strong>. '+q.tip+'</div>';
+  document.getElementById('alg3-submit-btn').style.display='none';
+  var isLast=alg3State.qIndex===ALG3_QUESTIONS.length-1;
+  var nBtn=document.getElementById('alg3-next-q-btn');
+  nBtn.textContent=isLast?'See Results 🏆':'Next →';
+  nBtn.style.display='inline-block';
+}
+
+function nextAlg3Question(){
+  if(alg3State.qIndex===ALG3_QUESTIONS.length-1){ showAlg3Results(); }
+  else { alg3State.qIndex++; alg3State.selectedChoice=null; renderAlg3Question(); }
+}
+
+function showAlg3Results(){
+  showAlg3View('results');
+  var total=ALG3_QUESTIONS.length, pct=Math.round(alg3State.score/total*100);
+  var grade, msg;
+  if(pct>=90){grade='⭐⭐⭐ Grouped-Terms Master!'; msg="Amazing! You have nailed brackets, working out which side X is on, and turning equal-groups word problems into the right expression.";}
+  else if(pct>=75){grade='🌟🌟 Brilliant!'; msg='Really strong work! Review any mistakes below, especially whether X was being subtracted or doing the subtracting.';}
+  else if(pct>=60){grade='👍 Good Effort!'; msg='Getting there! Re-read slides 2 and 4 — the "which side is X on" rule and the equal-groups multiply rule — then try again.';}
+  else{grade='📚 Keep Going!'; msg='This is tricky stuff! Go through all 5 slides again slowly, then try the test once more. You can do it!';}
+  document.getElementById('alg3-res-score').textContent=alg3State.score+' / '+total;
+  document.getElementById('alg3-res-pct').textContent=pct+'%';
+  document.getElementById('alg3-res-grade').textContent=grade;
+  document.getElementById('alg3-res-msg').textContent=msg;
+  if(!state.alg3History) state.alg3History=[];
+  state.alg3History.push({
+    ts:Date.now(), date:new Date().toDateString(), score:alg3State.score, total:total, pct:pct,
+    results:alg3State.answers.map(function(a){ return {text:a.text, topic:a.topic, userAns:a.userAns, correctAns:a.correctAns, isCorrect:a.isCorrect}; })
+  });
+  if(state.alg3History.length>5) state.alg3History=state.alg3History.slice(-5);
+  saveState();
+}
+
+function restartAlg3(){
+  alg3State.qIndex=0; alg3State.score=0; alg3State.selectedChoice=null; alg3State.answers=[];
+  showAlg3View('practice');
+  renderAlg3Question();
 }
 
 </script>
