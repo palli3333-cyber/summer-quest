@@ -1,4 +1,4 @@
-const CACHE = 'summer-quest-v1';
+const CACHE = 'summer-quest-v2';
 const ASSETS = [
   '/summer-quest/',
   '/summer-quest/index.html',
@@ -21,16 +21,16 @@ self.addEventListener('activate', e => {
   );
 });
 
+// Network-first: always try to fetch the latest version. Only fall back to
+// the cache when offline, so content updates show up on next load instead
+// of being stuck behind whatever was cached the first time the app opened.
 self.addEventListener('fetch', e => {
   e.respondWith(
-    caches.match(e.request).then(cached => {
-      if (cached) return cached;
-      return fetch(e.request).then(res => {
-        if (!res || res.status !== 200 || res.type === 'opaque') return res;
-        const clone = res.clone();
-        caches.open(CACHE).then(c => c.put(e.request, clone));
-        return res;
-      }).catch(() => caches.match('/summer-quest/index.html'));
-    })
+    fetch(e.request).then(res => {
+      if (!res || res.status !== 200 || res.type === 'opaque') return res;
+      const clone = res.clone();
+      caches.open(CACHE).then(c => c.put(e.request, clone));
+      return res;
+    }).catch(() => caches.match(e.request).then(cached => cached || caches.match('/summer-quest/index.html')))
   );
 });
